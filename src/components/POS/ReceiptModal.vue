@@ -1,5 +1,5 @@
 <template>
-  <!-- Receipt Success Modal (shown after Pay Now) -->
+  <!-- Receipt Success Modal -->
   <div v-if="visible" class="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
     <div class="bg-white p-6 rounded shadow w-[350px] text-sm">
       <h2 class="text-center text-lg font-bold mb-1">Cafe Eden</h2>
@@ -41,13 +41,10 @@
       </div>
     </div>
   </div>
-
-  <!-- Printable layout: hidden normally, shown only during print -->
-  
 </template>
 
 <script setup>
-import { computed, nextTick } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps({
   visible: Boolean,
@@ -58,20 +55,30 @@ const props = defineProps({
   method: String,
   change: Number,
 });
+
 const emit = defineEmits(['close']);
 
 const currentTime = computed(() => new Date().toLocaleString());
 const format = (v) => parseFloat(v).toFixed(2);
+
 const printReceipt = () => {
   const current = currentTime.value;
 
-  // Dynamically generate receipt HTML
-  let receiptContent = `
+  let itemsHtml = '';
+  cart.forEach(item => {
+    itemsHtml += `
+      <div class="row">
+        <span>${item.name} × ${item.qty}</span>
+        <span>$${format(item.qty * item.price)}</span>
+      </div>`;
+  });
+
+  const html = `
     <html>
       <head>
         <title>Receipt</title>
         <style>
-          body { font-family: Arial, sans-serif; padding: 20px; font-size: 13px; }
+          body { font-family: Arial, sans-serif; padding: 20px; font-size: 13px; color: #000; }
           .center { text-align: center; font-weight: bold; font-size: 16px; }
           .row { display: flex; justify-content: space-between; margin-top: 4px; }
           .divider { border-top: 1px dashed #000; margin: 8px 0; }
@@ -80,33 +87,23 @@ const printReceipt = () => {
       <body>
         <div class="center">Cafe Eden</div>
         <div class="center" style="font-size: 11px; margin-bottom: 10px;">${current}</div>
-        <div class="divider"></div>`;
-
-  cart.forEach(item => {
-    receiptContent += `
-      <div class="row">
-        <span>${item.name} × ${item.qty}</span>
-        <span>$${format(item.qty * item.price)}</span>
-      </div>`;
-  });
-
-  receiptContent += `
-    <div class="divider"></div>
-    <div class="row"><span>Subtotal</span><span>$${format(total)}</span></div>
-    ${discountAmount > 0 ? `<div class="row"><span>Discount</span><span>-$${format(discountAmount)}</span></div>` : ''}
-    <div class="row font-bold"><span>Total</span><span>$${format(discountedTotal)}</span></div>
-    <div class="row"><span>Paid by</span><span>${method}</span></div>
-    ${method === 'cash' ? `<div class="row"><span>Change</span><span>$${format(change)}</span></div>` : ''}
-    <div class="divider"></div>
-    <div class="center" style="font-size: 11px;">Thank you — visit again!</div>
+        <div class="divider"></div>
+        ${itemsHtml}
+        <div class="divider"></div>
+        <div class="row"><span>Subtotal</span><span>$${format(total)}</span></div>
+        ${discountAmount > 0 ? `<div class="row"><span>Discount</span><span>-$${format(discountAmount)}</span></div>` : ''}
+        <div class="row" style="font-weight: bold;"><span>Total</span><span>$${format(discountedTotal)}</span></div>
+        <div class="row"><span>Paid by</span><span>${method}</span></div>
+        ${method === 'cash' ? `<div class="row"><span>Change</span><span>$${format(change)}</span></div>` : ''}
+        <div class="divider"></div>
+        <div class="center" style="font-size: 11px;">Thank you — visit again!</div>
       </body>
-    </html>`;
+    </html>
+  `;
 
-  // Open a new tab and write the receipt content
   const printWindow = window.open('', '_blank');
   if (printWindow) {
-    printWindow.document.open();
-    printWindow.document.write(receiptContent);
+    printWindow.document.write(html);
     printWindow.document.close();
     printWindow.focus();
     printWindow.onload = () => {
@@ -115,12 +112,15 @@ const printReceipt = () => {
       emit('close');
     };
   } else {
-    alert('Pop-up blocked. Please allow pop-ups for this site.');
+    alert('Popup blocked! Please allow popups for this site.');
   }
 };
-
-
 </script>
+
+<style scoped>
+/* Optional cleanup */
+</style>
+
 
 
 <style scoped>
