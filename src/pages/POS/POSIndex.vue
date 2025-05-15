@@ -1,10 +1,26 @@
-<template> 
+<template>
   <AppLayout>
-    <div class="flex gap-6">
-      <!-- POS Main Section -->
-      <div class="flex-1 space-y-6">
-        <div class="flex justify-between items-center">
-          <h1 class="text-2xl font-bold text-gray-800">New Order</h1>
+    <div class="flex h-[calc(100vh-32px)] overflow-hidden px-6 py-4">
+      <!-- Main Section (Left) -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header: Categories + Search -->
+        <div class="flex justify-between items-center mb-4 shrink-0">
+          <div class="flex gap-2 overflow-x-auto no-scrollbar">
+            <button
+              v-for="cat in categories"
+              :key="cat.id"
+              @click="activeCategory = cat.id"
+              :class="[
+                'px-4 py-1 rounded-full text-sm whitespace-nowrap',
+                activeCategory === cat.id
+                  ? 'bg-purple-100 text-purple-700 font-semibold'
+                  : 'hover:bg-gray-200 text-gray-600'
+              ]"
+            >
+              {{ cat.name }}
+            </button>
+          </div>
+
           <input
             v-model="search"
             placeholder="Search..."
@@ -12,53 +28,46 @@
           />
         </div>
 
-        <!-- Categories -->
-        <div class="flex gap-2">
-          <button
-            v-for="cat in categories"
-            :key="cat.id"
-            @click="activeCategory = cat.id"
-            :class="[
-              'px-4 py-1 rounded-full text-sm',
-              activeCategory === cat.id
-                ? 'bg-purple-100 text-purple-700'
-                : 'hover:bg-gray-200'
-            ]"
-          >
-            {{ cat.name }}
-          </button>
-        </div>
-
-        <!-- Product Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <template v-if="filteredProducts.length">
+        <!-- Product Grid Scrollable -->
+        <div class="overflow-y-auto pr-2 no-scrollbar">
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <ProductCard
               v-for="item in filteredProducts"
               :key="item.id"
               :item="item"
               @add-to-cart="addToCart"
             />
-          </template>
-          <template v-else>
-            <p class="text-gray-500 col-span-full">No products found.</p>
-          </template>
+          </div>
         </div>
       </div>
 
-      <!-- Cart Panel -->
-      <Cart @checkout="handleCheckout" />
+      <!-- Cart Panel (Right) -->
+      <div class="ml-6 shrink-0">
+        <Cart @checkout="handleCheckout" />
+      </div>
     </div>
+
+    <!-- Always render PaymentModal -->
+    <PaymentModal
+      :visible="showModal"
+      :key="cart.length"  
+      @close="handleModalClose"
+      @success="handleModalClose"
+    />
   </AppLayout>
 </template>
 
+
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import AppLayout from '@/components/Common/AppLayout.vue';
 import ProductCard from '@/components/POS/ProductCard.vue';
 import Cart from '@/components/POS/Cart.vue';
+import PaymentModal from '@/components/POS/PaymentModal.vue';
 import api from '@/plugins/axios';
 import { usePOSStore } from '@/store/pos';
 
+const showModal = ref(false);
 const { cart, addToCart, clearCart } = usePOSStore();
 
 const products = ref([]);
@@ -68,17 +77,28 @@ const search = ref('');
 
 const filteredProducts = computed(() =>
   products.value.filter((p) => {
-    const matchCategory =
-      activeCategory.value === 0 || p.category_id === activeCategory.value;
+    const matchCategory = activeCategory.value === 0 || p.category_id === activeCategory.value;
     const matchSearch = p.name.toLowerCase().includes(search.value.toLowerCase());
     return matchCategory && matchSearch;
   })
 );
 
-// Debug watch
-watch(filteredProducts, (newVal) => {
-  console.log('Filtered Products:', newVal);
-});
+const handleCheckout = () => {
+  if (cart.length === 0) {
+    alert('Cart is empty');
+    return;
+  }
+  showModal.value = true;
+};
+
+const handleModalClose = () => {
+  showModal.value = false;
+};
+
+const handleSuccess = () => {
+  clearCart(); // ✅ Make sure to clear after success
+  showModal.value = false;
+};
 
 onMounted(async () => {
   const [menuRes, catRes] = await Promise.all([
@@ -86,33 +106,15 @@ onMounted(async () => {
     api.get('/categories'),
   ]);
 
-  console.log('MENU:', menuRes.data);
-  console.log('CATEGORIES:', catRes.data);
-
   products.value = menuRes.data;
   categories.value.push(...catRes.data);
 });
-
-const handleCheckout = async () => {
-  if (cart.length === 0) return alert('Cart is empty');
-
-  try {
-    const res = await api.post('/orders', {
-      items: cart.map((item) => ({
-        menu_item_id: item.id,
-        quantity: item.qty,
-      })),
-    });
-
-    await api.post(`/orders/${res.data.id}/pay`, {
-      payment_method: 'cash',
-    });
-
-    alert('Order placed successfully!');
-    clearCart();
-  } catch (err) {
-    console.error(err);
-    alert('Order failed.');
-  }
-};
 </script>
+
+<!-- Template -->
+<PaymentModal
+  :visible="showModal"
+  :key="cart.length"
+  @close="handleModalClose"
+  @success="handleSuccess"
+/>

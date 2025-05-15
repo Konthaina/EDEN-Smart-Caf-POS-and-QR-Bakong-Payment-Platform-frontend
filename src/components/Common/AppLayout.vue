@@ -5,9 +5,12 @@
 
     <!-- Main Area -->
     <div class="flex-1 flex flex-col overflow-hidden">
-      <!-- Topbar -->
-      <header class="bg-white shadow px-6 py-4 flex justify-between items-center">
-        <h1 class="text-xl font-semibold text-gray-800">Eden Cafe Dashboard</h1>
+      <!-- Topbar (hide on /pos) -->
+      <header
+        v-if="!isPOSPage"
+        class="bg-white shadow px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-xl font-bold text-gray-800">{{ pageTitle }}</h1>
         <button
           @click="handleLogout"
           class="text-sm text-red-500 hover:underline"
@@ -17,7 +20,7 @@
       </header>
 
       <!-- Page content -->
-      <main class="flex-1 overflow-y-auto p-6">
+      <main class="flex-1 overflow-hidden">
         <slot />
       </main>
     </div>
@@ -25,11 +28,27 @@
 </template>
 
 <script setup>
+import { useRoute, useRouter } from 'vue-router';
+import { computed } from 'vue';
 import Sidebar from './Sidebar.vue';
-import { useRouter } from 'vue-router';
 import api from '@/plugins/axios';
 
 const router = useRouter();
+const route = useRoute();
+
+const isPOSPage = computed(() => route.path === '/pos');
+
+const routeTitles = {
+  '/dashboard': 'Dashboard',
+  '/menu': 'Menu Management',
+  '/orders': 'Order History',
+  '/inventory': 'Inventory',
+  '/reports': 'Reports',
+  '/users': 'User Management',
+  '/settings': 'Settings',
+};
+
+const pageTitle = computed(() => routeTitles[route.path] || 'Eden Cafe');
 
 const handleLogout = async () => {
   await api.post('/logout');
