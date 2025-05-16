@@ -70,9 +70,9 @@
       <!-- Personal Section -->
       <div class="px-3 mt-4 text-gray-500 text-xs font-semibold uppercase tracking-wide">Personal</div>
       <nav class="space-y-0.5 px-3">
-        <SidebarItem to="#" label="Messages" icon="💬" badge="99+" />
-        <SidebarItem to="#" label="Notifications" icon="🔔" badge="9" />
-        <SidebarItem to="#" label="Setting" icon="⚙️" />
+        <SidebarItem to="/messages" label="Messages" icon="💬" badge="99+" />
+        <SidebarItem to="/Notifications" label="Notifications" icon="🔔" badge="9" />
+        <SidebarItem to="/Setting" label="Setting" icon="⚙️" />
       </nav>
     </div>
 
