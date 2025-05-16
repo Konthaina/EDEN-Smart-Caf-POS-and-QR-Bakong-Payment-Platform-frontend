@@ -62,8 +62,8 @@
                 </select>
               </td>
               <td class="px-3 py-2">{{ formatDate(order.created_at) }}</td>
-              <td class="px-3 py-2">
-                <router-link :to="`/orders/${order.id}`" class="text-purple-600 hover:underline">View</router-link>
+              <td class="px-6 py-4">
+                <RouterLink :to="`/orders/${order.id}`" class="text-purple-600 hover:underline">View</RouterLink>
               </td>
             </tr>
           </tbody>
@@ -154,8 +154,8 @@ async function downloadReport() {
 
     const type = res.headers['content-type'];
     const fileExt = filter.value.format === 'pdf' ? 'pdf'
-                   : filter.value.format === 'excel' ? 'xlsx'
-                   : 'csv';
+      : filter.value.format === 'excel' ? 'xlsx'
+        : 'csv';
 
     const blob = new Blob([res.data], { type });
     const url = window.URL.createObjectURL(blob);
@@ -178,14 +178,17 @@ async function downloadReport() {
   width: 0px;
   height: 0px;
 }
+
 .hide-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;

@@ -9,4 +9,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      // Forward /storage requests to Laravel
+      "/storage": "http://localhost:8000",
+    },
+  },
 });

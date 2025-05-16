@@ -32,6 +32,11 @@ const routes = [
   },
   { path: "/pos", component: POSIndex, meta: { requiresAuth: true } },
   { path: "/orders", component: ManageOrders, meta: { requiresAuth: true } },
+  {
+    path: "/orders/:id",
+    component: () => import("@/pages/Orders/OrderDetail.vue"),
+    meta: { requiresAuth: true },
+  },
 
   // Menu Module
   { path: "/menu/items", component: MenuItems, meta: { requiresAuth: true } },
