@@ -1,26 +1,14 @@
 <template>
-  <div class="flex h-screen bg-gray-100">
-    <!-- Sidebar -->
-    <Sidebar />
+  <div class="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden print:block">
+    <!-- Sidebar (hidden on print) -->
+    <div class="print:hidden">
+      <Sidebar />
+    </div>
 
     <!-- Main Area -->
     <div class="flex-1 flex flex-col overflow-hidden">
-      <!-- Topbar (hide on /pos) -->
-      <header
-        v-if="!isPOSPage"
-        class="bg-white shadow px-6 py-4 flex justify-between items-center"
-      >
-        <h1 class="text-xl font-bold text-gray-800">{{ pageTitle }}</h1>
-        <button
-          @click="handleLogout"
-          class="text-sm text-red-500 hover:underline"
-        >
-          Logout
-        </button>
-      </header>
-
-      <!-- Page content -->
-      <main class="flex-1 overflow-hidden">
+      <!-- Page Content -->
+      <main class="flex-1 overflow-y-auto p-6 text-gray-800 dark:text-white">
         <slot />
       </main>
     </div>
@@ -28,33 +16,16 @@
 </template>
 
 <script setup>
-import { useRoute, useRouter } from 'vue-router';
-import { computed } from 'vue';
-import Sidebar from './Sidebar.vue';
-import api from '@/plugins/axios';
+import { onMounted, watch, ref } from 'vue'
+import Sidebar from './Sidebar.vue'
 
-const router = useRouter();
-const route = useRoute();
+const darkMode = ref(localStorage.getItem('theme') === 'dark')
 
-const isPOSPage = computed(() => route.path === '/pos');
+const applyDarkMode = () => {
+  document.documentElement.classList.toggle('dark', darkMode.value)
+  localStorage.setItem('theme', darkMode.value ? 'dark' : 'light')
+}
 
-const routeTitles = {
-  '/dashboard': 'Dashboard',
-  '/menu': 'Menu Management',
-  '/orders': 'Order History',
-  '/inventory': 'Inventory',
-  '/reports': 'Reports',
-  '/users': 'User Management',
-  '/settings': 'Settings',
-};
-
-const pageTitle = computed(() => routeTitles[route.path] || 'Eden Cafe');
-
-const handleLogout = async () => {
-  await api.post('/logout');
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  delete api.defaults.headers.common['Authorization'];
-  router.push('/login');
-};
+watch(darkMode, applyDarkMode)
+onMounted(applyDarkMode)
 </script>

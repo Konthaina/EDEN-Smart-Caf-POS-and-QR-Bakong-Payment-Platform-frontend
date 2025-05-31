@@ -1,0 +1,416 @@
+{
+  "profile": {
+    "title": "My Profile",
+    "name": "Name",
+    "phone": "Phone",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "birthdate": "Birthdate",
+    "address": "Address",
+    "email": "Email",
+    "change_avatar": "Change Avatar",
+    "change_password": "Change Password",
+    "current_password": "Current Password",
+    "new_password": "New Password",
+    "confirm_password": "Confirm New Password",
+    "select": "Select",
+    "edit_profile": "Edit Profile",
+    "unknown": "Unknown"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save Changes",
+    "update": "Update",
+    "logout": "Logout",
+    "apply": "Apply",
+    "confirmDelete": "Yes, Delete",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "no": "No",
+    "yes": "Yes",
+    "dark_mode": "Dark Mode",
+    "light_mode": "Light Mode"
+  },
+
+  "login": {
+    "welcome": "Welcome to Eden",
+    "subtitle": "Please login to continue",
+    "email": "Email",
+    "email_placeholder": "you@example.com",
+    "password": "Password",
+    "password_placeholder": "Enter password",
+    "signin": "Sign In",
+    "create_account": "Create Account",
+    "forgot_password": "Forgot Password?"
+  },
+
+  "register": {
+    "title": "Create Account",
+    "subtitle": "Join Cafe Eden today",
+    "name": "Name",
+    "name_placeholder": "Your name",
+    "email": "Email",
+    "email_placeholder": "you@example.com",
+    "password": "Password",
+    "password_placeholder": "Password",
+    "confirm_password": "Confirm Password",
+    "confirm_password_placeholder": "Confirm Password",
+    "register_button": "Register",
+    "already_have_account": "Already have an account? Login",
+    "failed": "Registration failed."
+  },
+
+  "forgot": {
+    "title": "Forgot Password",
+    "subtitle": "We’ll send you a reset link",
+    "email_label": "Email Address",
+    "email_placeholder": "you@example.com",
+    "send_button": "Send Reset Link",
+    "back_to_login": "← Back to Login",
+    "success": "Reset link has been sent to your email.",
+    "failed": "Failed to send reset link."
+  },
+
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "pos": "POS",
+    "orders": "Orders",
+    "menu_items": "Menu Items",
+    "menu": "Menu",
+    "categories": "Categories",
+    "users": "Users",
+    "analytics": "Analytics",
+    "discounts": "Discounts",
+    "inventory": "Inventory",
+    "stock": "Stock",
+    "recipe": "Recipe",
+    "ingredient": "Ingredient",
+    "messages": "Messages",
+    "notifications": "Notifications",
+    "profile_settings": "Profile Settings",
+    "logout": "Logout",
+    "management": "Management",
+    "personal": "Personal"
+  },
+
+  "dashboard": {
+    "title": "Dashboard Overview",
+    "total_sales": "Total Revenue Today",
+    "total_orders": "Total Orders Today",
+    "total_customers": "Total Customers",
+    "top_item": "Top Item",
+    "no_data": "No top items to display yet."
+  },
+
+  "revenue": {
+    "title": "Revenue Overview",
+    "subtitle": "Revenue by Period",
+    "filter": {
+      "today": "Today",
+      "week": "This Week",
+      "month": "This Month",
+      "year": "This Year"
+    },
+    "dataset_label": "Revenue",
+    "tooltip": "revenue",
+    "loading": "Loading chart...",
+    "error": "Failed to load chart data"
+  },
+
+  "top_items": {
+    "title": "Top Selling Items",
+    "subtitle": "Based on selected period",
+    "no_data": "No data available",
+    "dataset_label": "Top Items",
+    "orders": "orders"
+  },
+
+  "pos": {
+    "all": "All",
+    "search": "Search...",
+    "loading_menu": "Loading menu...",
+    "empty_cart": "Cart is empty"
+  },
+
+  "cart": {
+    "title": "Your Cart",
+    "empty": "No items in your cart.",
+    "code": "Code",
+    "total": "Total",
+    "checkout": "Continue to Check Out",
+    "remove": "Remove"
+  },
+
+  "payment": {
+    "methods": "Payment Methods",
+    "cash": "Cash Payment",
+    "enter_amount": "Enter Amount",
+    "promo_code": "Promo Code",
+    "enter_code": "Enter code",
+    "manual_discount": "Manual Discount (%)",
+    "change": "Change",
+    "cart_items": "Your Items",
+    "cart_empty": "Cart is empty",
+    "total": "Total",
+    "pay_now": "Pay Now"
+  },
+  "receipt": {
+    "header": "Eden Coffee",
+    "thanks": "Thank you for your purchase!",
+    "order_id": "Order ID",
+    "subtotal": "Subtotal",
+    "promo_discount": "Promo Discount",
+    "manual_discount": "Manual Discount",
+    "total": "Total",
+    "pay_by": "Pay by",
+    "cashier": "Cashier",
+    "printed": "Printed on",
+    "unknown": "Unknown"
+  },
+
+  "order.title": "📦 Order Management",
+  "order.status.all": "All Status",
+  "order.status.pending": "Pending",
+  "order.status.completed": "Completed",
+  "order.status.cancelled": "Cancelled",
+  "order.download": "⬇ Download",
+  "order.showing": "Showing",
+  "order.orders": "orders",
+  "order.no_orders": "No orders found.",
+  "order.updated": "✅ Order status updated!",
+  "order.failed": "❌ Failed to download. Please check backend or file permissions.",
+  "order.view": "View",
+  "order.user": "User Name",
+  "order.discount": "Discount",
+  "order.promo": "Promo",
+  "order.payment": "Payment",
+  "order.total": "Total",
+  "order.date": "Date",
+  "order.action": "Action",
+  "order.code": "Code",
+
+  "order": {
+    "title": "Order Management",
+    "detail": {
+      "title": "Order Detail",
+      "print": "Print Order",
+      "back": "Back to Orders",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "total": "Total",
+      "payment": "Payment",
+      "thanks": "Thank you for ordering!",
+      "printed": "Printed on",
+      "loading": "Loading order details..."
+    },
+    "code": "Order Code",
+    "user": "User",
+    "status": {
+      "all": "Status",
+      "pending": "Pending",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "date": "Date",
+    "promo": "Promo Code",
+    "payment_method": "Payment Method",
+    "total": "Total Amount",
+    "item": "Item",
+    "qty": "Qty",
+    "price": "Price",
+    "subtotal": "Subtotal"
+  },
+
+  "categories": {
+    "title": "Categories",
+    "add": "Add Category",
+    "total": "Total Categories",
+    "name": "Name",
+    "actions": "Actions",
+    "empty": "No categories found.",
+    "confirmDelete": "Are you sure you want to delete '{name}'? This will also delete all related menu items."
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+
+  "menu": {
+    "title": "Menu Items",
+    "add": "Add Item",
+    "total": "Total Menu Items",
+    "image": "Image",
+    "name": "Name",
+    "price": "Price",
+    "category": "Category",
+    "actions": "Actions",
+    "empty": "No menu items found.",
+    "confirmDelete": "Are you sure you want to delete '{name}'?"
+  },
+
+  "add_menu": {
+    "addTitle": "Add Menu Item",
+    "editTitle": "Edit Menu Item",
+    "image": "Image",
+    "name": "Name",
+    "price": "Price",
+    "category": "Category",
+    "selectCategory": "-- Select Category --",
+    "saveEdit": "Save Changes"
+  },
+
+  "category": {
+    "addTitle": "Add Category",
+    "editTitle": "Edit Category",
+    "placeholder": "Category Name"
+  },
+
+  "stock": {
+    "title": "Stock Management",
+    "add": "Add Stock",
+    "update": "Update Stock",
+    "total": "Total Ingredients in Stock",
+    "ingredient": "Ingredient",
+    "quantity": "Quantity",
+    "level": "Level",
+    "updated": "Last Updated",
+    "action": "Action",
+    "selectIngredient": "Ingredient",
+    "currentQty": "Current Quantity",
+    "addQty": "Add Quantity",
+    "lowStockAlert": "Low stock on",
+    "addSuccess": "Added stock successfully",
+    "updateSuccess": "Updated stock successfully",
+    "addQtyPlaceholder": "Enter quantity to add",
+    "noRecord": "No stock records found.",
+    "low": "Low",
+    "selectPlaceholder": "-- Select Ingredient --"
+  },
+
+  "recipe": {
+    "title": "📋 Recipe Management",
+    "subtitle": "Manage how each menu item is composed from ingredients.",
+    "addButton": "Add Recipe",
+    "selectMenu": "Select Menu Item",
+    "selectMenuPlaceholder": "-- Choose Menu Item --",
+    "table": {
+      "ingredient": "Ingredient",
+      "quantity": "Quantity",
+      "action": "Action"
+    },
+    "delete": "Delete",
+    "addModal": {
+      "title": "Add Ingredient to Recipe",
+      "ingredient": "Ingredient",
+      "quantity": "Quantity"
+    },
+    "confirm": {
+      "title": "⚠️ Confirm Deletion",
+      "body": "Are you sure you want to remove this ingredient from the recipe?"
+    },
+    "successAdd": "✅ Ingredient added to recipe!",
+    "successDelete": "✅ Ingredient removed from recipe!"
+  },
+
+  "ingredient": {
+    "title": "🥬 Ingredient Management",
+    "subtitle": "Track and manage all ingredients in your stock.",
+    "addButton": "Add Ingredient",
+    "name": "Name",
+    "unit": "Unit",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "editTitle": "✏️ Edit Ingredient",
+    "addTitle": "➕ Add Ingredient",
+    "namePlaceholder": "e.g. Sugar, Milk",
+    "unitPlaceholder": "e.g. kg, ml, pcs",
+    "noData": "No ingredients found.",
+    "confirmDeleteTitle": "⚠️ Confirm Deletion",
+    "confirmDeleteText": "Are you sure you want to delete this ingredient?",
+    "successAdd": "✅ Ingredient added successfully!",
+    "successUpdate": "✅ Ingredient updated successfully!",
+    "successDelete": "✅ Ingredient deleted successfully!",
+    "errorExists": "Ingredient with this name already exists.",
+    "errorAnotherExists": "Another ingredient with this name already exists.",
+    "errorRequired": "Name and unit are required."
+  },
+
+  "discounts": {
+    "title": "Discounts",
+    "description": "Manage discount codes and offers.",
+    "code": "Code",
+    "type": "Type",
+    "value": "Value",
+    "expires": "Expires",
+    "expires_at": "Expires At",
+    "active": "Active",
+    "actions": "Actions",
+    "add": "Add Discount",
+    "edit": "Edit Discount",
+    "create": "Create",
+    "update": "Update",
+    "percentage": "Percentage (%)",
+    "amount": "Amount ($)",
+    "add_button": "➕ Add Discount",
+    "percent": "Percent",
+    "fixed": "Fixed",
+    "never": "Never",
+    "delete_confirm": "Are you sure you want to delete this discount?",
+    "create_success": "Discount created successfully!",
+    "update_success": "Discount updated successfully!",
+    "delete_success": "Discount deleted successfully!",
+    "delete_error": "Failed to delete discount.",
+    "error": "Something went wrong!"
+  },
+
+  "user": {
+    "manage_users": "👤 Manage Users",
+    "user_management": "👥 User Management",
+    "add_title": "Add New User",
+    "edit_title": "Edit User",
+    "created": "User created successfully!",
+    "updated": "User updated successfully!",
+    "add_failed": "Failed to add user",
+    "update_failed": "Failed to update user",
+    "deleted": "User deleted successfully!",
+    "delete_failed": "Failed to delete user",
+    "confirm_delete_title": "Confirm Delete",
+    "confirm_delete_text": "Are you sure you want to delete"
+  },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "role": "Role",
+    "name_placeholder": "Enter full name",
+    "email_placeholder": "example@mail.com",
+    "password_placeholder": "********"
+  },
+  "action": {
+    "add_user": "Add User",
+    "edit": "Edit",
+    "delete": "Delete",
+    "actions": "Actions",
+    "cancel": "Cancel",
+    "create": "Create",
+    "update": "Update",
+    "confirm_delete": "Yes, Delete"
+  },
+  "roles": {
+    "super admin": "Super Admin",
+    "admin": "Admin",
+    "cashier": "Cashier",
+    "customer": "Customer",
+    "table": "Table",
+    "unknown": "Unknown"
+  }
+
+}
+
+
+
+
+

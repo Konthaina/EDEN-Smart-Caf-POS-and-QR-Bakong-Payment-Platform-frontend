@@ -1,46 +1,73 @@
 <template>
   <AppLayout>
-    <div class="p-6 space-y-6">
+    <div class="p-6 space-y-8 dark:bg-gray-900 min-h-screen text-gray-800 dark:text-gray-100">
+      <!-- Header -->
       <div class="flex justify-between items-center">
-        <div>
-          <h1 class="text-2xl font-bold text-gray-800">Menu Items</h1>
-          <p class="text-sm text-gray-500">Manage food and drink offerings.</p>
-        </div>
-        <button @click="openAddModal"
-          class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center gap-2">
-          ➕ Add Item
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">🍽️ {{ $t('menu.title') }}</h1>
+        <button
+          @click="openAddModal"
+          class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-5 py-2 rounded-full font-semibold shadow transition-all duration-200 flex items-center gap-2"
+        >
+          {{ $t('menu.add') }}
         </button>
       </div>
 
-      <!-- Table Container -->
-      <div class="bg-white rounded-xl shadow overflow-hidden flex flex-col" style="height: calc(100vh - 200px)">
-        <!-- Table Header (non-scrollable) -->
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50 text-left text-sm text-gray-600 sticky top-0 z-10">
-            <tr>
-              <th class="px-6 py-3 font-semibold">Image</th>
-              <th class="px-6 py-3 font-semibold">Name</th>
-              <th class="px-6 py-3 font-semibold">Price</th>
-              <th class="px-6 py-3 font-semibold">Category</th>
-              <th class="px-6 py-3 font-semibold">Actions</th>
-            </tr>
-          </thead>
-        </table>
+      <!-- Summary -->
+      <div class="text-sm text-gray-600 dark:text-gray-300">
+        {{ $t('menu.total') }}: <strong>{{ menuItems.length }}</strong>
+      </div>
 
-        <!-- Scrollable Body -->
-        <div class="overflow-y-auto flex-1 custom-scroll">
-          <table class="min-w-full divide-y divide-gray-200">
-            <tbody class="divide-y divide-gray-100 text-sm">
-              <tr v-for="item in menuItems" :key="item.id">
-                <td class="px-6 py-4">
-                  <img :src="`/storage/${item.image}`" class="w-10 h-10 rounded object-cover" />
+      <!-- Table -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden h-[calc(100vh-220px)]">
+        <div class="overflow-y-auto h-full no-scrollbar">
+          <table class="min-w-full table-fixed divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+            <thead class="bg-gray-100 dark:bg-gray-700 sticky top-0 z-10 text-left text-gray-600 dark:text-gray-200 border-b dark:border-gray-600">
+              <tr>
+                <th class="px-4 py-3 font-semibold align-middle w-[100px]">{{ $t('menu.image') }}</th>
+                <th class="px-4 py-3 font-semibold align-middle w-[200px]">{{ $t('menu.name') }}</th>
+                <th class="px-4 py-3 font-semibold align-middle w-[100px]">{{ $t('menu.price') }}</th>
+                <th class="px-4 py-3 font-semibold align-middle w-[150px]">{{ $t('menu.category') }}</th>
+                <th class="px-4 py-3 font-semibold align-middle w-[180px]">{{ $t('menu.actions') }}</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+              <tr
+                v-for="item in menuItems"
+                :key="item.id"
+                class="hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+              >
+                <td class="px-4 py-3 align-middle">
+                  <img
+                    :src="`http://188.166.196.32/storage/${item.image}`"
+                    alt="item image"
+                    class="w-12 h-12 rounded-lg object-cover border dark:border-gray-700"
+                  />
                 </td>
-                <td class="px-6 py-4 font-medium text-gray-800">{{ item.name }}</td>
-                <td class="px-6 py-4">${{ item.price }}</td>
-                <td class="px-6 py-4">{{ item.category?.name }}</td>
-                <td class="px-6 py-4">
-                  <button class="text-blue-600 hover:underline mr-2" @click="editItem(item)">Edit</button>
-                  <button class="text-red-600 hover:underline" @click="askDelete(item)">Delete</button>
+                <td class="px-4 py-3 font-medium text-gray-800 dark:text-white align-middle">{{ item.name }}</td>
+                <td class="px-4 py-3 text-gray-700 dark:text-gray-300 font-semibold align-middle">${{ item.price }}</td>
+                <td class="px-4 py-3 align-middle">
+                  <span class="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold">
+                    {{ item.category?.name || '—' }}
+                  </span>
+                </td>
+                <td class="px-4 py-3 space-x-2 align-middle">
+                  <button
+                    class="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition"
+                    @click="editItem(item)"
+                  >
+                    {{ $t('actions.edit') }}
+                  </button>
+                  <button
+                    class="bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 px-3 py-1 rounded-full text-xs font-medium hover:bg-red-200 dark:hover:bg-red-800 transition"
+                    @click="askDelete(item)"
+                  >
+                    {{ $t('actions.delete') }}
+                  </button>
+                </td>
+              </tr>
+              <tr v-if="menuItems.length === 0">
+                <td colspan="5" class="text-center py-8 text-gray-400 dark:text-gray-500 align-middle">
+                  {{ $t('menu.empty') }}
                 </td>
               </tr>
             </tbody>
@@ -53,71 +80,70 @@
     <AddMenuItemModal :show="showAddModal" @close="closeAddModal" @saved="handleSaved" />
     <EditMenuItemModal :show="showEditModal" :item="selectedItem" @close="closeEditModal" @saved="handleSaved" />
     <Toast ref="toastRef" />
-    <ConfirmModal :show="showConfirm" :message="`Are you sure you want to delete '${selectedItem?.name}'?`"
-      @confirm="confirmDelete" @cancel="cancelDelete" />
-
+    <ConfirmModal
+      :show="showConfirm"
+      :message="$t('menu.confirmDelete', { name: selectedItem?.name })"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </AppLayout>
 </template>
 
 <script setup>
-import AppLayout from '@/components/Common/AppLayout.vue';
-import AddMenuItemModal from '@/components/Menu/AddMenuItemModal.vue';
-import EditMenuItemModal from '@/components/Menu/EditMenuItemModal.vue';
-import { ref, onMounted } from 'vue';
-import api from '@/plugins/axios';
-import Toast from '@/components/Common/Toast.vue'
+import AppLayout from '@/components/Common/AppLayout.vue'
+import AddMenuItemModal from '@/components/Menu/AddMenuItemModal.vue'
+import EditMenuItemModal from '@/components/Menu/EditMenuItemModal.vue'
 import ConfirmModal from '@/components/Common/ConfirmModal.vue'
+import Toast from '@/components/Common/Toast.vue'
+import { ref, onMounted } from 'vue'
+import api from '@/plugins/axios'
 
+const menuItems = ref([])
+const showAddModal = ref(false)
+const showEditModal = ref(false)
 const showConfirm = ref(false)
+const selectedItem = ref(null)
 const toastRef = ref(null)
-const menuItems = ref([]);
-const showAddModal = ref(false);
-const showEditModal = ref(false);
-const selectedItem = ref(null);
 
 const fetchMenuItems = async () => {
-  const res = await api.get('/menu-items');
-  menuItems.value = res.data;
-};
+  const res = await api.get('/menu-items')
+  menuItems.value = res.data
+}
 
 const openAddModal = () => {
-  showAddModal.value = true;
-};
+  showAddModal.value = true
+}
 
 const closeAddModal = () => {
-  showAddModal.value = false;
-};
+  showAddModal.value = false
+}
+
+const editItem = (item) => {
+  selectedItem.value = item
+  showEditModal.value = true
+}
+
+const closeEditModal = () => {
+  selectedItem.value = null
+  showEditModal.value = false
+}
+
 const askDelete = (item) => {
   selectedItem.value = item
   showConfirm.value = true
 }
 
-const editItem = (item) => {
-  selectedItem.value = item;
-  showEditModal.value = true;
-};
-
-const closeEditModal = () => {
-  selectedItem.value = null;
-  showEditModal.value = false;
-};
-
-const handleSaved = () => {
-  fetchMenuItems()
-  toastRef.value?.showToast('✅ Item saved successfully!')
-}
-
-
-const deleteItem = async (id) => {
-  await api.delete(`/menu-items/${id}`)
-  fetchMenuItems()
-  toastRef.value?.showToast('🗑️ Item deleted successfully!')
-}
 const confirmDelete = async () => {
-  await api.delete(`/menu-items/${selectedItem.value.id}`)
-  fetchMenuItems()
-  showConfirm.value = false
-  toastRef.value?.showToast(`🗑️ ${selectedItem.value.name} deleted successfully!`)
+  try {
+    await api.delete(`/menu-items/${selectedItem.value.id}`)
+    toastRef.value?.showToast(`🗑️ ${selectedItem.value.name} deleted successfully!`)
+    fetchMenuItems()
+  } catch (error) {
+    toastRef.value?.showToast('❌ Failed to delete item.')
+  } finally {
+    showConfirm.value = false
+    selectedItem.value = null
+  }
 }
 
 const cancelDelete = () => {
@@ -125,16 +151,19 @@ const cancelDelete = () => {
   selectedItem.value = null
 }
 
-
-onMounted(fetchMenuItems);
-</script>
-
-<style>
-.custom-scroll::-webkit-scrollbar {
-  display: none;
+const handleSaved = () => {
+  fetchMenuItems()
+  toastRef.value?.showToast('✅ Item saved successfully!')
 }
 
-.custom-scroll {
+onMounted(fetchMenuItems)
+</script>
+
+<style scoped>
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }

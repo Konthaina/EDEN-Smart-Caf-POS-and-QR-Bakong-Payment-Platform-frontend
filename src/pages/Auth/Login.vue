@@ -1,67 +1,60 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="bg-white shadow-md rounded-lg flex w-[900px] overflow-hidden">
+    <div class="bg-white shadow-xl rounded-2xl flex w-full max-w-4xl overflow-hidden">
+      
       <!-- Left Image -->
       <div class="w-1/2 hidden md:block">
-        <img
-          src="/login-image.jpg"
-          alt="POS"
-          class="h-full w-full object-cover"
-        />
+        <img src="/login-image.jpg" alt="POS" class="h-full w-full object-cover" />
       </div>
 
       <!-- Right Form -->
-      <div class="w-full md:w-1/2 p-8 flex flex-col justify-center">
-        <div class="text-center mb-6">
-          <div
-            class="w-12 h-12 bg-indigo-500 rounded-full mx-auto mb-2 flex items-center justify-center text-white text-2xl font-bold"
-          >
+      <div class="w-full md:w-1/2 p-10 flex flex-col justify-center space-y-6">
+
+        <!-- Logo -->
+        <div class="text-center">
+          <div class="w-14 h-14 bg-indigo-500 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold">
             ☕
           </div>
-          <h1 class="text-2xl font-bold text-gray-700">Welcome to Eden</h1>
+          <h1 class="text-2xl font-bold text-gray-800 mt-2">{{ $t('login.welcome') }}</h1>
+          <p class="text-sm text-gray-500">{{ $t('login.subtitle') }}</p>
         </div>
 
-        <form @submit.prevent="handleLogin" class="space-y-4">
+        <!-- Login Form -->
+        <form @submit.prevent="handleLogin" class="space-y-5">
           <div>
-            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('login.email') }}</label>
             <input
               v-model="email"
               type="email"
-              placeholder="you@example.com"
-              class="w-full mt-1 px-4 py-2 border rounded-full focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+              :placeholder="$t('login.email_placeholder')"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               required
             />
           </div>
+
           <div>
-            <label class="block text-sm font-medium text-gray-700"
-              >Password</label
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('login.password') }}</label>
             <input
               v-model="password"
               type="password"
-              placeholder="••••••••"
-              class="w-full mt-1 px-4 py-2 border rounded-full focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+              :placeholder="$t('login.password_placeholder')"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               required
             />
           </div>
 
           <button
             type="submit"
-            class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-full transition duration-200 font-semibold"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition"
           >
-            Login
+            {{ $t('login.signin') }}
           </button>
         </form>
 
-        <div class="flex justify-between mt-4 text-sm">
-          <router-link to="/register" class="text-indigo-500 hover:underline"
-            >Create Account</router-link
-          >
-          <router-link
-            to="/forgot-password"
-            class="text-gray-500 hover:underline"
-            >Forgot Password?</router-link
-          >
+        <!-- Links -->
+        <div class="flex justify-between text-sm text-gray-600">
+          <router-link to="/register" class="hover:text-indigo-600">{{ $t('login.create_account') }}</router-link>
+          <router-link to="/forgot-password" class="hover:text-indigo-600">{{ $t('login.forgot_password') }}</router-link>
         </div>
       </div>
     </div>
@@ -71,8 +64,10 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import api from "@/plugins/axios";
 
+const { locale } = useI18n();
 const email = ref("");
 const password = ref("");
 const router = useRouter();
@@ -91,7 +86,6 @@ const handleLogin = async () => {
     localStorage.setItem("user", JSON.stringify(user));
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-    // Redirect based on role (optional)
     router.push("/dashboard");
   } catch (err) {
     alert("Login failed. Please check your credentials.");

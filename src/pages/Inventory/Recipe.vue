@@ -1,65 +1,74 @@
 <template>
   <AppLayout>
-    <div class="p-6 space-y-6">
+    <div class="p-6 space-y-8">
       <!-- Header -->
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-2xl font-bold text-gray-800">📋 Recipe Management</h1>
-          <p class="text-sm text-gray-500">Manage how each menu item is composed from ingredients.</p>
+          <h1 class="text-2xl font-bold text-gray-800">{{ $t('recipe.title') }}</h1>
+          <p class="text-sm text-gray-500">{{ $t('recipe.subtitle') }}</p>
         </div>
-        <button @click="openAddModal"
-          class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full flex items-center gap-2 shadow">
-          ➕ Add Recipe
+        <button
+          @click="openAddModal"
+          class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-5 py-2 rounded-full font-semibold shadow flex items-center gap-2 transition-all duration-200"
+        >
+          ➕ {{ $t('recipe.addButton') }}
         </button>
       </div>
 
-      <!-- Alert Box -->
+      <!-- Success Alert -->
       <transition name="fade">
-        <div v-if="successMessage"
-          class="flex items-center justify-between bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded shadow">
+        <div
+          v-if="successMessage"
+          class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-xl flex justify-between items-center shadow max-w-2xl"
+        >
           <div class="flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span class="text-sm font-medium">{{ successMessage }}</span>
+            <span class="text-sm font-medium">{{ $t(successMessage) }}</span>
           </div>
-          <button @click="successMessage = ''" class="text-green-600 hover:text-green-800 text-sm font-bold">
-            ✖
-          </button>
+          <button @click="successMessage = ''" class="text-green-600 hover:text-red-600 font-bold">✖</button>
         </div>
       </transition>
 
       <!-- Menu Item Selector -->
-      <div class="bg-white p-4 rounded-xl shadow w-full max-w-md">
-        <label class="block text-sm font-medium text-gray-600 mb-1">Select Menu Item</label>
-        <select v-model="selectedMenuItemId" @change="filterRecipes"
-          class="w-full border px-3 py-2 rounded focus:ring focus:ring-purple-300">
-          <option disabled value="">-- Choose Menu Item --</option>
-          <option v-for="item in menuItems" :key="item.id" :value="item.id">
-            {{ item.name }}
-          </option>
+      <div class="bg-white p-5 rounded-xl shadow max-w-md w-full">
+        <label class="text-sm font-medium text-gray-700 block mb-2">{{ $t('recipe.selectMenu') }}</label>
+        <select
+          v-model="selectedMenuItemId"
+          @change="filterRecipes"
+          class="w-full border border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500 px-4 py-2 text-sm"
+        >
+          <option disabled value="">{{ $t('recipe.selectMenuPlaceholder') }}</option>
+          <option v-for="item in menuItems" :key="item.id" :value="item.id">{{ item.name }}</option>
         </select>
       </div>
 
       <!-- Recipe Table -->
       <div v-if="filteredRecipes.length > 0" class="bg-white rounded-xl shadow overflow-x-auto">
-        <table class="min-w-full text-sm text-gray-700">
-          <thead class="bg-purple-50 text-purple-800 font-semibold text-left">
+        <table class="min-w-full text-sm text-gray-800">
+          <thead class="bg-purple-100 text-purple-700 font-semibold text-left">
             <tr>
-              <th class="px-4 py-3">Ingredient</th>
-              <th class="px-4 py-3">Quantity</th>
-              <th class="px-4 py-3 text-center">Action</th>
+              <th class="px-6 py-3">{{ $t('recipe.table.ingredient') }}</th>
+              <th class="px-6 py-3">{{ $t('recipe.table.quantity') }}</th>
+              <th class="px-6 py-3 text-center">{{ $t('recipe.table.action') }}</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="recipe in filteredRecipes" :key="recipe.id" class="border-t hover:bg-gray-50 transition">
-              <td class="px-4 py-2 font-medium">{{ recipe.ingredient.name }}</td>
-              <td class="px-4 py-2">{{ recipe.quantity }} {{ recipe.ingredient.unit }}</td>
-              <td class="px-4 py-2 text-center">
-                <button class="text-red-600 hover:bg-red-50 px-3 py-1 text-xs rounded-full border border-red-100"
-                  @click="promptDelete(recipe.id)">
-                  Delete
+            <tr
+              v-for="recipe in filteredRecipes"
+              :key="recipe.id"
+              class="border-t hover:bg-gray-50 transition-all"
+            >
+              <td class="px-6 py-3 font-medium">{{ recipe.ingredient.name }}</td>
+              <td class="px-6 py-3">{{ recipe.quantity }} {{ recipe.ingredient.unit }}</td>
+              <td class="px-6 py-3 text-center">
+                <button
+                  @click="promptDelete(recipe.id)"
+                  class="text-red-600 hover:text-white hover:bg-red-500 border border-red-300 px-3 py-1 rounded-full text-xs font-medium transition"
+                >
+                  {{ $t('recipe.delete') }}
                 </button>
               </td>
             </tr>
@@ -67,38 +76,52 @@
         </table>
       </div>
 
-      <!-- Add Modal -->
+      <!-- Add Recipe Modal -->
       <teleport to="body">
-        <div v-if="openModal" class="fixed inset-0 z-[999] flex items-center justify-center">
-          <!-- Overlay -->
-          <div class="absolute inset-0 bg-black bg-opacity-50 z-[998]"></div>
+        <div v-if="openModal" class="fixed inset-0 z-[999] flex items-center justify-center px-4">
+          <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+          <div class="bg-white p-6 rounded-xl shadow-lg z-[1000] max-w-md w-full space-y-5">
+            <h2 class="text-lg font-bold text-gray-700">➕ {{ $t('recipe.addModal.title') }}</h2>
 
-          <div class="bg-white relative z-[999] w-full max-w-md p-6 rounded-xl shadow space-y-4">
-            <h2 class="text-lg font-bold text-gray-700">➕ Add Ingredient to Recipe</h2>
-
-            <div class="space-y-3">
+            <div class="space-y-4">
               <div>
-                <label class="text-sm block mb-1">Ingredient</label>
-                <select v-model="form.ingredient_id" class="w-full border px-3 py-2 rounded focus:ring-purple-300">
-                  <option disabled value="">-- Select Ingredient --</option>
-                  <option v-for="ingredient in availableIngredients" :key="ingredient.id" :value="ingredient.id">
+                <label class="text-sm font-medium text-gray-600 block mb-1">{{ $t('recipe.addModal.ingredient') }}</label>
+                <select
+                  v-model="form.ingredient_id"
+                  class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500 px-4 py-2"
+                >
+                  <option disabled value="">{{ $t('recipe.selectMenuPlaceholder') }}</option>
+                  <option
+                    v-for="ingredient in availableIngredients"
+                    :key="ingredient.id"
+                    :value="ingredient.id"
+                  >
                     {{ ingredient.name }} ({{ ingredient.unit }})
                   </option>
                 </select>
               </div>
 
               <div>
-                <label class="text-sm block mb-1">Quantity</label>
-                <input type="number" step="0.01" v-model="form.quantity"
-                  class="w-full border px-3 py-2 rounded focus:ring-purple-300" placeholder="e.g. 0.5" />
+                <label class="text-sm font-medium text-gray-600 block mb-1">{{ $t('recipe.addModal.quantity') }}</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  v-model="form.quantity"
+                  class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500 px-4 py-2"
+                  placeholder="e.g. 0.5"
+                />
               </div>
             </div>
 
-            <div class="flex justify-end gap-2 pt-4">
-              <button @click="closeModal" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Cancel</button>
-              <button @click="submitRecipe"
-                class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">
-                Save
+            <div class="flex justify-end gap-3 pt-4">
+              <button @click="closeModal" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm">
+                {{ $t('common.cancel') }}
+              </button>
+              <button
+                @click="submitRecipe"
+                class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm transition"
+              >
+                {{ $t('common.save') }}
               </button>
             </div>
           </div>
@@ -107,21 +130,20 @@
 
       <!-- Confirm Delete Modal -->
       <teleport to="body">
-        <div v-if="showConfirm" class="fixed inset-0 z-[999] flex items-center justify-center">
-          <!-- Overlay -->
-          <div class="absolute inset-0 bg-black bg-opacity-50 z-[998]"></div>
-
-          <div class="bg-white relative z-[999] w-full max-w-sm p-6 rounded-xl shadow space-y-4 text-center">
-            <h2 class="text-lg font-semibold text-gray-800">Confirm Deletion</h2>
-            <p class="text-sm text-gray-600">
-              Are you sure you want to remove this ingredient from the recipe?
-            </p>
-            <div class="flex justify-center gap-4 pt-4">
-              <button @click="cancelDelete" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">
-                Cancel
+        <div v-if="showConfirm" class="fixed inset-0 z-[999] flex items-center justify-center px-4">
+          <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+          <div class="bg-white p-6 rounded-xl shadow-lg z-[1000] max-w-sm w-full text-center space-y-5">
+            <h2 class="text-lg font-semibold text-gray-800">{{ $t('recipe.confirm.title') }}</h2>
+            <p class="text-sm text-gray-600">{{ $t('recipe.confirm.body') }}</p>
+            <div class="flex justify-center gap-3 pt-2">
+              <button @click="cancelDelete" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm">
+                {{ $t('common.cancel') }}
               </button>
-              <button @click="confirmDelete" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                Yes, Delete
+              <button
+                @click="confirmDelete"
+                class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+              >
+                {{ $t('common.confirmDelete') }}
               </button>
             </div>
           </div>
@@ -134,7 +156,10 @@
 <script setup>
 import AppLayout from '@/components/Common/AppLayout.vue'
 import { ref, onMounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import api from '@/plugins/axios'
+
+const { t } = useI18n()
 
 const menuItems = ref([])
 const ingredients = ref([])
@@ -181,7 +206,7 @@ function filterRecipes() {
 
 function openAddModal() {
   if (!selectedMenuItemId.value) {
-    alert('Please select a menu item first.')
+    alert(t('recipe.selectMenu'))
     return
   }
   form.value = {
@@ -203,7 +228,7 @@ async function submitRecipe() {
       quantity: parseFloat(form.value.quantity)
     })
     await refreshRecipes()
-    successMessage.value = '✅ Ingredient added to recipe!'
+    successMessage.value = 'recipe.successAdd'
     setTimeout(() => (successMessage.value = ''), 3000)
     closeModal()
   } catch (err) {
@@ -224,7 +249,7 @@ function cancelDelete() {
 async function confirmDelete() {
   try {
     await api.delete(`/recipes/${confirmRecipeId.value}`)
-    successMessage.value = '✅ Ingredient removed from recipe!'
+    successMessage.value = 'recipe.successDelete'
     setTimeout(() => (successMessage.value = ''), 3000)
     await refreshRecipes()
   } catch (err) {
@@ -249,7 +274,6 @@ onMounted(loadAll)
 .fade-leave-active {
   transition: opacity 0.3s ease;
 }
-
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
