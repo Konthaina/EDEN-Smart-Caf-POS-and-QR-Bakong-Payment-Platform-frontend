@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import axios from "@/plugins/axios";
 
 // Auth
 import Login from "@/pages/Auth/Login.vue";
@@ -41,56 +42,286 @@ import Settings from "@/pages/Settings/Settings.vue";
 // About Developer
 import About from "@/pages/Settings/About.vue";
 
+import Profile from "@/pages/Customer/Profile.vue";
+const MarketingBanner = () => import("@/pages/Marketing/MarketingBanner.vue");
+const NotificationManagement = () =>
+  import("@/pages/Marketing/NotificationManagement.vue");
+
+// Discounts (lazy-loaded)
+const DiscountManagement = () =>
+  import("@/pages/Discount/DiscountManagement.vue");
+
+// Customer Home (NEW)
+const CustomerHome = () => import("@/pages/Customer/Home.vue");
+
 const routes = [
   { path: "/", redirect: "/login" },
-  { path: "/login", name: "Login", component: Login, meta: { title: "Login - Cafe Eden" } },
-  { path: "/register", name: "Register", component: Register, meta: { title: "Register - Cafe Eden" } },
-  { path: "/reset-password", name: "ResetPassword", component: ResetPassword, meta: { title: "Reset Password - Cafe Eden" } },
-  { path: "/forgot-password", name: "ForgotPassword", component: ForgotPassword, meta: { title: "Forgot Password - Cafe Eden" } },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+    meta: { title: "Login - Cafe Eden" },
+  },
+  {
+    path: "/marketing/banner",
+    name: "MarketingBanner",
+    component: MarketingBanner,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin"],
+      title: "Banner Management - Cafe Eden",
+    },
+  },
+  {
+    path: "/marketing/notification",
+    name: "NotificationManagement",
+    component: NotificationManagement,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin"],
+      title: "Notification Management - Cafe Eden",
+    },
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register,
+    meta: { title: "Register - Cafe Eden" },
+  },
+  {
+    path: "/reset-password",
+    name: "ResetPassword",
+    component: ResetPassword,
+    meta: { title: "Reset Password - Cafe Eden" },
+  },
+  {
+    path: "/forgot-password",
+    name: "ForgotPassword",
+    component: ForgotPassword,
+    meta: { title: "Forgot Password - Cafe Eden" },
+  },
 
-  // Protected Routes
-  { path: "/dashboard", name: "Dashboard", component: DashboardOverview, meta: { requiresAuth: true, title: "Dashboard - Cafe Eden" } },
-  { path: "/pos", name: "POS", component: POSIndex, meta: { requiresAuth: true, title: "POS - Cafe Eden" } },
-  { path: "/orders", name: "Orders", component: ManageOrders, meta: { requiresAuth: true, title: "Orders - Cafe Eden" } },
-  { path: "/orders/:id", name: "OrderDetail", component: () => import("@/pages/Orders/OrderDetail.vue"), meta: { requiresAuth: true, title: "Order Detail - Cafe Eden" } },
+  // Dashboard: all roles
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: DashboardOverview,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier"],
+      title: "Dashboard - Cafe Eden",
+    },
+  },
 
-  // Menu Module
-  { path: "/menu/items", name: "MenuItems", component: MenuItems, meta: { requiresAuth: true, title: "Menu Items - Cafe Eden" } },
-  { path: "/menu/categories", name: "Categories", component: Categories, meta: { requiresAuth: true, title: "Categories - Cafe Eden" } },
+  // POS: staff only
+  {
+    path: "/pos",
+    name: "POS",
+    component: POSIndex,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier"],
+      title: "POS - Cafe Eden",
+    },
+  },
 
-  // Inventory Module
-  { path: "/inventory/stock", name: "Stock", component: Stock, meta: { requiresAuth: true, title: "Stock - Cafe Eden" } },
-  { path: "/inventory/recipe", name: "Recipe", component: Recipe, meta: { requiresAuth: true, title: "Recipes - Cafe Eden" } },
-  { path: "/inventory/ingredient", name: "Ingredient", component: Ingredient, meta: { requiresAuth: true, title: "Ingredients - Cafe Eden" } },
+  // Orders: staff only
+  {
+    path: "/orders",
+    name: "Orders",
+    component: ManageOrders,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier"],
+      title: "Orders - Cafe Eden",
+    },
+  },
+  {
+    path: "/orders/:id",
+    name: "OrderDetail",
+    component: () => import("@/pages/Orders/OrderDetail.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier"],
+      title: "Order Detail - Cafe Eden",
+    },
+  },
 
-  // Reports
-  { path: "/reports", name: "Reports", component: SalesReport, meta: { requiresAuth: true, title: "Reports - Cafe Eden" } },
+  // Menu Module: admin/staff only
+  {
+    path: "/menu/items",
+    name: "MenuItems",
+    component: MenuItems,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier"],
+      title: "Menu Items - Cafe Eden",
+    },
+  },
+  {
+    path: "/menu/categories",
+    name: "Categories",
+    component: Categories,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier"],
+      title: "Categories - Cafe Eden",
+    },
+  },
 
-  // User Management
-  { path: "/users", name: "Users", component: Users, meta: { requiresAuth: true, title: "User Management - Cafe Eden" } },
+  // Inventory Module: admin only
+  {
+    path: "/inventory/stock",
+    name: "Stock",
+    component: Stock,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin"],
+      title: "Stock - Cafe Eden",
+    },
+  },
+  {
+    path: "/inventory/recipe",
+    name: "Recipe",
+    component: Recipe,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin"],
+      title: "Recipes - Cafe Eden",
+    },
+  },
+  {
+    path: "/inventory/ingredient",
+    name: "Ingredient",
+    component: Ingredient,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin"],
+      title: "Ingredients - Cafe Eden",
+    },
+  },
 
-  // Analytics
-  { path: "/analytics", name: "Analytics", component: Analytics, meta: { requiresAuth: true, title: "Analytics - Cafe Eden" } },
+  // Reports: admin/staff only
+  {
+    path: "/reports",
+    name: "Reports",
+    component: SalesReport,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier"],
+      title: "Reports - Cafe Eden",
+    },
+  },
 
-  // Alerts
-  { path: "/messages", name: "Message", component: Message, meta: { requiresAuth: true, title: "Messages - Cafe Eden" } },
+  // User Management: admin only
+  {
+    path: "/users",
+    name: "Users",
+    component: Users,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin"],
+      title: "User Management - Cafe Eden",
+    },
+  },
 
-  // Notifications
-  { path: "/notifications", name: "Notifications", component: Notifications, meta: { requiresAuth: true, title: "Notifications - Cafe Eden" } },
+  // Analytics: admin only
+  {
+    path: "/analytics",
+    name: "Analytics",
+    component: Analytics,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin"],
+      title: "Analytics - Cafe Eden",
+    },
+  },
 
-  // Settings
-  { path: "/settings", name: "Settings", component: Settings, meta: { requiresAuth: true, title: "Settings - Cafe Eden" } },
+  // Alerts: all roles
+  {
+    path: "/messages",
+    name: "Message",
+    component: Message,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier", "Customer", "Table"],
+      title: "Messages - Cafe Eden",
+    },
+  },
 
-  // Discounts
+  // Notifications: all roles (this is the *user-facing* notification center)
+  {
+    path: "/notifications",
+    name: "Notifications",
+    component: Notifications,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier", "Customer", "Table"],
+      title: "Notifications - Cafe Eden",
+    },
+  },
+
+  // Settings: all roles
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier", "Customer", "Table"],
+      title: "Settings - Cafe Eden",
+    },
+  },
+
+  // Discounts: all roles
   {
     path: "/discounts",
     name: "Discounts",
-    component: () => import("@/pages/Discount/DiscountManagement.vue"),
-    meta: { requiresAuth: true, title: "Discounts - Cafe Eden" },
+    component: DiscountManagement,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier", "Customer", "Table"],
+      title: "Discounts - Cafe Eden",
+    },
   },
 
-  // About Developer
-  { path: "/about", name: "About", component: About, meta: { title: "About Developer - Cafe Eden" } },
+  // Customer Home: customer only
+  {
+    path: "/customer",
+    name: "CustomerHome",
+    component: CustomerHome,
+    meta: {
+      requiresAuth: true,
+      roles: ["Customer"],
+      title: "My Account - Cafe Eden",
+    },
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier", "Customer", "Table"],
+      title: "My Profile - Cafe Eden",
+    },
+  },
+
+  // Not found page
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: () => import("@/components/Common/NotFound.vue"),
+    meta: { title: "404 Not Found - Cafe Eden" },
+  },
+
+  // About
+  {
+    path: "/about",
+    name: "About",
+    component: About,
+    meta: { title: "About Developer - Cafe Eden" },
+  },
 ];
 
 const router = createRouter({
@@ -98,20 +329,75 @@ const router = createRouter({
   routes,
 });
 
-// Set document title and check auth before each route
-router.beforeEach((to, from, next) => {
+// --- Role-to-home function ---
+function getHomeRouteByRole(role) {
+  switch (role) {
+    case "Super Admin":
+    case "Admin":
+    case "Cashier":
+      return { name: "Dashboard" };
+    case "Customer":
+      return { name: "CustomerHome" };
+    case "Table":
+      return { name: "POS" };
+    default:
+      return { name: "Login" };
+  }
+}
+
+// --- Navigation Guard ---
+router.beforeEach(async (to, from, next) => {
   const defaultTitle = "Cafe Eden";
   document.title = to.meta.title || defaultTitle;
 
   const token = localStorage.getItem("token");
   const isLoggedIn = !!token;
 
+  // Redirect authenticated users from login/register to their home page
+  if ((to.name === "Login" || to.name === "Register") && isLoggedIn) {
+    let userRole = localStorage.getItem("role");
+    if (!userRole) {
+      try {
+        const res = await axios.get("/me");
+        userRole = res.data.role?.name || res.data.role || "";
+        localStorage.setItem("role", userRole);
+      } catch (err) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        return next({ name: "Login" });
+      }
+    }
+    return next(getHomeRouteByRole(userRole));
+  }
+
   if (to.meta.requiresAuth && !isLoggedIn) {
     return next({ name: "Login" });
   }
 
-  if ((to.name === "Login" || to.name === "Register") && isLoggedIn) {
-    return next({ name: "Dashboard" });
+  if (!to.meta.roles) return next();
+
+  let userRole = localStorage.getItem("role");
+  if (!userRole && isLoggedIn) {
+    try {
+      const res = await axios.get("/me");
+      userRole = res.data.role?.name || res.data.role || "";
+      localStorage.setItem("role", userRole);
+    } catch (err) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      return next({ name: "Login" });
+    }
+  }
+
+  if (!userRole || !to.meta.roles.includes(userRole)) {
+    if (window.$toast) window.$toast.error("No access permission!");
+    const homeRoute = getHomeRouteByRole(userRole);
+    if (to.name !== homeRoute.name) {
+      return next(homeRoute);
+    } else {
+      // Already at home page, do nothing (avoid infinite redirect)
+      return;
+    }
   }
 
   next();

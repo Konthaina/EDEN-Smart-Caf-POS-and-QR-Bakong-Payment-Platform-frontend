@@ -1,0 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer&family=Battambang&family=Siemreap&family=Poppins&display=swap");
+
+:root {
+  --font-en: "Poppins", sans-serif;
+  --font-km: "Noto Sans Khmer", sans-serif;
+}
+
+body {
+  font-family: var(--font-en);
+}
+
+body.khmer {
+  font-family: var(--font-km);
+}

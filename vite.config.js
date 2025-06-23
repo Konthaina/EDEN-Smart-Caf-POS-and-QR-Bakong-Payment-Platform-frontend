@@ -14,7 +14,7 @@ export default defineConfig({
   server: {
     proxy: {
       // Forward /storage requests to Laravel
-      "/storage": "http://localhost:8000",
+      "/storage": "http://127.0.0.1:8000",
     },
   },
 });

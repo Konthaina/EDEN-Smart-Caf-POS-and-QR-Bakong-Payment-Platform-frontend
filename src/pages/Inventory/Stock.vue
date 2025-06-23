@@ -4,48 +4,43 @@
     <transition name="fade">
       <div
         v-if="showLowStockAlert"
-        class="fixed top-4 left-1/2 -translate-x-1/2 bg-red-100 border border-red-300 text-red-800 px-6 py-3 rounded-xl shadow-lg z-50 flex items-center gap-3 max-w-lg"
+        class="fixed top-4 left-1/2 -translate-x-1/2 bg-red-100 dark:bg-red-300 border border-red-300 dark:border-red-400 text-red-800 px-6 py-3 rounded-xl shadow-lg z-50 flex items-center gap-3 max-w-lg"
       >
         <span class="text-xl">⚠️</span>
         <div class="text-sm">
-          {{ $t('stock.lowStockAlert') }}: <strong>{{ lowStockItems.map(i => i.ingredient.name).join(', ') }}</strong>
+          {{ $t('stock.lowStockAlert') }}:
+          <strong>{{ lowStockItems.map(i => i.ingredient.name).join(', ') }}</strong>
         </div>
-        <button @click="showLowStockAlert = false" class="ml-auto text-red-600 hover:text-red-800 text-sm font-bold">✖</button>
+        <button @click="showLowStockAlert = false" class="ml-auto text-red-600 hover:text-red-800 text-sm font-bold">
+          ✖
+        </button>
       </div>
     </transition>
 
     <div class="p-6 space-y-6">
       <!-- Header -->
       <div class="flex justify-between items-center mb-4">
-        <h1 class="text-2xl font-bold flex items-center gap-2">
-          📦 {{ $t('stock.title') }}
-        </h1>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $t('stock.title') }}</h1>
+          <p class="text-sm text-gray-500 dark:text-gray-300">{{ $t('stock.subtitle') }}</p>
+        </div>
         <button
           @click="openAddForm"
           class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-5 py-2 rounded-full shadow flex items-center gap-2 text-sm transition"
         >
-          ➕ {{ $t('stock.add') }}
+          {{ $t('stock.add') }}
         </button>
       </div>
 
-      <!-- Success Message -->
-      <div
-        v-if="successMessage"
-        class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-xl flex justify-between items-center shadow max-w-xl"
-      >
-        <span class="text-sm">{{ successMessage }}</span>
-        <button @click="successMessage = ''" class="text-green-700 hover:text-red-500 font-bold text-sm">✖</button>
-      </div>
-
       <!-- Stock Summary -->
-      <div class="text-sm text-gray-600">
+      <div class="text-sm text-gray-600 dark:text-gray-300">
         {{ $t('stock.total') }}: <strong>{{ stocks.length }}</strong>
       </div>
 
       <!-- Stock Table -->
-      <div class="max-h-[490px] overflow-y-auto custom-scroll rounded-xl shadow-lg">
-        <table class="min-w-full text-sm bg-white">
-          <thead class="bg-purple-50 text-purple-800 text-left font-semibold sticky top-0 z-10">
+      <div class="max-h-[480px] overflow-y-auto custom-scroll rounded-xl shadow-lg">
+        <table class="min-w-full text-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100">
+          <thead class="bg-purple-50 dark:bg-gray-700 text-purple-800 dark:text-purple-300 text-left font-semibold sticky top-0 z-10">
             <tr>
               <th class="px-4 py-3">#</th>
               <th class="px-4 py-3">{{ $t('stock.ingredient') }}</th>
@@ -56,12 +51,16 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(stock, index) in stocks" :key="stock.id" class="border-t hover:bg-gray-50 transition">
+            <tr
+              v-for="(stock, index) in stocks"
+              :key="stock.id"
+              class="border-t dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+            >
               <td class="px-4 py-3">{{ index + 1 }}</td>
               <td class="px-4 py-3 font-medium">{{ stock.ingredient.name }}</td>
               <td class="px-4 py-3">{{ stock.quantity }} {{ stock.ingredient.unit }}</td>
               <td class="px-4 py-3">
-                <div class="relative w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div class="relative w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3 overflow-hidden">
                   <div
                     class="h-3 rounded-full absolute top-0 left-0 flex items-center justify-center text-[10px] font-medium transition-all duration-500"
                     :style="{ width: getStockLevel(stock) + '%' }"
@@ -86,7 +85,7 @@
               <td class="px-4 py-3">{{ formatDate(stock.updated_at) }}</td>
               <td class="px-4 py-3 text-center">
                 <button
-                  class="px-4 py-1 text-blue-600 border border-blue-200 rounded-full hover:bg-blue-50 text-xs"
+                  class="px-4 py-1 text-blue-600 border border-blue-200 dark:border-blue-400 dark:text-blue-400 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900 text-xs"
                   @click="editStock(stock)"
                 >
                   {{ $t('stock.update') }}
@@ -94,7 +93,9 @@
               </td>
             </tr>
             <tr v-if="stocks.length === 0">
-              <td colspan="6" class="text-center text-gray-400 py-6">{{ $t('stock.noRecord') }}</td>
+              <td colspan="6" class="text-center text-gray-400 dark:text-gray-500 py-6">
+                {{ $t('stock.noRecord') }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -105,24 +106,24 @@
         <div v-if="openModal" class="fixed inset-0 z-[999] flex items-center justify-center">
           <div class="absolute inset-0 bg-black bg-opacity-50 z-[998]"></div>
 
-          <div class="relative z-[999] bg-white w-full max-w-md rounded-xl shadow-lg p-6 space-y-4">
-            <h2 class="text-lg font-bold text-gray-800">
-              {{ isEditing ? '🖊️ ' + $t('stock.update') : '➕ ' + $t('stock.add') }}
+          <div class="relative z-[999] bg-white dark:bg-gray-800 w-full max-w-md rounded-xl shadow-lg p-6 space-y-4">
+            <h2 class="text-lg font-bold text-gray-800 dark:text-white">
+              {{ isEditing ? $t('stock.update') : $t('stock.add') }}
             </h2>
 
             <div class="space-y-3">
               <div>
-                <label class="block text-sm font-medium mb-1">{{ $t('stock.selectIngredient') }}</label>
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">{{ $t('stock.selectIngredient') }}</label>
                 <input
                   v-if="isEditing"
                   v-model="selectedIngredientName"
                   disabled
-                  class="w-full border rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
+                  class="w-full border rounded px-3 py-2 bg-gray-100 dark:bg-gray-600 cursor-not-allowed text-gray-600 dark:text-white"
                 />
                 <select
                   v-else
                   v-model="form.ingredient_id"
-                  class="w-full border rounded px-3 py-2 focus:ring focus:border-purple-500"
+                  class="w-full border rounded px-3 py-2 focus:ring focus:border-purple-500 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 >
                   <option disabled value="">{{ $t('stock.selectPlaceholder') }}</option>
                   <option v-for="ingredient in availableIngredients" :key="ingredient.id" :value="ingredient.id">
@@ -132,20 +133,20 @@
               </div>
 
               <div v-if="isEditing">
-                <label class="block text-sm font-medium mb-1">{{ $t('stock.currentQty') }}</label>
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">{{ $t('stock.currentQty') }}</label>
                 <input
                   v-model="form.current_quantity"
                   disabled
-                  class="w-full border rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
+                  class="w-full border rounded px-3 py-2 bg-gray-100 dark:bg-gray-600 cursor-not-allowed text-gray-600 dark:text-white"
                 />
               </div>
 
               <div>
-                <label class="block text-sm font-medium mb-1">{{ $t('stock.addQty') }}</label>
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">{{ $t('stock.addQty') }}</label>
                 <input
                   type="number"
                   v-model="form.addQuantity"
-                  class="w-full border rounded px-3 py-2"
+                  class="w-full border rounded px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   :placeholder="$t('stock.addQtyPlaceholder')"
                 />
               </div>
@@ -154,7 +155,7 @@
             <div class="flex justify-end pt-4 space-x-2">
               <button
                 @click="closeModal"
-                class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm"
+                class="bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white px-4 py-2 rounded-full text-sm"
               >
                 {{ $t('common.cancel') }}
               </button>
@@ -176,13 +177,15 @@
 import AppLayout from '@/components/Common/AppLayout.vue'
 import { ref, computed, onMounted } from 'vue'
 import api from '@/plugins/axios'
+import { createToastInterface } from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
 
+const toast = createToastInterface()
 
 const stocks = ref([])
 const ingredients = ref([])
 const openModal = ref(false)
 const isEditing = ref(false)
-const successMessage = ref('')
 const showLowStockAlert = ref(false)
 const lowStockItems = ref([])
 
@@ -261,12 +264,12 @@ async function updateStock() {
       quantity: newQuantity
     })
 
-    successMessage.value = isEditing.value ? '✅ Stock updated successfully!' : '✅ Stock added successfully!'
+    toast.success(isEditing.value ? 'Stock updated successfully!' : 'Stock added successfully!')
     closeModal()
     await loadStocks()
-    setTimeout(() => (successMessage.value = ''), 3000)
   } catch (err) {
     console.error('Update Error:', err)
+    toast.error('Failed to update stock.')
   }
 }
 

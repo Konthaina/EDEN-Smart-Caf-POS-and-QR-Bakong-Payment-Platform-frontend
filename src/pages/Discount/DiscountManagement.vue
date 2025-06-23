@@ -1,6 +1,7 @@
 <template>
   <AppLayout>
     <div class="p-6 space-y-6">
+      <!-- Header -->
       <div class="flex justify-between items-center">
         <div>
           <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ t("discounts.title") }}</h1>
@@ -14,8 +15,13 @@
         </button>
       </div>
 
+      <!-- Summary -->
+      <div class="text-sm text-gray-600 dark:text-gray-300">
+        {{ $t('discounts.total') }}: <strong>{{ discounts.length }}</strong>
+      </div>
+
       <!-- Table -->
-      <div class="overflow-y-auto max-h-[530px] rounded-xl shadow no-scrollbar bg-white dark:bg-gray-800">
+      <div class="overflow-y-auto max-h-[480px] rounded-xl shadow no-scrollbar bg-white dark:bg-gray-800">
         <table class="w-full text-sm text-left bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100">
           <thead class="bg-gray-100 dark:bg-gray-700 sticky top-0 text-xs text-gray-700 dark:text-gray-200 font-semibold uppercase border-b dark:border-gray-600">
             <tr>

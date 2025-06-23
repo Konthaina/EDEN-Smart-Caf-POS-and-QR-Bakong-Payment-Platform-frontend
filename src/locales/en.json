@@ -1,6 +1,7 @@
 {
   "profile": {
     "title": "My Profile",
+    "subtitle": "Manage your personal information",
     "name": "Name",
     "phone": "Phone",
     "gender": "Gender",
@@ -17,7 +18,9 @@
     "confirm_password": "Confirm New Password",
     "select": "Select",
     "edit_profile": "Edit Profile",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "khmer_font": "Khmer Font",
+    "english_font": "English Font"
   },
   "common": {
     "cancel": "Cancel",
@@ -39,7 +42,7 @@
     "welcome": "Welcome to Eden",
     "subtitle": "Please login to continue",
     "email": "Email",
-    "email_placeholder": "you@example.com",
+    "email_placeholder": "your email",
     "password": "Password",
     "password_placeholder": "Enter password",
     "signin": "Sign In",
@@ -89,15 +92,18 @@
     "recipe": "Recipe",
     "ingredient": "Ingredient",
     "messages": "Messages",
-    "notifications": "Notifications",
     "profile_settings": "Profile Settings",
     "logout": "Logout",
     "management": "Management",
-    "personal": "Personal"
+    "personal": "Personal",
+    "marketing": "Marketing",
+    "banner": "Banner",
+    "notification": "Notification"
   },
 
   "dashboard": {
     "title": "Dashboard Overview",
+    "subtitle": "Welcome to Cafe Eden",
     "total_sales": "Total Revenue Today",
     "total_orders": "Total Orders Today",
     "total_customers": "Total Customers",
@@ -171,7 +177,8 @@
     "unknown": "Unknown"
   },
 
-  "order.title": "📦 Order Management",
+  "order.title": "Order Management",
+  "order.subtitle": "Manage and track all customer orders.",
   "order.status.all": "All Status",
   "order.status.pending": "Pending",
   "order.status.completed": "Completed",
@@ -180,8 +187,8 @@
   "order.showing": "Showing",
   "order.orders": "orders",
   "order.no_orders": "No orders found.",
-  "order.updated": "✅ Order status updated!",
-  "order.failed": "❌ Failed to download. Please check backend or file permissions.",
+  "order.updated": "Order status updated!",
+  "order.failed": "Failed to download. Please check backend or file permissions.",
   "order.view": "View",
   "order.user": "User Name",
   "order.discount": "Discount",
@@ -196,6 +203,7 @@
     "title": "Order Management",
     "detail": {
       "title": "Order Detail",
+      "subtitle": "View and print order details.",
       "print": "Print Order",
       "back": "Back to Orders",
       "subtotal": "Subtotal",
@@ -205,6 +213,12 @@
       "thanks": "Thank you for ordering!",
       "printed": "Printed on",
       "loading": "Loading order details..."
+    },
+    "toast": {
+      "update_success": "Order status updated successfully!",
+      "update_error": "Failed to update order status.",
+      "export_success": "Order exported successfully!",
+      "export_error": "Failed to export order. Please check backend or file permissions."
     },
     "code": "Order Code",
     "user": "User",
@@ -226,6 +240,7 @@
 
   "categories": {
     "title": "Categories",
+    "subtitle": "Organize your menu items into categories.",
     "add": "Add Category",
     "total": "Total Categories",
     "name": "Name",
@@ -240,8 +255,10 @@
 
   "menu": {
     "title": "Menu Items",
+    "subtitle": "Manage your menu items.",
     "add": "Add Item",
     "total": "Total Menu Items",
+    "available": "Quantity",
     "image": "Image",
     "name": "Name",
     "price": "Price",
@@ -270,6 +287,7 @@
 
   "stock": {
     "title": "Stock Management",
+    "subtitle": "Manage your ingredients stock levels.",
     "add": "Add Stock",
     "update": "Update Stock",
     "total": "Total Ingredients in Stock",
@@ -291,7 +309,7 @@
   },
 
   "recipe": {
-    "title": "📋 Recipe Management",
+    "title": "Recipe Management",
     "subtitle": "Manage how each menu item is composed from ingredients.",
     "addButton": "Add Recipe",
     "selectMenu": "Select Menu Item",
@@ -311,35 +329,37 @@
       "title": "⚠️ Confirm Deletion",
       "body": "Are you sure you want to remove this ingredient from the recipe?"
     },
-    "successAdd": "✅ Ingredient added to recipe!",
-    "successDelete": "✅ Ingredient removed from recipe!"
+    "successAdd": "Ingredient added to recipe!",
+    "successDelete": "Ingredient removed from recipe!"
   },
 
   "ingredient": {
-    "title": "🥬 Ingredient Management",
+    "title": "Ingredient Management",
     "subtitle": "Track and manage all ingredients in your stock.",
     "addButton": "Add Ingredient",
     "name": "Name",
     "unit": "Unit",
     "createdAt": "Created At",
     "actions": "Actions",
-    "editTitle": "✏️ Edit Ingredient",
-    "addTitle": "➕ Add Ingredient",
+    "editTitle": "Edit Ingredient",
+    "addTitle": "Add Ingredient",
     "namePlaceholder": "e.g. Sugar, Milk",
     "unitPlaceholder": "e.g. kg, ml, pcs",
     "noData": "No ingredients found.",
     "confirmDeleteTitle": "⚠️ Confirm Deletion",
     "confirmDeleteText": "Are you sure you want to delete this ingredient?",
-    "successAdd": "✅ Ingredient added successfully!",
-    "successUpdate": "✅ Ingredient updated successfully!",
-    "successDelete": "✅ Ingredient deleted successfully!",
+    "successAdd": "Ingredient added successfully!",
+    "successUpdate": "Ingredient updated successfully!",
+    "successDelete": "Ingredient deleted successfully!",
     "errorExists": "Ingredient with this name already exists.",
     "errorAnotherExists": "Another ingredient with this name already exists.",
-    "errorRequired": "Name and unit are required."
+    "errorRequired": "Name and unit are required.",
+    "total": "Total Ingredients"
   },
 
   "discounts": {
     "title": "Discounts",
+    "total": "Total Discounts",
     "description": "Manage discount codes and offers.",
     "code": "Code",
     "type": "Type",
@@ -354,7 +374,7 @@
     "update": "Update",
     "percentage": "Percentage (%)",
     "amount": "Amount ($)",
-    "add_button": "➕ Add Discount",
+    "add_button": "Add Discount",
     "percent": "Percent",
     "fixed": "Fixed",
     "never": "Never",
@@ -367,8 +387,10 @@
   },
 
   "user": {
-    "manage_users": "👤 Manage Users",
-    "user_management": "👥 User Management",
+    "manage_users": "Manage Users",
+    "subtitle": "Create and manage users for your cafe.",
+    "user_management": "User Management",
+    "total_users": "Total Users",
     "add_title": "Add New User",
     "edit_title": "Edit User",
     "created": "User created successfully!",
@@ -397,7 +419,8 @@
     "cancel": "Cancel",
     "create": "Create",
     "update": "Update",
-    "confirm_delete": "Yes, Delete"
+    "confirm_delete": "Yes, Delete",
+    "processing": "Processing..."
   },
   "roles": {
     "super admin": "Super Admin",
@@ -406,11 +429,113 @@
     "customer": "Customer",
     "table": "Table",
     "unknown": "Unknown"
+  },
+
+  "analysis": {
+    "title": "Analytics Dashboard",
+    "subtitle": "AI-powered cafe business insights",
+    "refresh": "Refresh Data",
+    "sales_trend": "Sales Trend & Forecast",
+    "ai": "AI",
+    "top_menu_items": "Top 10 Menu Items",
+    "menu_item": "Menu Item",
+    "sold": "Sold",
+    "no_data": "No data yet.",
+    "peak_hours": "Peak Hours",
+    "low_stock_risk": "Low Stock Risk (AI)",
+    "auto_detected": "Auto-detected",
+    "ingredient": "Ingredient",
+    "stock_left": "Stock Left",
+    "days_left": "Est. Days Left",
+    "critical": "Critical",
+    "warning": "Warning",
+    "no_low_stock": "No low stock items 🚀",
+    "frequently_bought": "AI recommendations for items frequently bought together.",
+    "buy_id": "When customer buys",
+    "recommend_id": "Recommend also",
+    "support": "Support",
+    "confidence": "Confidence",
+    "no_recommendations": "No recommendations yet.",
+    "promotion_effect": "Promotion Effectiveness",
+    "promo_code": "Promo Code",
+    "orders": "Orders",
+    "sales": "Sales",
+    "no_promotions": "No promotions used.",
+    "top_customers": "Top Seller",
+    "customer": "Name",
+    "spent": "Revenue",
+    "used/perday": "Average Used/Day"
+  },
+  "banners": {
+    "title": "Banner Management",
+    "description": "Manage promotional banners for the customer app.",
+    "add_button": "Add Banner",
+    "edit": "Edit Banner",
+    "add": "Add Banner",
+    "create": "Create",
+    "update": "Update",
+    "total": "Total banners",
+    "image": "Image",
+    "title_col": "Title",
+    "description_col": "Description",
+    "link": "Link",
+    "active": "Active",
+    "actions": "Actions",
+    "delete_confirm": "Are you sure you want to delete this banner?",
+    "empty": "No banners found.",
+    "fetch_error": "Failed to fetch banners.",
+    "save_error": "Failed to save banner.",
+    "create_success": "Banner created successfully.",
+    "update_success": "Banner updated successfully.",
+    "delete_success": "Banner deleted successfully.",
+    "delete_error": "Failed to delete banner.",
+    "display_order": "Display Order"
+  },
+  "notifications": {
+    "manage_notifications": "Notification Management",
+    "subtitle": "Send, schedule, and manage customer or staff notifications.",
+    "add_button": "Add Notification",
+    "total": "Total notifications",
+    "title_col": "Title",
+    "type": "Type",
+    "message": "Message",
+    "scheduled_at": "Schedule",
+    "recurring": "Recurring",
+    "recurring_type": "Repeat",
+    "recurring_value": "Repeat On",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "none": "None",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday",
+    "actions": "Actions",
+    "created": "Notification created.",
+    "updated": "Notification updated.",
+    "deleted": "Notification deleted.",
+    "add_failed": "Failed to create notification.",
+    "update_failed": "Failed to update notification.",
+    "delete_failed": "Failed to delete notification.",
+    "add_title": "Add Notification",
+    "edit_title": "Edit Notification",
+    "confirm_delete_title": "Delete Notification",
+    "confirm_delete_text": "Are you sure you want to delete notification:",
+    "null": "No",
+    "message_placeholder": "Enter notification message",
+    "title_placeholder": "Enter notification title",
+    "type_placeholder": "Enter notification type",
+    "recurring_value_week": "Repeat On",
+    "low_stock_alerts": "Low Stock Alerts",
+    "current_stock": "Current Stock",
+    "estimated_days_left": "Estimated Days Left",
+    "used_per_day": "Used Per Day",
+    "low": "Low stock",
+    "out_of_stock": "Out of stock",
+    "title": "Notifications of stock"
   }
-
 }
-
-
-
-
-

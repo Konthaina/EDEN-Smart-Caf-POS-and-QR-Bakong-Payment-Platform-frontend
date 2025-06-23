@@ -2,8 +2,11 @@
   <MainLayout>
     <div class="p-6 space-y-8">
       <!-- Header -->
-      <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">📊 {{ $t('dashboard.title') }}</h1>
+      <div class="flex justify-between items-center">  
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ t("dashboard.title") }}</h1>
+          <p class="text-sm text-gray-500 dark:text-gray-300">{{ t("dashboard.subtitle") }}</p>
+        </div>
           <button
             @click="logout"
             class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm rounded-full font-medium shadow transition"
@@ -85,7 +88,7 @@ onMounted(async () => {
     const [res1, res2, res3, res4] = await Promise.all([
       api.get('/reports/summary'),
       api.get('/reports/stats'),
-      api.get('/users'),
+      api.get('/users/view'),
       api.get('/reports/top-items')
     ])
 

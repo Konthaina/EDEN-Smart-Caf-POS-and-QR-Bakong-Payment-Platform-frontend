@@ -1,6 +1,8 @@
 <template>
   <AppLayout>
-    <div class="flex h-[calc(97vh-32px)] overflow-hidden px-6 py-6 dark:bg-gray-900">
+    <div
+      class="flex h-[calc(97vh-32px)] overflow-hidden px-6 py-6 dark:bg-gray-900"
+    >
       <!-- Main Section (Left) -->
       <div class="flex-1 flex flex-col overflow-hidden">
         <!-- Header: Scrollable Categories + Search -->
@@ -20,7 +22,7 @@
                   'px-4 py-1 rounded-full text-sm whitespace-nowrap transition-all',
                   activeCategory === cat.id
                     ? 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 font-semibold'
-                    : 'hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300'
+                    : 'hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300',
                 ]"
               >
                 {{ cat.name }}
@@ -37,13 +39,18 @@
         </div>
 
         <!-- Loading State -->
-        <div v-if="loading" class="text-center text-gray-500 dark:text-gray-400 py-12">
-          {{ $t('pos.loading_menu') }}
+        <div
+          v-if="loading"
+          class="text-center text-gray-500 dark:text-gray-400 py-12"
+        >
+          {{ $t("pos.loading_menu") }}
         </div>
 
         <!-- Product Grid Scrollable -->
         <div v-else class="overflow-y-auto pr-2 no-scrollbar flex-1">
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4">
+          <div
+            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4"
+          >
             <ProductCard
               v-for="item in filteredProducts"
               :key="item.id"
@@ -71,14 +78,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import AppLayout from '@/components/Common/AppLayout.vue';
-import ProductCard from '@/components/POS/ProductCard.vue';
-import Cart from '@/components/POS/Cart.vue';
-import PaymentModal from '@/components/POS/PaymentModal.vue';
-import api from '@/plugins/axios';
-import { usePOSStore } from '@/store/pos';
+import { ref, computed, onMounted, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import AppLayout from "@/components/Common/AppLayout.vue";
+import ProductCard from "@/components/POS/ProductCard.vue";
+import Cart from "@/components/POS/Cart.vue";
+import PaymentModal from "@/components/POS/PaymentModal.vue";
+import api from "@/plugins/axios";
+import { usePOSStore } from "@/store/pos";
 
 const { t } = useI18n();
 
@@ -87,9 +94,9 @@ const loading = ref(true);
 const { cart, addToCart, clearCart } = usePOSStore();
 
 const products = ref([]);
-const categories = ref([{ id: 0, name: t('pos.all') }]);
+const categories = ref([{ id: 0, name: t("pos.all") }]);
 const activeCategory = ref(0);
-const search = ref('');
+const search = ref("");
 
 const categoryScroll = ref(null);
 
@@ -102,8 +109,11 @@ const handleWheelScroll = (e) => {
 
 const filteredProducts = computed(() =>
   products.value.filter((p) => {
-    const matchCategory = activeCategory.value === 0 || p.category_id === activeCategory.value;
-    const matchSearch = p.name.toLowerCase().includes(search.value.toLowerCase());
+    const matchCategory =
+      activeCategory.value === 0 || p.category_id === activeCategory.value;
+    const matchSearch = p.name
+      .toLowerCase()
+      .includes(search.value.toLowerCase());
     return matchCategory && matchSearch;
   })
 );
@@ -116,7 +126,7 @@ watch(cart, (newVal) => {
 
 const handleCheckout = () => {
   if (cart.length === 0) {
-    alert(t('pos.empty_cart'));
+    alert(t("pos.empty_cart"));
     return;
   }
   showModal.value = true;
@@ -134,13 +144,29 @@ const handleSuccess = () => {
 onMounted(async () => {
   try {
     const [menuRes, catRes] = await Promise.all([
-      api.get('/menu-items'),
-      api.get('/categories'),
+      api.get("/menu-items"),
+      api.get("/categories"),
     ]);
-    products.value = menuRes.data;
+
+    // 🔁 Fetch availability for each menu item
+    const enrichedItems = await Promise.all(
+      menuRes.data.map(async (item) => {
+        try {
+          const availability = await api.get(
+            `/menu-items/${item.id}/availability`
+          );
+          item.available_quantity = availability.data.available;
+        } catch (err) {
+          item.available_quantity = 0; // fallback
+        }
+        return item;
+      })
+    );
+
+    products.value = enrichedItems;
     categories.value.push(...catRes.data);
   } catch (e) {
-    console.error('Failed to load menu or categories:', e);
+    console.error("Failed to load menu or categories:", e);
   } finally {
     loading.value = false;
   }

@@ -1,9 +1,12 @@
 <template>
   <MainLayout>
-    <div class="p-6 space-y-8 dark:bg-gray-900 min-h-screen text-gray-800 dark:text-gray-100">
+    <div class="p-6 space-y-6">
       <!-- Header -->
       <div class="flex flex-wrap items-center justify-between gap-4">
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $t('order.title') }}</h1>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ $t('order.title') }}</h1>
+          <p class="text-sm text-gray-500 dark:text-gray-300">{{ $t('order.subtitle') }}</p>
+        </div>
         <div class="flex flex-wrap gap-2 items-center">
           <input v-model="filter.from" type="date" class="input" />
           <input v-model="filter.to" type="date" class="input" />
@@ -20,7 +23,7 @@
           </select>
           <button
             @click="downloadReport"
-            class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-4 py-2 rounded-lg shadow-sm text-sm transition"
+            class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-4 py-2 rounded-full shadow-sm text-sm transition"
           >
             {{ $t('order.download') }}
           </button>
@@ -35,7 +38,7 @@
       </div>
 
       <!-- Table -->
-      <div class="overflow-y-auto max-h-[500px] rounded-xl shadow no-scrollbar">
+      <div class="overflow-y-auto max-h-[480px] rounded-xl shadow no-scrollbar">
         <table class="w-full text-sm text-left bg-white dark:bg-gray-800">
           <thead class="bg-gray-100 dark:bg-gray-700 sticky top-0 text-xs text-gray-700 dark:text-gray-300 font-semibold uppercase border-b dark:border-gray-600">
             <tr>
@@ -98,16 +101,6 @@
           </tbody>
         </table>
       </div>
-
-      <!-- Toast Message -->
-      <transition name="fade">
-        <div
-          v-if="successMessage"
-          class="fixed bottom-6 right-6 bg-green-600 dark:bg-green-500 text-white px-5 py-3 rounded-xl shadow-xl text-sm"
-        >
-          {{ $t('order.updated') }}
-        </div>
-      </transition>
     </div>
   </MainLayout>
 </template>
@@ -116,9 +109,15 @@
 import { ref, computed, onMounted } from 'vue'
 import api from '@/plugins/axios'
 import MainLayout from '@/components/Common/AppLayout.vue'
+import { createToastInterface } from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+const toast = createToastInterface()
+
 
 const orders = ref([])
-const successMessage = ref('')
 
 const filter = ref({
   from: '',
@@ -159,10 +158,10 @@ const filteredOrders = computed(() => {
 async function updateStatus(order) {
   try {
     await api.put(`/orders/${order.id}`, { status: order.status })
-    successMessage.value = '✅ Order status updated!'
-    setTimeout(() => (successMessage.value = ''), 2500)
+    toast.success(t('order.toast.update_success'))
   } catch (err) {
     console.error(err)
+    toast.error(t('order.toast.update_error'))
   }
 }
 
@@ -189,8 +188,9 @@ async function downloadReport() {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+    toast.success(t('order.toast.export_success'))
   } catch (err) {
-    alert('❌ Failed to download. Please check backend or file permissions.')
+    toast.error(t('order.toast.export_error'))
     console.error(err)
   }
 }

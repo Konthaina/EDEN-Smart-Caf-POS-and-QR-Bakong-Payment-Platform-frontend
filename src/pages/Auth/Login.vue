@@ -66,29 +66,39 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import api from "@/plugins/axios";
+import { useToast } from "vue-toastification";
 
 const { locale } = useI18n();
 const email = ref("");
 const password = ref("");
 const router = useRouter();
+const toast = useToast();
 
 const handleLogin = async () => {
   try {
+    // 1. Log in, get token + user object
     const res = await api.post("/login", {
       email: email.value,
       password: password.value,
     });
-
     const token = res.data.token;
-    const user = res.data.user;
 
+    // 2. Save token
     localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(user));
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+    // 3. Always fetch latest profile/role
+    const me = await api.get("/me");
+    const user = me.data;
+    localStorage.setItem("user", JSON.stringify(user));
+    if (user.role && user.role.name) {
+      localStorage.setItem("role", user.role.name);
+    }
 
     router.push("/dashboard");
   } catch (err) {
-    alert("Login failed. Please check your credentials.");
+    toast.error("Login failed. Please check your credentials.");
   }
 };
 </script>
+

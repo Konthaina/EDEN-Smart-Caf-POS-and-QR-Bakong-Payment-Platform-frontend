@@ -1,14 +1,14 @@
 import axios from "axios";
-import router from "@/router"; // Make sure Vue Router is imported
-import { useToast } from "vue-toastification"; // Optional: only if you're using toast
+import router from "@/router";
 
-const toast = useToast();
+import { useToast } from "vue-toastification";
+
+const toast = typeof useToast === "function" ? useToast() : window.$toast;
 
 const instance = axios.create({
-  baseURL: "http://188.166.196.32/api",
+  baseURL: "http://127.0.0.1:8000/api",
 });
 
-// Add token to request headers
 instance.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -17,25 +17,27 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
-// Add response error handling
 instance.interceptors.response.use(
-  response => response,
-  error => {
+  (response) => response,
+  (error) => {
     const status = error.response?.status;
     const message = error.response?.data?.message || "";
 
-    // 🔐 Handle deleted user (from CheckUserExists middleware)
     if (status === 403 && message.includes("User account no longer exists")) {
-      toast.error("Your account has been deleted.");
+      if (toast) toast.error("Your account has been deleted.");
       localStorage.removeItem("token");
+      localStorage.removeItem("role");
       router.push("/login");
     }
-
-    // 🔐 Handle expired or invalid token
     if (status === 401) {
-      toast.error("Session expired. Please log in again.");
+      if (toast) toast.error("Session expired. Please log in again.");
       localStorage.removeItem("token");
+      localStorage.removeItem("role");
       router.push("/login");
+    }
+    if (status === 403 && message.includes("insufficient role")) {
+      if (toast) toast.error("You do not have permission to access this page.");
+      router.push("/dashboard");
     }
 
     return Promise.reject(error);

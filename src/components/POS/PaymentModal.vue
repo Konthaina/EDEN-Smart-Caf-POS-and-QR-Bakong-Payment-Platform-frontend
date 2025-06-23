@@ -2,312 +2,301 @@
   <teleport to="body">
     <div v-show="visible" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
       <div class="bg-white rounded-2xl shadow-xl w-[90%] max-w-6xl h-[90%] flex overflow-hidden relative">
-        <!-- Left Side: Payment -->
+        <!-- Left: Payment Methods + Discounts -->
         <div class="flex-1 p-6 overflow-y-auto no-scrollbar space-y-6">
-          <h2 class="text-lg font-semibold text-purple-700 mb-4">{{ $t('payment.methods') }}</h2>
-
-          <!-- Cash Input -->
-          <div :class="methodBox('cash')" @click="selectMethod('cash')">
-            <div class="font-medium mb-2">{{ $t('payment.cash') }}</div>
-            <input
-              v-model="amount"
-              type="number"
-              :placeholder="$t('payment.enter_amount')"
-              class="w-full bg-gray-100 px-4 py-2 rounded-lg outline-none text-sm"
-            />
-          </div>
-
-          <!-- Payment Method Icons -->
-          <div class="grid grid-cols-3 gap-4 mt-6">
-            <div :class="methodBox('card')" @click="selectMethod('card')">
-              <img src="/src/assets/icons/card.png" class="h-10 mx-auto" />
-              <p class="text-center text-sm mt-2">Card</p>
-            </div>
-            <div :class="methodBox('aba')" @click="selectMethod('aba')">
-              <img src="/src/assets/icons/aba.png" class="h-10 mx-auto" />
-              <p class="text-center text-sm mt-2">ABA</p>
-            </div>
-            <div :class="methodBox('khqr')" @click="selectMethod('khqr')">
-              <img src="/src/assets/icons/khqr.png" class="h-10 mx-auto" />
-              <p class="text-center text-sm mt-2">KHQR</p>
-            </div>
-          </div>
-          <div v-if="methodError" class="text-red-500 text-sm mt-2">{{ methodError }}</div>
-
-          <!-- Discount Section -->
-          <div class="space-y-4 mt-6">
-            <div>
-              <p class="text-sm font-medium mb-1">{{ $t('payment.promo_code') }}</p>
-              <div class="flex gap-2">
-                <input v-model="promoCode" type="text" :placeholder="$t('payment.enter_code')"
-                  class="bg-gray-100 px-4 py-2 rounded-lg w-full outline-none text-sm" />
-                <button @click="applyDiscount"
-                  class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm">
-                  {{ $t('common.apply') }}
-                </button>
-              </div>
-              <div v-if="discount" class="text-green-600 text-sm mt-1">{{ discountSummary }}</div>
-              <div v-if="discountError" class="text-red-500 text-sm mt-1">{{ discountError }}</div>
-            </div>
-
-            <div>
-              <p class="text-sm font-medium mb-1">{{ $t('payment.manual_discount') }}</p>
-              <input v-model.number="manualDiscount" type="number" min="0" max="100"
-                class="bg-gray-100 px-4 py-2 rounded-lg w-full outline-none text-sm" />
-            </div>
-
-            <div v-if="selectedMethod === 'cash'">
-              <p class="text-sm font-medium mb-1">{{ $t('payment.change') }}</p>
-              <div class="bg-gray-100 px-4 py-2 rounded-lg text-gray-700 text-sm font-medium">
-                ${{ changeAmount }}
-              </div>
-            </div>
-          </div>
+          <PaymentMethods
+            ref="paymentMethodRef"
+            :selected-method="selectedMethod"
+            :amount="amount"
+            :method-error="methodError"
+            :change-amount="changeAmount"
+            @select="selectMethod"
+            @update:amount="val => (amount = val)"
+            @bakongQr="handleQrPopup"
+            @bakongSuccess="handlePaymentSuccess"
+          />
+          <DiscountSection
+            :promoCode="promoCode"
+            :discount="discount"
+            :manualDiscount="manualDiscount"
+            :discountError="discountError"
+            @apply="applyDiscount"
+            @update:manualDiscount="val => (manualDiscount = val)"
+          />
         </div>
 
-        <!-- Right Side: Cart Summary -->
-        <div class="w-96 p-6 bg-gray-50 overflow-y-auto no-scrollbar flex flex-col border-l">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold text-purple-700">🛒 {{ $t('payment.cart_items') }}</h2>
-            <button @click="close" class="text-2xl font-light hover:text-red-500">&times;</button>
-          </div>
+        <!-- Right: Cart Summary -->
+        <CartSummary
+          :cart="cart"
+          :total="total"
+          :discount="discount"
+          :manualDiscount="manualDiscount"
+          :discountedTotal="discountedTotal"
+          :discountText="discountText"
+          @close="close"
+          @pay="submitPayment"
+        />
 
-          <div class="flex-1 overflow-y-auto no-scrollbar pr-1 mb-4">
-            <div v-if="cart.length === 0" class="text-gray-400 text-sm">{{ $t('payment.cart_empty') }}</div>
-            <div v-for="item in cart" :key="item.id" class="flex gap-3 items-center mb-3">
-              <img :src="getImage(item.image)" class="w-10 h-10 object-cover rounded-lg" />
-              <div class="flex-1 text-sm">
-                <div class="font-semibold text-gray-800">{{ item.name }}</div>
-                <div class="text-gray-400 text-xs">{{ $t('cart.code') }}: {{ item.id }}</div>
-                <div class="text-gray-600">{{ item.qty }} × ${{ format(item.price) }}</div>
-              </div>
-              <div class="text-sm font-semibold text-gray-700">{{ item.qty }}</div>
-            </div>
-          </div>
+        <!-- Receipt Print Component - IMPORTANT: Only rendered when orderId is set for printing -->
+        <ReceiptPrint
+          v-if="orderId"
+          :cart="cart"
+          :user="user"
+          :selectedMethod="selectedMethod"
+          :orderId="orderId"
+          :total="total"
+          :discount="discount"
+          :manualDiscount="manualDiscount"
+          :discountedTotal="discountedTotal"
+        />
 
-          <div class="mt-auto border-t pt-4 space-y-2 text-sm text-gray-700">
-            <div v-if="discount">Promo Code: <span class="text-green-600">-{{ discountText }}</span></div>
-            <div v-if="manualDiscount > 0">Manual Discount: <span class="text-green-600">-{{ manualDiscount }}%</span></div>
-            <div v-if="total !== discountedTotal" class="text-red-600">
-              Total Discount: ${{ format(total - discountedTotal) }}
+        <!-- KHQR Modal for payment confirmation -->
+        <div v-if="showQrPopup && qrCode" class="fixed inset-0 z-[60] bg-black bg-opacity-70 flex items-center justify-center">
+          <div class="bg-white w-[300px] rounded-[20px] overflow-hidden shadow-xl text-center relative">
+            <div class="bg-[#D00000] text-white text-[20px] font-bold py-3 px-4">KHQR</div>
+            <div class="px-12 pt-4 pb-2 text-left">
+              <p class="font-bold text-[16px] text-[#222]">Eden Coffee</p>
+              <p class="text-[25px] font-medium text-black">
+                {{ Number(discountedTotal).toLocaleString() }}
+                <span class="text-[16px] text-gray-600 ml-1">{{ selectedCurrency }}</span>
+              </p>
             </div>
-            <div class="flex justify-between text-base font-bold pt-2">
-              <span>{{ $t('payment.total') }}:</span>
-              <span>${{ format(discountedTotal) }}</span>
+            <div class="border-t border-dashed border-gray-300 mx-6 my-2"></div>
+            <div class="pt-4 pb-2 px-4 relative w-fit mx-auto">
+              <qrcode-vue :value="qrCode" :size="200" />
+              <img :src="currencyLogo" class="w-8 h-8 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-full shadow-md" />
             </div>
-          </div>
-
-          <button @click="submitPayment"
-            class="mt-6 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-full font-semibold text-sm">
-            {{ $t('payment.pay_now') }}
-          </button>
-        </div>
-
-        <!-- Receipt -->
-        <div class="top-2 bottom-2 print-area hidden print:flex justify-center w-full bg-white">
-          <div class="w-[280px] p-4 text-[13px] font-mono text-black">
-            <h2 class="text-center text-lg font-bold mb-1">{{ $t('receipt.header') }}</h2>
-            <p class="text-center text-xs mb-1">{{ $t('receipt.thanks') }}</p>
-            <p class="text-center text-xs mb-3">{{ $t('receipt.order_id') }}: #{{ String(orderId).padStart(3, '0') }}</p>
-
-            <div class="flex justify-between font-semibold border-b border-gray-400 pb-1 mb-1">
-              <span class="w-1/2">Item</span>
-              <span class="w-1/4 text-center">Qty</span>
-              <span class="w-1/4 text-right">Amount</span>
-            </div>
-
-            <div v-for="item in cart" :key="item.id" class="flex justify-between mb-1">
-              <span class="w-1/2 truncate">{{ item.name }}</span>
-              <span class="w-1/4 text-center">x{{ item.qty }}</span>
-              <span class="w-1/4 text-right">${{ format(item.price * item.qty) }}</span>
-            </div>
-
-            <hr class="my-2 border-dashed border-gray-400" />
-            <div class="flex justify-between"><span>{{ $t('receipt.subtotal') }}</span><span>${{ format(total) }}</span></div>
-            <div v-if="discount" class="flex justify-between text-green-700">
-              <span>{{ $t('receipt.promo_discount') }}</span><span>-{{ discountText }}</span>
-            </div>
-            <div v-if="manualDiscount > 0" class="flex justify-between text-green-700">
-              <span>{{ $t('receipt.manual_discount') }}</span><span>-{{ manualDiscount }}%</span>
-            </div>
-            <div class="flex justify-between font-bold text-base border-t border-black mt-2 pt-2">
-              <span>{{ $t('receipt.total') }}</span><span>${{ format(discountedTotal) }}</span>
-            </div>
-
-            <div class="flex justify-between text-xs mt-1">
-              <span>{{ $t('receipt.pay_by') }}</span>
-              <span class="capitalize">{{ selectedMethod }}</span>
-            </div>
-
-            <div class="text-xs mt-4 text-gray-500 text-center">
-              <p>{{ $t('receipt.cashier') }}: {{ user?.name || $t('receipt.unknown') }}</p>
-              <p>{{ $t('receipt.printed') }}: {{ new Date().toLocaleString() }}</p>
-            </div>
+            <p class="text-[13px] text-gray-600 pt-2 pb-5">Scan KHQR to Pay</p>
+            <button @click="cancelQr" class="absolute top-3 right-3 w-7 h-7 text-white font-bold">&times;</button>
           </div>
         </div>
-
       </div>
     </div>
   </teleport>
 </template>
 
-
 <script setup>
-import { ref, computed, nextTick, watch, onMounted } from 'vue'
-import api from '@/plugins/axios'
-import { usePOSStore } from '@/store/pos'
+import { ref, computed, onMounted, watch, nextTick } from "vue";
+import api from "@/plugins/axios";
+import { usePOSStore } from "@/store/pos";
+import { useToast } from "vue-toastification";
+import QrcodeVue from "qrcode.vue";
 
-const props = defineProps({ visible: Boolean })
-const emit = defineEmits(['close'])
+// Import child components
+import PaymentMethods from "@/components/POS/PaymentMethods.vue";
+import DiscountSection from "@/components/POS/DiscountSection.vue";
+import CartSummary from "@/components/POS/CartSummary.vue";
+import ReceiptPrint from "@/components/POS/ReceiptPrint.vue";
 
-const user = ref(null)
-const { cart, clearCart } = usePOSStore()
+const props = defineProps({ visible: Boolean });
+const emit = defineEmits(["close", "success"]);
 
-const selectedMethod = ref(null) // 🔄 Changed from 'cash' to null
-const amount = ref('')
-const promoCode = ref('')
-const discount = ref(null)
-const discountError = ref('')
-const manualDiscount = ref(0)
-const orderId = ref(null)
-const methodError = ref('') // ⚠️ Error message
+const { cart, clearCart } = usePOSStore();
+const toast = useToast();
 
-onMounted(async () => {
-  try {
-    const res = await api.get('/me')
-    user.value = res.data
-  } catch (e) {
-    console.error('Failed to load user', e)
-  }
+// Reactive state variables
+const user = ref(null);
+const selectedMethod = ref(null);
+const amount = ref("");
+const promoCode = ref("");
+const discount = ref(null);
+const manualDiscount = ref(0);
+const discountError = ref("");
+const methodError = ref("");
+const orderId = ref(null); // Initialized as null, will be set to a number when ready to print
 
-  window.onafterprint = () => location.reload()
-})
+const selectedCurrency = ref("USD");
+const qrCode = ref(null);
+const showQrPopup = ref(false);
+const polling = ref(null);
 
-watch(cart, val => {
-  if (val.length === 0) close()
-})
-
-const close = () => emit('close')
+// Computed properties
+const currencyLogo = computed(() =>
+  selectedCurrency.value === "KHR" ? "/khr-logo.png" : "/usd-logo.png"
+);
 
 const total = computed(() =>
-  cart.reduce((sum, i) => sum + i.qty * parseFloat(i.price), 0)
-)
+  cart.reduce((sum, item) => sum + item.qty * parseFloat(item.price), 0)
+);
 
 const discountedTotal = computed(() => {
-  let result = total.value
-  if (discount.value?.type === 'percent') result *= (1 - discount.value.value / 100)
-  else if (discount.value?.value) result = Math.max(result - discount.value.value, 0)
-  if (manualDiscount.value > 0) result *= (1 - manualDiscount.value / 100)
-  return parseFloat(result.toFixed(2))
-})
+  let val = total.value;
+  if (discount.value?.type === "percent") val *= 1 - discount.value.value / 100;
+  else if (discount.value?.value) val = Math.max(val - discount.value.value, 0);
+  if (manualDiscount.value > 0) val *= 1 - manualDiscount.value / 100;
+  return parseFloat(val.toFixed(2));
+});
 
 const changeAmount = computed(() => {
-  if (selectedMethod.value !== 'cash') return '0.00'
-  const paid = parseFloat(amount.value || 0)
-  return paid > discountedTotal.value ? (paid - discountedTotal.value).toFixed(2) : '0.00'
-})
-
-const format = v => parseFloat(v).toFixed(2)
-const getImage = img => img ? `http://188.166.196.32/storage/${img}` : 'https://via.placeholder.com/100'
-const methodBox = m => `cursor-pointer border rounded-xl p-4 transition ${selectedMethod.value === m ? 'border-purple-600 bg-purple-50' : 'hover:border-gray-300'}`
-const selectMethod = m => {
-  selectedMethod.value = m.toLowerCase()
-  methodError.value = '' // Clear error on select
-}
-
-const applyDiscount = async () => {
-  discountError.value = ''
-  try {
-    const res = await api.get(`/discounts/validate?code=${promoCode.value}`)
-    discount.value = res.data
-  } catch {
-    discount.value = null
-    discountError.value = 'Invalid or expired code'
-  }
-}
-
-const discountSummary = computed(() =>
-  !discount.value ? '' :
-    discount.value.type === 'percent' ? `${discount.value.value}% off` :
-      `$${discount.value.value} off`
-)
+  if (selectedMethod.value !== "cash") return "0.00";
+  const paid = parseFloat(amount.value || 0);
+  return paid > discountedTotal.value ? (paid - discountedTotal.value).toFixed(2) : "0.00";
+});
 
 const discountText = computed(() =>
-  discount.value?.type === 'percent' ? `${discount.value.value}%` : `$${discount.value.value}`
-)
+  discount.value?.type === "percent"
+    ? `${discount.value.value}%`
+    : discount.value?.value
+    ? `$${discount.value.value}`
+    : ""
+);
+
+// Lifecycle hooks
+onMounted(async () => {
+  try {
+    const res = await api.get("/me");
+    user.value = res.data;
+  } catch (e) {
+    console.error("Load user failed", e);
+  }
+});
+
+// Watchers for reactivity
+watch(cart, (val) => val.length === 0 && close());
+watch(showQrPopup, (v) => (document.body.style.overflow = v ? "hidden" : ""));
+
+// Methods
+const close = () => {
+  emit("close");
+  orderId.value = null; // IMPORTANT: Reset orderId when modal closes to ensure receipt is removed from DOM
+};
+
+const selectMethod = (m) => {
+  selectedMethod.value = m;
+  methodError.value = "";
+};
+
+const applyDiscount = async (code) => {
+  promoCode.value = code;
+  discountError.value = "";
+  try {
+    const res = await api.get(`/discounts/validate?code=${code}`);
+    discount.value = res.data;
+  } catch {
+    discount.value = null;
+    discountError.value = "Invalid or expired code";
+  }
+};
+
+const cancelQr = () => {
+  showQrPopup.value = false;
+  if (polling.value) clearInterval(polling.value);
+  polling.value = null;
+};
+
+const handleQrPopup = (qr) => {
+  qrCode.value = qr;
+  showQrPopup.value = true;
+};
+
+const handlePaymentSuccess = () => {
+  showQrPopup.value = false;
+  emit("success");
+};
 
 const submitPayment = async () => {
-  methodError.value = ''
-  if (!selectedMethod.value) {
-    methodError.value = 'Please select a payment method.'
-    return
-  }
+  if (!selectedMethod.value) return (methodError.value = "Please select a payment method.");
+  const amountToPay = parseFloat(discountedTotal.value);
+  if (isNaN(amountToPay) || amountToPay < 0.01) return toast.error("❌ Invalid amount");
 
+  if (selectedMethod.value === "cash") return handleCashPayment();
+
+  if (selectedMethod.value === "khqr") {
+    try {
+      const qrRes = await api.post("/bakong/generate-qr", {
+        amount: amountToPay,
+        currency: selectedCurrency.value,
+      });
+      qrCode.value = qrRes.data.qr_string;
+      showQrPopup.value = true;
+      toast.info("✅ KHQR generated. Waiting...");
+      startPollingBakong(qrRes.data.md5);
+    } catch (error) {
+      console.error("KHQR generation failed:", error);
+      toast.error("❌ KHQR generation failed");
+    }
+  }
+};
+
+const handleCashPayment = async () => {
   try {
-    const orderRes = await api.post('/orders', {
-      items: cart.map(i => ({ menu_item_id: i.id, quantity: i.qty })),
-      code: promoCode.value || null
-    })
+    const orderRes = await api.post("/orders", {
+      items: cart.map((i) => ({ menu_item_id: i.id, quantity: i.qty })),
+      code: promoCode.value || null,
+    });
 
-    const rawOrderId = orderRes.data.id
-    orderId.value = ((rawOrderId - 1) % 200) + 1
+    const rawOrderId = orderRes.data.id;
+    orderId.value = ((rawOrderId - 1) % 200) + 1; // Set orderId to a number, making ReceiptPrint visible
 
-    await api.post('/payments', {
+    await api.post("/payments", {
       order_id: rawOrderId,
-      method: selectedMethod.value,
+      method: "cash",
       amount: discountedTotal.value,
-      transaction_id: selectedMethod.value === 'cash' ? null : `TXN-${Date.now()}`,
-      note: `Paid via ${selectedMethod.value}${promoCode.value ? ` (Code: ${promoCode.value})` : ''}`
-    })
+      transaction_id: null,
+      note: `Paid via cash${promoCode.value ? ` (Code: ${promoCode.value})` : ""}`,
+    });
 
-    clearCart()
-    await nextTick()
-    setTimeout(() => window.print(), 200)
-  } catch (err) {
-    console.error(err)
-    alert('Payment failed')
+    await nextTick(); // Ensures the ReceiptPrint component is fully rendered before printing
+    setTimeout(() => {
+      clearCart();
+      window.onafterprint = () => {
+          location.reload(); // Optional: Reloads the page after printing, adjust as per your app flow
+          orderId.value = null; // IMPORTANT: Reset orderId to hide the receipt component after the print dialog closes
+      };
+      window.print(); // Triggers the browser's print dialog
+    }, 200);
+  } catch (error) {
+    console.error("Cash payment failed:", error);
+    toast.error("❌ Payment failed");
   }
-}
+};
+
+const startPollingBakong = (md5) => {
+  if (polling.value) clearInterval(polling.value);
+  polling.value = setInterval(async () => {
+    try {
+      const res = await api.get("/bakong/verify/md5", { params: { md5 } });
+      const txn = res.data.results?.find(
+        (r) => r.raw_response?.responseCode === 0 && r.raw_response?.data
+      );
+      if (txn) {
+        clearInterval(polling.value);
+        polling.value = null;
+
+        const orderRes = await api.post("/orders", {
+          items: cart.map((i) => ({ menu_item_id: i.id, quantity: i.qty })),
+          code: promoCode.value || null,
+        });
+
+        const rawOrderId = orderRes.data.id;
+        orderId.value = ((rawOrderId - 1) % 200) + 1; // Set orderId to a number, making ReceiptPrint visible
+
+        await api.post("/payments", {
+          order_id: rawOrderId,
+          method: "khqr",
+          amount: discountedTotal.value,
+          transaction_id: txn.bill || `TXN-${Date.now()}`,
+          note: `Paid via KHQR${promoCode.value ? ` (Code: ${promoCode.value})` : ""}`,
+        });
+
+        toast.success("✅ Payment confirmed!");
+        showQrPopup.value = false;
+
+        await nextTick(); // Ensures the ReceiptPrint component is fully rendered before printing
+        setTimeout(() => {
+          window.onafterprint = () => {
+              location.reload(); // Optional: Reloads the page after printing
+              orderId.value = null; // IMPORTANT: Reset orderId to hide the receipt component after the print dialog closes
+          };
+          window.print(); // Triggers the browser's print dialog
+          clearCart();
+          emit("success");
+        }, 300);
+      }
+    } catch (err) {
+      console.warn("Polling failed:", err?.response?.data || err.message);
+      // Implement more robust error handling or retry logic if needed for polling
+    }
+  }, 5000);
+};
 </script>
-
-
-<style scoped>
-@media print {
-  body {
-    background: white !important;
-    margin: 0;
-    padding: 0;
-  }
-
-  body * {
-    visibility: hidden !important;
-    font-size: 13px !important;
-  }
-
-  .print-area,
-  .print-area * {
-    visibility: visible !important;
-  }
-
-  .print-area {
-    position: fixed !important;
-    inset: 0;
-    width: 100%;
-    background: white !important;
-    display: flex !important;
-    justify-content: center;
-    z-index: 9999;
-    padding: 0;
-  }
-
-  @page {
-    size: auto;
-    margin: 0;
-  }
-
-  html, body {
-    height: auto !important;
-    overflow: visible !important;
-  }
-}
-</style>

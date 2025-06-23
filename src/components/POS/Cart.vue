@@ -110,7 +110,7 @@ const formatPrice = (value) => {
 }
 
 const getImageUrl = (img) =>
-  img ? `http://188.166.196.32/storage/${img}` : 'https://via.placeholder.com/100'
+  img ? `http://127.0.0.1:8000/storage/${img}` : '/menu.png'
 
 const total = computed(() =>
   cart.reduce((sum, item) => sum + item.qty * parseFloat(item.price), 0)
