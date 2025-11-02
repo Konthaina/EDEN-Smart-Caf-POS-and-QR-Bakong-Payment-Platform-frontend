@@ -1,40 +1,30 @@
 <template>
-  <RouterLink
+  <router-link
     :to="to"
-    class="flex items-center py-2 px-3 rounded-lg transition-all text-sm font-medium hover:bg-purple-100 dark:hover:bg-purple-300 text-gray-700 dark:text-white"
-    active-class="bg-purple-100 font-semibold text-purple-700 dark:bg-purple-800 dark:text-purple-200"
-    :class="[{ 'ml-5 text-sm': small }, collapsed ? 'justify-center' : 'justify-between']"
-    :title="collapsed ? label : ''"
+    class="block"
+    :class="[
+      collapsed
+        ? 'flex items-center justify-start pl-1 pr-2 py-2' // left aligned!
+        : 'flex items-center gap-3 px-4 py-2',
+      small ? 'text-xs' : 'text-base',
+      active
+        ? 'bg-purple-50 text-purple-700 font-semibold dark:bg-purple-900 dark:text-purple-200'
+        : 'text-gray-700 hover:bg-purple-100 hover:text-purple-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white',
+      'rounded-lg transition-colors duration-150 cursor-pointer select-none',
+    ]"
   >
-    <!-- Left Side: Icon + Label -->
-    <div class="flex items-center gap-2">
-      <component :is="icon" class="w-4 h-4" />
-      <span v-if="!collapsed" class="truncate">{{ label }}</span>
-    </div>
-
-    <!-- Badge -->
-    <span
-      v-if="badge && !collapsed"
-      class="ml-2 bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full shadow-sm"
-    >
-      {{ badge }}
-    </span>
-  </RouterLink>
+    <component :is="icon" class="w-5 h-5" />
+    <span v-if="!collapsed" class="whitespace-nowrap">{{ label }}</span>
+  </router-link>
 </template>
 
 <script setup>
 defineProps({
-  to: String,
+  to: { type: [String, Object], required: true },
   label: String,
-  icon: [Object, Function], // Use component object, not string
-  badge: [String, Number],
-  small: {
-    type: Boolean,
-    default: false,
-  },
-  collapsed: {
-    type: Boolean,
-    default: false,
-  },
+  icon: [Object, Function],
+  collapsed: Boolean,
+  active: Boolean,
+  small: Boolean,
 });
 </script>

@@ -23,6 +23,17 @@
     "english_font": "English Font"
   },
   "common": {
+    "saving": "Saving...",
+    "saved": "Saved!",
+    "view_details": "View Detail",
+    "back": "Back",
+    "view": "View",
+    "loading": "Loading...",
+    "confirm_title": " Confirm",
+    "close": "Close",
+    "clear": "Clear",
+    "reset": "Reset",
+    "yes_delete": "Yes, Delete",
     "cancel": "Cancel",
     "save": "Save Changes",
     "update": "Update",
@@ -35,9 +46,11 @@
     "no": "No",
     "yes": "Yes",
     "dark_mode": "Dark Mode",
-    "light_mode": "Light Mode"
+    "light_mode": "Light Mode",
+    "all": "All",
+    "active": "Active",
+    "inactive": "Inactive/Expired"
   },
-
   "login": {
     "welcome": "Welcome to Eden",
     "subtitle": "Please login to continue",
@@ -51,33 +64,77 @@
   },
 
   "register": {
-    "title": "Create Account",
-    "subtitle": "Join Cafe Eden today",
-    "name": "Name",
-    "name_placeholder": "Your name",
+    "title": "Create Your Customer Account",
+    "subtitle": "Register and start ordering coffee!",
+    "name": "Full Name",
+    "name_placeholder": "Enter your name",
     "email": "Email",
-    "email_placeholder": "you@example.com",
-    "password": "Password",
-    "password_placeholder": "Password",
-    "confirm_password": "Confirm Password",
-    "confirm_password_placeholder": "Confirm Password",
     "register_button": "Register",
+    "registering": "Registering",
     "already_have_account": "Already have an account? Login",
-    "failed": "Registration failed."
+    "success": "Account created. Please check your email to set your password.",
+    "go_to_login": "Go to Login",
+    "failed": "Registration failed. Please try again."
   },
 
   "forgot": {
     "title": "Forgot Password",
     "subtitle": "We’ll send you a reset link",
     "email_label": "Email Address",
-    "email_placeholder": "you@example.com",
+    "email_placeholder": "youexample.com",
     "send_button": "Send Reset Link",
     "back_to_login": "← Back to Login",
     "success": "Reset link has been sent to your email.",
     "failed": "Failed to send reset link."
   },
+  "reset": {
+    "title_register": "Set your password",
+    "title_forgot": "Reset your password",
+    "subtitle_register": "Create a password to activate your account.",
+    "subtitle_forgot": "Choose a new password for your account.",
+    "submit_register": "Set Password",
+    "submit_forgot": "Reset Password",
+    "success_register": "Password set! You can now log in.",
+    "success_forgot": "Password has been reset successfully!",
+    "error_generic": "Reset failed. Try again."
+  },
+  "table": {
+    "view_qr": "View QR Code",
+    "qr_for": "QR Code for ",
+    "manage_tables": "Manage Tables",
+    "subtitle": "Create and manage tables for QR self-ordering.",
+    "add_table": "Add Table",
+    "add_title": "Add Table",
+    "edit_title": "Edit Table",
+    "name": "Name",
+    "slug": "Slug",
+    "table_user": "Table User",
+    "qr_link": "QR Link",
+    "qr_link_short": "QR Link",
+    "actions": "Actions",
+    "assign_table_user": "Assign Table User",
+    "select_user": "Select a user",
+    "edit": "Edit",
+    "delete": "Delete",
+    "copy": "Copy",
+    "total": "Total Tables:",
+    "no_tables": "No tables found.",
+    "no_user": "No user",
+    "search": "Search tables",
+    "sort": "Sort Tables",
+    "updated": "Table updated!",
+    "added": "Table added!",
+    "save_failed": "Failed to save table",
+    "confirm_delete": "Delete this table?",
+    "deleted": "Table deleted",
+    "copied": "Copied QR link!",
+    "qr_code": "QR Code"
+  },
 
   "sidebar": {
+    "collapse": "Collapse Sidebar",
+    "tables": "Tables",
+    "loading": "Loading...",
     "dashboard": "Dashboard",
     "pos": "POS",
     "orders": "Orders",
@@ -98,7 +155,10 @@
     "personal": "Personal",
     "marketing": "Marketing",
     "banner": "Banner",
-    "notification": "Notification"
+    "notification": "Notification",
+    "powered_by": "Powered by",
+    "app_name": "Eden Coffee",
+    "customer": "Customer"
   },
 
   "dashboard": {
@@ -108,7 +168,8 @@
     "total_orders": "Total Orders Today",
     "total_customers": "Total Customers",
     "top_item": "Top Item",
-    "no_data": "No top items to display yet."
+    "no_data": "No top items to display yet.",
+    "loading": "Loading dashboard data..."
   },
 
   "revenue": {
@@ -135,13 +196,48 @@
   },
 
   "pos": {
+    "invalidCode": "invalid Code",
+    "paymentFailed": "Payment failed. Please try again.",
+    "paymentSuccess": "Payment successful!",
+    "discount": "Discount",
+    "khqrWaiting": "Waiting for KHQR payment...",
+    "show_card": "Show Card",
+    "items": "Menu Items",
+    "scanToPay": "Scan to Pay",
+    "taxRate": "Tax Rate",
+    "exchangeRate": "Exchange Rate",
+    "hide_cart": "Hide Cart",
+    "cart": "Cart",
     "all": "All",
     "search": "Search...",
     "loading_menu": "Loading menu...",
-    "empty_cart": "Cart is empty"
+    "empty_cart": "Cart is empty",
+    "order_list": "Order List",
+    "hide_card": "Hide Card",
+    "add": "Add"
   },
 
   "cart": {
+    "default": "M",
+    "variant": "Sizes",
+    "qty_help_edit": "qty",
+    "subtotal": "Subtotal",
+    "unit_price": "price",
+    "customize_add": "Customize & Add",
+    "qty_help_add": "Enter quantity to add",
+    "add_to_cart": "Add to Cart",
+    "quantity": "Quantity",
+    "qty_help": "Enter quantity to add",
+    "ice": "Ice",
+    "sugar": "Sugar",
+    "note": "Note",
+    "level": "Level",
+    "max": "Max",
+    "quick_notes": "Quick Notes",
+    "customize": "Customize",
+    "edit_item": "Edit Item",
+    "note_placeholder": "e.g. extra ice, to go, no sugar",
+    "edit": "Edit Cart",
     "title": "Your Cart",
     "empty": "No items in your cart.",
     "code": "Code",
@@ -151,6 +247,28 @@
   },
 
   "payment": {
+    "sale_mode": "Payment Mode",
+    "normal_sale": "Normal Sale",
+    "event_pay": "Event Sale",
+    "select_md": "Select Payment Mode",
+    "limit_hint_usd": "Maximum cash amount is $100",
+    "limit_hint_khr": "Maximum cash amount is ៛400,000",
+    "need": "Need to add",
+    "insufficient_cash": "Insufficient cash amount.",
+    "manual": "Manual Payment",
+    "khqrWaiting": "Waiting for KHQR payment...",
+    "manual_disabled_hint": "Manual payment is disabled. Please enable it in settings.",
+    "manual_payment": "Manual Payment",
+    "enter_percent": "Enter Percent Off",
+    "discount": "Discount",
+    "percent_off": "Percent Off",
+    "amount_off": "Amount Off",
+    "khr_round_hint": "Round cash amount to nearest 100 (៛)",
+    "change_khr": "Change (៛)",
+    "cash_amount_khr_placeholder": "Enter cash amount (៛)",
+    "rate_hint": "Set exchange rate for cashier transactions.",
+    "change_usd": "Change (USD)",
+    "cash_amount_placeholder": "Enter cash amount",
     "methods": "Payment Methods",
     "cash": "Cash Payment",
     "enter_amount": "Enter Amount",
@@ -164,6 +282,8 @@
     "pay_now": "Pay Now"
   },
   "receipt": {
+    "note": "Note",
+    "exchange_rate": "Exchange Rate",
     "header": "Eden Coffee",
     "thanks": "Thank you for your purchase!",
     "order_id": "Order ID",
@@ -174,9 +294,11 @@
     "pay_by": "Pay by",
     "cashier": "Cashier",
     "printed": "Printed on",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "tax_rate": "Tax Rate (%)",
+    " exchange_rate": "Exchange Rate ",
+    "total_khr": "total (៛)"
   },
-
   "order.title": "Order Management",
   "order.subtitle": "Manage and track all customer orders.",
   "order.status.all": "All Status",
@@ -198,8 +320,17 @@
   "order.date": "Date",
   "order.action": "Action",
   "order.code": "Code",
-
+  "order.search": "Search Orders",
+  "order.sort": "Sort Orders",
+  "loading": "Loading orders...",
+  "EDEN CAFE": "Eden Coffee",
+  "loading:": "Loading...",
+  "show_hide_columns": "Show/Hide Columns",
+  "columns": "Columns",
   "order": {
+    "of": " of ",
+    "no_data": "No orders found.",
+    "search": "Search Orders",
     "title": "Order Management",
     "detail": {
       "title": "Order Detail",
@@ -215,6 +346,9 @@
       "loading": "Loading order details..."
     },
     "toast": {
+      "new_order": "New order received!",
+      "fetch_error": "Failed to fetch orders.",
+      "delete_success": "Order deleted successfully!",
       "update_success": "Order status updated successfully!",
       "update_error": "Failed to update order status.",
       "export_success": "Order exported successfully!",
@@ -239,6 +373,16 @@
   },
 
   "categories": {
+    "mode": {
+      "uncategorize": "Let items be uncategorized",
+      "archive": "Archive Categories",
+      "reassign": "Reassigned Categories"
+    },
+    "selectTarget": "Select Target Category",
+    "showArchived": "Show Archived Categories",
+    "confirmDeleteTitle": "Delete Category",
+    "search": "Search Categories",
+    "sort": "Sort Categories",
     "title": "Categories",
     "subtitle": "Organize your menu items into categories.",
     "add": "Add Category",
@@ -249,11 +393,35 @@
     "confirmDelete": "Are you sure you want to delete '{name}'? This will also delete all related menu items."
   },
   "actions": {
+    "deleteForever": "Delete",
+    "confirm": "Confirm",
+    "restore": "Restore",
+    "create": "Create",
+    "add": "Add",
+    "save": "Save",
+    "update": "Update",
+    "cancel": "Cancel",
+    "close": "Close",
+    "download": "Download",
+    "view": "View",
     "edit": "Edit",
     "delete": "Delete"
   },
 
   "menu": {
+    "showActive": "Active Items",
+    "showingDeleted": "Deleted Items",
+    "variant": "Variant",
+    "size": "Size",
+    "sizes": "Sizes",
+    "from": "From",
+    "manageVariants": "Variant",
+    "variants": "Variants",
+    "status": "Status",
+    "discount": "Discount",
+    "archive": "Archive",
+    "restore": "Restore",
+    "showArchived": "Show Archived",
     "title": "Menu Items",
     "subtitle": "Manage your menu items.",
     "add": "Add Item",
@@ -266,10 +434,18 @@
     "actions": "Actions",
     "empty": "No menu items found.",
     "confirmDelete": "Are you sure you want to delete '{name}'?",
-    "add_to_cart": "Add to Cart"
+    "add_to_cart": "Add to Cart",
+    "out_of_stock": "Out of Stock",
+    "sort": "Sort",
+    "search": "Search Menu Items",
+    "allCategories": "All Categories",
+    "sale": "Discount"
   },
 
   "add_menu": {
+    "discount": "Discount",
+    "none": "None",
+    "isActive": "Is Active",
     "addTitle": "Add Menu Item",
     "editTitle": "Edit Menu Item",
     "image": "Image",
@@ -287,6 +463,24 @@
   },
 
   "stock": {
+    "alertAt": "Stock Alert At",
+    "loading": "Loading stock data...",
+    "error": "Failed to load stock data.",
+    "enterValidAmount": "Please enter a valid amount",
+    "added": "Stock added successfully",
+    "deduct": "Deduct Stock",
+    "ok": "Stock is okay",
+    "max": "Max Stock",
+    "zeroOutHint": "Set stock level to zero for this ingredient.",
+    "zeroOut": " Zero Out Stock",
+    "zeroOutPlaceholder": "Set stock level to zero",
+    "setExact": "Set Exact Quantity",
+    "setExactPlaceholder": "Enter exact stock level",
+    "deductQtyPlaceholder": "Enter quantity to deduct",
+    "deductQty": "Deduct Quantity",
+    "unit": "Unit",
+    "search": "Search Stock",
+    "sort": "Sort Stock",
     "title": "Stock Management",
     "subtitle": "Manage your ingredients stock levels.",
     "add": "Add Stock",
@@ -308,13 +502,82 @@
     "low": "Low",
     "selectPlaceholder": "-- Select Ingredient --"
   },
-
+  "errors": {
+    "loadIngredients": "Failed to load ingredients.",
+    "loadRecipes": "Failed to load recipes.",
+    "delete": "Failed to delete ingredient from recipe.",
+    "save": "Failed to save recipes.",
+    "duplicate": "This ingredient is already in the recipe."
+  },
+  "recipeModal": {
+    "title": "{name} Recipe",
+    "close": "Close",
+    "th": {
+      "ingredient": "Ingredient",
+      "quantity": "Quantity",
+      "unit": "Unit",
+      "action": "Action"
+    },
+    "scope": {
+      "item": "Main Item",
+      "variant": "Variant"
+    },
+    "add": "Add More Ingredient",
+    "save": "Save",
+    "saving": "Saving...",
+    "empty": "No ingredients yet.",
+    "messages": {
+      "saved": "Recipes saved successfully.",
+      "removed": "Ingredient removed."
+    },
+    "errors": {
+      "loadIngredients": "Failed to load ingredients.",
+      "loadRecipes": "Failed to load recipes.",
+      "delete": "Failed to delete ingredient from recipe.",
+      "save": "Failed to save recipes.",
+      "duplicate": "This ingredient is already in the recipe."
+    }
+  },
+  "ingredientModal": {
+    "titleAdd": "Add New Ingredient",
+    "titleEdit": "Edit Ingredient",
+    "close": "Close",
+    "searchPlaceholder": "Search ingredient",
+    "toggleList": "Toggle ingredient list",
+    "labels": {
+      "ingredient": "Ingredient",
+      "quantity": "Quantity"
+    },
+    "noSelected": "(None selected)",
+    "unitGeneric": "unit",
+    "add": "Add",
+    "update": "Update",
+    "errors": {
+      "notSelected": "Please select an ingredient.",
+      "invalidQty": "Quantity must be a positive number.",
+      "saveFailed": "Failed to save ingredient."
+    }
+  },
   "recipe": {
+    "showArchived": "Show Archived Categories",
     "title": "Recipe Management",
-    "subtitle": "Manage how each menu item is composed from ingredients.",
-    "addButton": "Add Recipe",
-    "selectMenu": "Select Menu Item",
-    "selectMenuPlaceholder": "-- Choose Menu Item --",
+    "subtitle": "Manage and update the recipes for all menu items.",
+    "searchPlaceholder": "Search menu or ingredient",
+    "filters": {
+      "allIngredients": "All Ingredients"
+    },
+    "sort": "Sort",
+    "total": "Total Recipes",
+    "th": {
+      "id": "ID",
+      "product": "Product",
+      "name": "Name",
+      "ingredients": "Ingredients",
+      "quantity": "Qty",
+      "actions": "Actions"
+    },
+    "loading": "Loading...",
+    "noData": "No menu items found.",
     "table": {
       "ingredient": "Ingredient",
       "quantity": "Quantity",
@@ -335,6 +598,11 @@
   },
 
   "ingredient": {
+    "lowAlertAt": "Low Stock Alert At",
+    "lowAlertPlaceholder": "Set low stock alert threshold",
+    "lowAlertHint": "Receive notification when stock falls below this level.",
+    "search": "Search Ingredients",
+    "sort": "Sort Ingredients",
     "title": "Ingredient Management",
     "subtitle": "Track and manage all ingredients in your stock.",
     "addButton": "Add Ingredient",
@@ -357,8 +625,26 @@
     "errorRequired": "Name and unit are required.",
     "total": "Total Ingredients"
   },
-
+  "customize": {
+    "title": "Customize",
+    "qty_to_customize": "Quantity to customize",
+    "of_total": "of {total} total",
+    "customizing_one": "Customizing 1 of 1",
+    "sugar": { "label": "Sugar", "full": "100%", "half": "50%", "none": "0%" },
+    "ice": {
+      "label": "Ice",
+      "regular": "Regular",
+      "less": "Less",
+      "none": "None"
+    },
+    "note": "Note",
+    "note_placeholder": "e.g. No cinnamon"
+  },
   "discounts": {
+    "no_data": "No discounts found.",
+    "delete_title": "Delete Discount",
+    "search": "Search Discounts",
+    "sort": "Sort Discounts",
     "title": "Discounts",
     "total": "Total Discounts",
     "description": "Manage discount codes and offers.",
@@ -384,10 +670,39 @@
     "update_success": "Discount updated successfully!",
     "delete_success": "Discount deleted successfully!",
     "delete_error": "Failed to delete discount.",
-    "error": "Something went wrong!"
+    "error": "Something went wrong!",
+    "empty_title": "Nothing here yet",
+    "empty_help": "Try clearing filters or add a new discount.",
+    "expired": "Expired",
+    "valid": "Valid",
+    "filter": {
+      "type": "Type",
+      "status": "Status",
+      "from": "Expiry From",
+      "to": "Expiry To"
+    },
+    "validation": {
+      "code_required": "Code is required.",
+      "one_value": "Enter either percent or amount (not both).",
+      "value_required": "Value is required.",
+      "value_min": "Value must be greater than zero.",
+      "type_required": "Type is required.",
+      "expires_at_invalid": "Expires At date is invalid."
+    }
   },
 
   "user": {
+    "showing": "Showing",
+    "of": " of ",
+    "users": "users",
+    "restored": "Restored User",
+    "active": "Active",
+    "trash": "Trash",
+    "restore": "Restore",
+    "deleted_at": "Deleted At",
+    "no_data": "No users found.",
+    "search": "Search Users",
+    "sort": "Sort Users",
     "manage_users": "Manage Users",
     "subtitle": "Create and manage users for your cafe.",
     "user_management": "User Management",
@@ -408,11 +723,17 @@
     "email": "Email",
     "password": "Password",
     "role": "Role",
+    "new_password": "New Password",
+    "confirm_password": "Confirm Password",
+    "new_password_optional": "Enter new password",
+    "confirm_password_placeholder": "Confirm new password",
     "name_placeholder": "Enter full name",
-    "email_placeholder": "example@mail.com",
+    "email_placeholder": "examplemail.com",
     "password_placeholder": "********"
   },
   "action": {
+    "delete_forever": "Delete Forever",
+    "restore": "Restore",
     "add_user": "Add User",
     "edit": "Edit",
     "delete": "Delete",
@@ -468,6 +789,9 @@
     "used/perday": "Average Used/Day"
   },
   "banners": {
+    "delete_title": "Delete Banner",
+    "search": "Search Banners",
+    "sort": "Sort Banners",
     "title": "Banner Management",
     "description": "Manage promotional banners for the customer app.",
     "add_button": "Add Banner",
@@ -493,6 +817,8 @@
     "display_order": "Display Order"
   },
   "notifications": {
+    "search": "Search Notifications",
+    "sort": "Sort Notifications",
     "manage_notifications": "Notification Management",
     "subtitle": "Send, schedule, and manage customer or staff notifications.",
     "add_button": "Add Notification",
@@ -538,5 +864,38 @@
     "low": "Low stock",
     "out_of_stock": "Out of stock",
     "title": "Notifications of stock"
+  },
+  "setting": {
+    "view_only": "Exchange Rate",
+    "exchange_rate_click_to_change": " Click to change",
+    "exchange_rate_change_title": " Change Exchange Rate",
+    "exchange_rate_effect": " This rate will be used for cashier transactions.",
+    "save_apply": "Save & Apply",
+    "change_rate_here": "Change rate here",
+    "exchange_rate_change_here_caption": "Exchange Rate",
+    "exchange_rate_cashier_edit_hint": "Edit exchange rate for cashier transactions.",
+    "exchange_rate_cashier_hint": "Set exchange rate for cashier transactions.",
+    "merchant_id": "Merchant ID",
+    "merchant_id_help": "Your unique merchant ID for payment processing.",
+    "change_logo": "Change Logo",
+    "app_setting_subtitle": "Configure your cafe settings.",
+    "shop_name": "Shop Name",
+    "tax_rate": "Tax Rate (%)",
+    "exchange_rate": "Exchange Rate (៛)",
+    "edit_app_setting": "Edit App Settings",
+    "title": "Settings",
+    "app_setting": "App Settings",
+    "subtitle": "Configure your cafe settings",
+    "general": "General Settings",
+    "business_name": "Business Name",
+    "business_email": "Business Email",
+    "business_phone": "Business Phone",
+    "address": "Address",
+    "timezone": "Timezone",
+    "currency": "Currency",
+    "language": "Language",
+    "save_changes": "Save Changes",
+    "success_message": "Settings updated successfully!",
+    "error_message": "Failed to update settings."
   }
 }

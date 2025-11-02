@@ -6,7 +6,6 @@ import "./style.css";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import "./assets/fonts.css";
-
 // Khmer Unicode
 import i18n from "./plugins/i18n";
 

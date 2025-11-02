@@ -42,45 +42,28 @@ import Settings from "@/pages/Settings/Settings.vue";
 // About Developer
 import About from "@/pages/Settings/About.vue";
 
+// Customer/Guest-facing
+import OrderHistory from "@/pages/Customer/OrderHistory.vue";
 import Profile from "@/pages/Customer/Profile.vue";
+import CustomerNotifications from "@/pages/Customer/CustomerNotifications.vue";
 const MarketingBanner = () => import("@/pages/Marketing/MarketingBanner.vue");
 const NotificationManagement = () =>
   import("@/pages/Marketing/NotificationManagement.vue");
-
 // Discounts (lazy-loaded)
 const DiscountManagement = () =>
   import("@/pages/Discount/DiscountManagement.vue");
-
-// Customer Home (NEW)
 const CustomerHome = () => import("@/pages/Customer/Home.vue");
+// Guest QR Order (public)
 
 const routes = [
   { path: "/", redirect: "/login" },
+
+  // --- Auth ---
   {
     path: "/login",
     name: "Login",
     component: Login,
     meta: { title: "Login - Cafe Eden" },
-  },
-  {
-    path: "/marketing/banner",
-    name: "MarketingBanner",
-    component: MarketingBanner,
-    meta: {
-      requiresAuth: true,
-      roles: ["Super Admin", "Admin"],
-      title: "Banner Management - Cafe Eden",
-    },
-  },
-  {
-    path: "/marketing/notification",
-    name: "NotificationManagement",
-    component: NotificationManagement,
-    meta: {
-      requiresAuth: true,
-      roles: ["Super Admin", "Admin"],
-      title: "Notification Management - Cafe Eden",
-    },
   },
   {
     path: "/register",
@@ -101,7 +84,7 @@ const routes = [
     meta: { title: "Forgot Password - Cafe Eden" },
   },
 
-  // Dashboard: all roles
+  // --- Main Modules ---
   {
     path: "/dashboard",
     name: "Dashboard",
@@ -113,7 +96,47 @@ const routes = [
     },
   },
 
-  // POS: staff only
+  {
+    path: "/dashboard/revenue",
+    name: "DashboardRevenueDetail",
+    component: () => import("@/pages/DashboardDetails/RevenueDetail.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier"],
+      title: "Revenue Detail - Cafe Eden",
+    },
+  },
+  {
+    path: "/dashboard/orders",
+    name: "DashboardOrdersDetail",
+    component: () => import("@/pages/DashboardDetails/OrdersDetail.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier"],
+      title: "Orders Detail - Cafe Eden",
+    },
+  },
+  {
+    path: "/dashboard/customers",
+    name: "DashboardCustomersDetail",
+    component: () => import("@/pages/DashboardDetails/CustomersDetail.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier"],
+      title: "Customers Detail - Cafe Eden",
+    },
+  },
+  {
+    path: "/dashboard/top-items",
+    name: "DashboardTopItemsDetail",
+    component: () => import("@/pages/DashboardDetails/TopItemsDetail.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier"],
+      title: "Top Items - Cafe Eden",
+    },
+  },
+
   {
     path: "/pos",
     name: "POS",
@@ -124,8 +147,6 @@ const routes = [
       title: "POS - Cafe Eden",
     },
   },
-
-  // Orders: staff only
   {
     path: "/orders",
     name: "Orders",
@@ -147,7 +168,7 @@ const routes = [
     },
   },
 
-  // Menu Module: admin/staff only
+  // --- Menu/Inventory ---
   {
     path: "/menu/items",
     name: "MenuItems",
@@ -168,18 +189,30 @@ const routes = [
       title: "Categories - Cafe Eden",
     },
   },
+  {
+    path: "/inventory/stock/:id",
+    name: "StockDetail",
+    component: () => import("@/pages/Inventory/StockDetail.vue"),
+    props: true,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier"],
+      title: "Stock Detail - Cafe Eden",
+    },
+  },
 
-  // Inventory Module: admin only
+  // (Keep your existing list route as-is)
   {
     path: "/inventory/stock",
     name: "Stock",
     component: Stock,
     meta: {
       requiresAuth: true,
-      roles: ["Super Admin", "Admin"],
+      roles: ["Super Admin", "Admin", "Cashier"],
       title: "Stock - Cafe Eden",
     },
   },
+
   {
     path: "/inventory/recipe",
     name: "Recipe",
@@ -196,12 +229,12 @@ const routes = [
     component: Ingredient,
     meta: {
       requiresAuth: true,
-      roles: ["Super Admin", "Admin"],
+      roles: ["Super Admin", "Admin", "Cashier"],
       title: "Ingredients - Cafe Eden",
     },
   },
 
-  // Reports: admin/staff only
+  // --- Reports/User Management/Analytics ---
   {
     path: "/reports",
     name: "Reports",
@@ -212,8 +245,6 @@ const routes = [
       title: "Reports - Cafe Eden",
     },
   },
-
-  // User Management: admin only
   {
     path: "/users",
     name: "Users",
@@ -224,8 +255,6 @@ const routes = [
       title: "User Management - Cafe Eden",
     },
   },
-
-  // Analytics: admin only
   {
     path: "/analytics",
     name: "Analytics",
@@ -237,7 +266,7 @@ const routes = [
     },
   },
 
-  // Alerts: all roles
+  // --- Alerts, Settings, Discounts ---
   {
     path: "/messages",
     name: "Message",
@@ -248,8 +277,6 @@ const routes = [
       title: "Messages - Cafe Eden",
     },
   },
-
-  // Notifications: all roles (this is the *user-facing* notification center)
   {
     path: "/notifications",
     name: "Notifications",
@@ -260,8 +287,6 @@ const routes = [
       title: "Notifications - Cafe Eden",
     },
   },
-
-  // Settings: all roles
   {
     path: "/settings",
     name: "Settings",
@@ -272,8 +297,6 @@ const routes = [
       title: "Settings - Cafe Eden",
     },
   },
-
-  // Discounts: all roles
   {
     path: "/discounts",
     name: "Discounts",
@@ -285,15 +308,25 @@ const routes = [
     },
   },
 
-  // Customer Home: customer only
+  // --- Customer/Guest-Facing Pages: BOTH Customer + Table roles ---
   {
     path: "/customer",
     name: "CustomerHome",
     component: CustomerHome,
     meta: {
       requiresAuth: true,
-      roles: ["Customer"],
+      roles: ["Customer", "Table"], // <--- Updated!
       title: "My Account - Cafe Eden",
+    },
+  },
+  {
+    path: "/history",
+    name: "OrderHistory",
+    component: OrderHistory,
+    meta: {
+      requiresAuth: true,
+      roles: ["Customer", "Table"], // <--- Updated!
+      title: "Order History - Cafe Eden",
     },
   },
   {
@@ -306,16 +339,56 @@ const routes = [
       title: "My Profile - Cafe Eden",
     },
   },
+  {
+    path: "/notificationscs",
+    name: "Notifications",
+    component: CustomerNotifications,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin", "Cashier", "Customer", "Table"],
+      title: "Notifications - Cafe Eden",
+    },
+  },
 
-  // Not found page
+  // --- Marketing ---
+  {
+    path: "/marketing/banner",
+    name: "MarketingBanner",
+    component: MarketingBanner,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin"],
+      title: "Banner Management - Cafe Eden",
+    },
+  },
+  {
+    path: "/marketing/notification",
+    name: "NotificationManagement",
+    component: NotificationManagement,
+    meta: {
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin"],
+      title: "Notification Management - Cafe Eden",
+    },
+  },
+  {
+    path: "/tables",
+    name: "ManageTables",
+    component: () => import("@/pages/Table/ManageTables.vue"),
+    meta: {
+      title: "Manage Tables",
+      requiresAuth: true,
+      roles: ["Super Admin", "Admin"],
+    },
+  },
+
+  // --- Not Found & About ---
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: () => import("@/components/Common/NotFound.vue"),
     meta: { title: "404 Not Found - Cafe Eden" },
   },
-
-  // About
   {
     path: "/about",
     name: "About",
@@ -337,9 +410,8 @@ function getHomeRouteByRole(role) {
     case "Cashier":
       return { name: "Dashboard" };
     case "Customer":
-      return { name: "CustomerHome" };
     case "Table":
-      return { name: "POS" };
+      return { name: "CustomerHome" };
     default:
       return { name: "Login" };
   }
@@ -349,6 +421,14 @@ function getHomeRouteByRole(role) {
 router.beforeEach(async (to, from, next) => {
   const defaultTitle = "Cafe Eden";
   document.title = to.meta.title || defaultTitle;
+
+  // --- PUBLIC ROUTE: Allow /customer?slug=table1 for QR auto-login ---
+  if (to.path === "/customer" && to.query.slug) {
+    return next();
+  }
+
+  // --- PUBLIC ROUTE: Allow /guest-order/:slug with or without login ---
+  if (to.meta.public) return next();
 
   const token = localStorage.getItem("token");
   const isLoggedIn = !!token;

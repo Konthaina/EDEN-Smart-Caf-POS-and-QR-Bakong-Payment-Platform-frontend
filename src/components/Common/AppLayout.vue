@@ -1,16 +1,14 @@
 <template>
-  <div
-    class="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden print:block"
-  >
+  <div class="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden print:block">
     <!-- Sidebar (hidden on print) -->
     <div class="print:hidden">
       <Sidebar />
     </div>
 
     <!-- Main Area -->
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="flex-1 min-h-0 flex flex-col overflow-hidden">
       <!-- Page Content -->
-      <main class="flex-1 overflow-y-auto p-6 text-gray-800 dark:text-white">
+      <main class="flex-1 min-h-0 overflow-hidden flex flex-col text-gray-800 dark:text-white">
         <slot />
       </main>
     </div>

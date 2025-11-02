@@ -1,289 +1,234 @@
 <template>
-  <aside
-    :class="[
-      'bg-white dark:bg-gray-800 shadow-md h-full flex flex-col justify-between border-r border-gray-200 dark:border-gray-700 rounded-r-2xl overflow-hidden transition-all duration-300',
-      collapsed ? 'w-20' : 'w-60',
-    ]"
-  >
-    <div class="flex-1 overflow-y-auto custom-scrollbar">
-      <!-- Logo & Collapse Toggle -->
+  <aside :class="[
+    'transition-all duration-200 border h-screen flex flex-col shadow-md rounded-tr-xl rounded-br-xl',
+    'bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-800',
+    collapsed ? 'w-[90px]' : 'w-[235px]',
+  ]">
+    <!-- Header -->
+    <div :class="[
+      'flex items-center border-b min-h-[64px]',
+      'border-gray-200 dark:border-gray-800',
+      collapsed ? 'pl-3 pr-2 py-4' : 'pl-5 pr-4 py-4 justify-between',
+    ]">
       <div
-        class="flex items-center justify-between p-4"
-        :class="{ 'justify-center': collapsed }"
-      >
-        <div v-if="!collapsed" class="sidebar-logo-text">Eden Coffee</div>
-        <button
-          @click="collapsed = !collapsed"
-          class="text-purple-500 hover:text-purple-600 transition rounded-full p-3.5 sidebar-icon"
-          :class="{ 'ml-auto': !collapsed }"
-        >
-          <component
-            :is="collapsed ? ChevronRight : ChevronLeft"
-            class="w-5 h-5"
-          />
-        </button>
+        class="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-sm">
+        <img :src="appLogoUrl" alt="Logo" class="w-full h-full object-cover rounded-lg" @error="onLogoError" />
       </div>
+      <span v-if="!collapsed"
+        class="ml-4 font-bold text-lg whitespace-nowrap bg-gradient-to-r from-purple-500 via-pink-400 to-purple-700 bg-clip-text text-transparent select-none">
+        {{ settings.shop_name || t('sidebar.app_name') }}
+      </span>
+      <button @click="toggleSidebar" :title="t('sidebar.collapse')"
+        class="ml-auto p-2 rounded-lg transition-all duration-150 outline-none">
+        <svg :class="[
+          'w-6 h-6 text-purple-500 transition-transform duration-300',
+          collapsed ? 'rotate-180' : '',
+        ]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          viewBox="0 0 24 24">
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+      </button>
+    </div>
 
-      <!-- Management Section -->
-      <div
-        v-if="!collapsed"
-        class="px-6 text-xs font-semibold uppercase text-gray-500 dark:text-white mb-1 tracking-wide"
-      >
-        {{ $t("sidebar.management") }}
-      </div>
-      <nav class="space-y-1 px-3 dark:text-gray-200">
-        <!-- Dashboard: Admin only -->
-        <SidebarItem
-          v-if="['Super Admin', 'Admin', 'Cashier'].includes(userRole)"
-          to="/dashboard"
-          :label="$t('sidebar.dashboard')"
-          :icon="BarChart2"
-          :collapsed="collapsed"
-        />
-
-        <!-- POS, Orders: staff only -->
-        <SidebarItem
-          v-if="['Super Admin', 'Admin', 'Cashier'].includes(userRole)"
-          to="/pos"
-          :label="$t('sidebar.pos')"
-          :icon="ShoppingCart"
-          :collapsed="collapsed"
-        />
-        <SidebarItem
-          v-if="['Super Admin', 'Admin', 'Cashier'].includes(userRole)"
-          to="/orders"
-          :label="$t('sidebar.orders')"
-          :icon="FileText"
-          :collapsed="collapsed"
-        />
-
-        <!-- Menu Dropdown: Admin only -->
-        <div v-if="['Super Admin', 'Admin', 'Cashier'].includes(userRole)">
-          <button
-            @click="isMenuOpen = !isMenuOpen"
-            class="w-full flex items-center dark:text-gray-200"
-            :class="
-              collapsed
-                ? 'justify-center p-3.5'
-                : 'justify-between px-3 py-2 rounded-lg text-sm font-medium text-gray-700  hover:bg-purple-100 dark:hover:bg-gray-700 hover:shadow-md transition'
-            "
-          >
-            <span class="flex items-center gap-2">
-              <Utensils class="w-4 h-4" />
-              <span v-if="!collapsed">{{ $t("sidebar.menu") }}</span>
-            </span>
-            <ChevronDown
-              v-if="!collapsed"
-              :class="{ 'rotate-180': isMenuOpen }"
-              class="w-4 h-4 transition-transform"
-            />
-          </button>
-          <div v-if="isMenuOpen && !collapsed" class="ml-6 mt-1 space-y-1">
-            <SidebarItem
-              to="/menu/items"
-              :label="$t('sidebar.menu_items')"
-              :icon="List"
-              small
-              :collapsed="collapsed"
-            />
-            <SidebarItem
-              to="/menu/categories"
-              :label="$t('sidebar.categories')"
-              :icon="FolderOpen"
-              small
-              :collapsed="collapsed"
-            />
-          </div>
+    <!-- Scrollable menu area -->
+    <div class="flex-1 min-h-0 overflow-y-auto pr-1 no-scrollbar">
+      <div class="pt-4">
+        <!-- Management -->
+        <div v-if="
+          !collapsed &&
+          (showKey('dashboard') ||
+            showKey('pos') ||
+            showKey('orders') ||
+            showKey('menu') ||
+            !isCashier)
+        " class="px-6 mb-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+          {{ t('sidebar.management') }}
         </div>
 
-        <!-- Inventory Dropdown: Admin only -->
-        <div v-if="['Super Admin', 'Admin'].includes(userRole)">
-          <button
-            @click="isInventoryOpen = !isInventoryOpen"
-            class="w-full flex items-center dark:text-gray-200"
-            :class="
+        <nav class="flex flex-col gap-1 px-2">
+          <!-- Dashboard -->
+          <SidebarItem v-if="showKey('dashboard')" to="/dashboard" :label="t('sidebar.dashboard')" :icon="BarChart2"
+            :collapsed="collapsed" :active="route.path === '/dashboard' || route.path.startsWith('/dashboard')" />
+
+          <!-- POS -->
+          <SidebarItem v-if="showKey('pos')" to="/pos" :label="t('sidebar.pos')" :icon="ShoppingCart"
+            :collapsed="collapsed" :active="route.path.startsWith('/pos')" />
+
+          <!-- Orders -->
+          <SidebarItem v-if="showKey('orders')" to="/orders" :label="t('sidebar.orders')" :icon="FileText"
+            :collapsed="collapsed" :active="route.path.startsWith('/orders')" />
+
+          <!-- Menu -->
+          <div v-if="showKey('menu')">
+            <button @click="isMenuOpen = !isMenuOpen" :title="collapsed ? t('sidebar.menu') : ''" :class="[
+              route.path.startsWith('/menu/')
+                ? 'bg-purple-50 text-purple-700 font-semibold dark:bg-purple-900 dark:text-purple-200'
+                : 'text-gray-700 hover:bg-purple-100 hover:text-purple-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white',
               collapsed
-                ? 'justify-center p-3.5'
-                : 'justify-between px-3 py-2 rounded-lg text-sm font-medium text-gray-700  hover:bg-purple-100 dark:hover:bg-gray-700 hover:shadow-md transition'
-            "
-          >
-            <span class="flex items-center gap-2">
-              <Boxes class="w-4 h-4" />
-              <span v-if="!collapsed">{{ $t("sidebar.inventory") }}</span>
-            </span>
-            <ChevronDown
-              v-if="!collapsed"
-              :class="{ 'rotate-180': isInventoryOpen }"
-              class="w-4 h-4 transition-transform"
-            />
-          </button>
-          <div v-if="isInventoryOpen && !collapsed" class="ml-6 mt-1 space-y-1">
-            <SidebarItem
-              to="/inventory/stock"
-              :label="$t('sidebar.stock')"
-              :icon="Box"
-              small
-              :collapsed="collapsed"
-            />
-            <SidebarItem
-              to="/inventory/recipe"
-              :label="$t('sidebar.recipe')"
-              :icon="FlaskConical"
-              small
-              :collapsed="collapsed"
-            />
-            <SidebarItem
-              to="/inventory/ingredient"
-              :label="$t('sidebar.ingredient')"
-              :icon="Leaf"
-              small
-              :collapsed="collapsed"
-            />
+                ? 'flex items-center pl-1 pr-2 gap-7 py-2 rounded-lg text-sm font-medium'
+                : 'flex items-center w-full px-3 justify-between gap-2 py-2 rounded-lg text-sm font-medium',
+              'transition-colors duration-150 cursor-pointer select-none',
+            ]">
+              <span class="flex items-center gap-2">
+                <component :is="Utensils" class="w-5 h-5" />
+                <span v-if="!collapsed">{{ t('sidebar.menu') }}</span>
+              </span>
+              <ChevronDown :class="[
+                'w-4 h-4 ml-1 transition-transform',
+                { 'rotate-180': isMenuOpen },
+              ]" />
+            </button>
+
+            <div v-if="isMenuOpen" :class="collapsed
+              ? 'ml-0 mt-1 flex flex-col gap-1 items-center'
+              : 'ml-8 mt-1 flex flex-col gap-1'
+              ">
+              <SidebarItem to="/menu/items" :label="t('sidebar.menu_items')" :icon="List" :collapsed="collapsed" small
+                :active="route.path.startsWith('/menu/items')" />
+              <SidebarItem to="/menu/categories" :label="t('sidebar.categories')" :icon="FolderOpen"
+                :collapsed="collapsed" small :active="route.path.startsWith('/menu/categories')" />
+            </div>
           </div>
-        </div>
 
-        <!-- User Management & Analytics: Admin only -->
-        <SidebarItem
-          v-if="['Super Admin', 'Admin'].includes(userRole)"
-          to="/users"
-          :label="$t('sidebar.users')"
-          :icon="Users"
-          :collapsed="collapsed"
-        />
-        <SidebarItem
-          v-if="['Super Admin', 'Admin'].includes(userRole)"
-          to="/analytics"
-          :label="$t('sidebar.analytics')"
-          :icon="LineChart"
-          :collapsed="collapsed"
-        />
+          <!-- Inventory -->
+          <div v-if="showKey('inventory')">
+            <button @click="isInventoryOpen = !isInventoryOpen" :title="collapsed ? t('sidebar.inventory') : ''" :class="[
+              route.path.startsWith('/inventory/')
+                ? 'bg-purple-50 text-purple-700 font-semibold dark:bg-purple-900 dark:text-purple-200'
+                : 'text-gray-700 hover:bg-purple-100 hover:text-purple-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white',
+              collapsed
+                ? 'flex items-center pl-1 pr-2 gap-7 py-2 rounded-lg text-sm font-medium'
+                : 'flex items-center w-full px-3 justify-between gap-2 py-2 rounded-lg text-sm font-medium',
+              'transition-colors duration-150 cursor-pointer select-none',
+            ]">
+              <span class="flex items-center gap-2">
+                <component :is="Boxes" class="w-5 h-5" />
+                <span v-if="!collapsed">{{ t('sidebar.inventory') }}</span>
+              </span>
+              <ChevronDown :class="[
+                'w-4 h-4 ml-1 transition-transform',
+                { 'rotate-180': isInventoryOpen },
+              ]" />
+            </button>
+            <div v-if="isInventoryOpen" :class="collapsed
+              ? 'ml-0 mt-1 flex flex-col gap-1 items-center'
+              : 'ml-8 mt-1 flex flex-col gap-1'
+              ">
+              <SidebarItem to="/inventory/stock" :label="t('sidebar.stock')" :icon="Box" :collapsed="collapsed" small
+                :active="route.path.startsWith('/inventory/stock')" />
+              <SidebarItem v-if="!isCashier" to="/inventory/recipe" :label="t('sidebar.recipe')" :icon="FlaskConical"
+                :collapsed="collapsed" small :active="route.path.startsWith('/inventory/recipe')" />
+              <SidebarItem to="/inventory/ingredient" :label="t('sidebar.ingredient')" :icon="Leaf"
+                :collapsed="collapsed" small :active="route.path.startsWith('/inventory/ingredient')" />
+            </div>
+          </div>
 
-        <!-- Discounts: all roles -->
-        <SidebarItem
-          to="/discounts"
-          :label="$t('sidebar.discounts')"
-          :icon="Percent"
-          :collapsed="collapsed"
-        />
-      </nav>
+          <!-- Users -->
+          <SidebarItem v-if="showKey('users')" to="/users" :label="t('sidebar.users')" :icon="Users"
+            :collapsed="collapsed" :active="route.path.startsWith('/users')" />
 
-      <!-- Marketing Section -->
-      <div
-        v-if="!collapsed"
-        class="px-6 mt-6 mb-1 text-xs font-semibold uppercase text-gray-500 dark:text-white tracking-wide"
-      >
-        {{ $t("roles.customer") }}
+          <!-- Analytics -->
+          <SidebarItem v-if="showKey('analytics')" to="/analytics" :label="t('sidebar.analytics')" :icon="BarChart2"
+            :collapsed="collapsed" :active="route.path.startsWith('/analytics')" />
+
+          <!-- Discounts -->
+          <SidebarItem v-if="showKey('discounts')" to="/discounts" :label="t('sidebar.discounts')" :icon="Percent"
+            :collapsed="collapsed" :active="route.path.startsWith('/discounts')" />
+
+          <!-- Customer section -->
+          <div v-if="!collapsed && (showKey('tables') || showKey('marketing'))"
+            class="px-6 mt-6 mb-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            {{ tt('sidebar.customer', 'roles.customer') }}
+          </div>
+
+          <!-- Tables -->
+          <SidebarItem v-if="showKey('tables')" to="/tables" :label="t('sidebar.tables')" :icon="List"
+            :collapsed="collapsed" :active="route.path.startsWith('/tables')" />
+
+          <!-- Marketing -->
+          <div v-if="showKey('marketing')">
+            <button @click="isMarketingOpen = !isMarketingOpen" :title="collapsed ? t('sidebar.marketing') : ''" :class="[
+              route.path.startsWith('/marketing/')
+                ? 'bg-purple-50 text-purple-700 font-semibold dark:bg-purple-900 dark:text-purple-200'
+                : 'text-gray-700 hover:bg-purple-100 hover:text-purple-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white',
+              collapsed
+                ? 'flex items-center pl-1 pr-2 gap-7 py-2 rounded-lg text-sm font-medium'
+                : 'flex items-center w-full px-3 justify-between gap-2 py-2 rounded-lg text-sm font-medium',
+              'transition-colors duration-150 cursor-pointer select-none',
+            ]">
+              <span class="flex items-center gap-2">
+                <component :is="Megaphone" class="w-5 h-5" />
+                <span v-if="!collapsed">{{ t('sidebar.marketing') }}</span>
+              </span>
+              <ChevronDown :class="[
+                'w-4 h-4 ml-1 transition-transform',
+                { 'rotate-180': isMarketingOpen },
+              ]" />
+            </button>
+            <div v-if="isMarketingOpen" :class="collapsed
+              ? 'ml-0 mt-1 flex flex-col gap-1 items-center'
+              : 'ml-8 mt-1 flex flex-col gap-1'
+              ">
+              <SidebarItem to="/marketing/banner" :label="t('sidebar.banner')" :icon="Image" :collapsed="collapsed"
+                small :active="route.path.startsWith('/marketing/banner')" />
+              <SidebarItem to="/marketing/notification" :label="t('sidebar.notification')" :icon="Bell"
+                :collapsed="collapsed" small :active="route.path.startsWith('/marketing/notification')" />
+            </div>
+          </div>
+        </nav>
       </div>
-      <nav class="space-y-1 px-3">
-        <!-- Marketing Dropdown: Admin only -->
-        <div v-if="['Super Admin', 'Admin'].includes(userRole)">
-          <button
-            @click="isMarketingOpen = !isMarketingOpen"
-            class="w-full flex items-center dark:text-gray-200"
-            :class="
-              collapsed
-                ? 'justify-center p-3.5'
-                : 'justify-between px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-purple-100 dark:hover:bg-gray-700 hover:shadow-md transition'
-            "
-          >
-            <span class="flex items-center gap-2">
-              <Megaphone class="w-4 h-4" />
-              <span v-if="!collapsed">{{ $t("sidebar.marketing") }}</span>
-            </span>
-            <ChevronDown
-              v-if="!collapsed"
-              :class="{ 'rotate-180': isMarketingOpen }"
-              class="w-4 h-4 transition-transform"
-            />
-          </button>
-          <div v-if="isMarketingOpen && !collapsed" class="ml-6 mt-1 space-y-1">
-            <SidebarItem
-              to="/marketing/banner"
-              :label="$t('sidebar.banner')"
-              :icon="Image"
-              small
-              :collapsed="collapsed"
-            />
-            <SidebarItem
-              to="/marketing/notification"
-              :label="$t('sidebar.notification')"
-              :icon="Bell"
-              small
-              :collapsed="collapsed"
-            />
-          </div>
-        </div>
-          <SidebarItem
-            to="/notifications"
-            :label="$t('sidebar.notification')"
-            :icon="Bell"
-            :collapsed="collapsed"
-            :badge="notificationCount > 0 ? notificationCount : null"
-          />
-      </nav>
     </div>
 
     <!-- Footer -->
-    <div
-      v-if="!collapsed"
-      class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 relative"
-    >
-      <div
-        class="flex items-center gap-3 cursor-pointer"
-        @click="toggleProfileMenu"
-      >
-        <img
-          :src="currentUser?.profile?.avatar_url || defaultAvatar"
-          @error="onAvatarError"
-          class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-md ring-2 ring-purple-300 dark:ring-purple-500 dark:border-gray-700"
-          alt="User Avatar"
-        />
-        <div class="text-sm leading-tight">
+    <div class="p-4 border-t bg-gray-50 border-gray-200 dark:bg-gray-900 dark:border-gray-800 relative">
+      <div class="flex items-center gap-3 cursor-pointer justify-center" @click="toggleProfileMenu">
+        <img :src="currentUser?.profile?.avatar_url || defaultAvatar" @error="onAvatarError"
+          class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-gray-800 shadow-md ring-2 ring-purple-300"
+          alt="User Avatar" />
+        <div v-if="!collapsed" class="text-sm leading-tight">
           <p class="font-semibold text-gray-800 dark:text-white">
-            {{ currentUser?.name || "Loading..." }}
+            {{ currentUser?.name || t('sidebar.loading') }}
           </p>
-          <p class="text-xs text-gray-500 dark:text-gray-300">
-            {{ currentUser?.email || "" }}
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            {{ currentUser?.email || '' }}
           </p>
         </div>
       </div>
 
-      <!-- Profile Menu -->
       <transition name="fade">
-        <div
-          v-if="showProfileMenu"
-          class="absolute bottom-[110px] left-4 right-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md py-2 z-50"
-        >
+        <div v-if="showProfileMenu" :class="[
+          'absolute z-50 shadow-md border rounded-lg flex flex-col transition-all duration-200',
+          'bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-800',
+          collapsed
+            ? 'bottom-[110px] left-1/2 -translate-x-1/2 w-14 py-1 mt-4 pl-2'
+            : 'bottom-[110px] left-4 right-4 w-auto py-2',
+        ]">
           <button
-            class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
-            @click="goToSettings"
-          >
-            <Settings class="w-4 h-4" />
-            <span>{{ $t("sidebar.profile_settings") }}</span>
+            class="flex flex-row items-center w-full px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition gap-2"
+            @click="goToSettings">
+            <Settings class="w-5 h-5 text-gray-600 dark:text-gray-200" />
+            <span v-if="!collapsed" class="ml-2 text-sm text-gray-700 dark:text-gray-200">
+              {{ t('sidebar.profile_settings') }}
+            </span>
           </button>
           <button
-            class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900 flex items-center gap-2"
-            @click="logout"
-          >
-            <LogOut class="w-4 h-4" />
-            <span>{{ $t("sidebar.logout") }}</span>
+            class="flex flex-row items-center w-full px-2 py-2 hover:bg-red-50 dark:hover:bg-red-900 rounded transition gap-2"
+            @click="logout">
+            <LogOut class="w-5 h-5 text-red-600" />
+            <span v-if="!collapsed" class="ml-2 text-sm text-red-600 dark:text-red-400">
+              {{ t('sidebar.logout') }}
+            </span>
           </button>
         </div>
       </transition>
 
-      <!-- Footer Note -->
-      <div
-        class="text-center text-[11px] text-gray-500 dark:text-gray-400 py-3 border-gray-100 dark:border-gray-700 flex items-center justify-center gap-2"
-      >
+      <div class="text-center text-[11px] text-gray-500 dark:text-gray-400 py-3 flex items-center justify-center gap-2">
         <span class="text-purple-500 text-[13px]">⚡</span>
-        <span>
-          Powered by
-          <a
-            href="/about"
-            class="ml-1 font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 hover:underline"
-          >
-            Thesis Developer
-          </a>
+        <span v-if="!collapsed">
+          {{ t('sidebar.powered_by') }}
+          <a href="/about"
+            class="ml-1 font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 hover:underline">Thesis
+            Developer</a>
         </span>
       </div>
     </div>
@@ -291,116 +236,148 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watchEffect, computed, inject } from "vue";
-import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
-import { useToast } from "vue-toastification";
-import SidebarItem from "./SidebarItem.vue";
-import api from "@/plugins/axios";
-import { useUserStore } from "@/store/user";
-import { Megaphone, Image } from "lucide-vue-next";
-
+import { ref, computed, watchEffect, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter, useRoute } from 'vue-router';
+import SidebarItem from './SidebarItem.vue';
+import { useUserStore } from '@/store/user';
+import api from '@/plugins/axios';
+import defaultAvatar from '@/assets/default-avatar.png';
+import useSettings from '@/composables/useSettings';
+import { useSidebarStore } from '@/store/sidebar';
 import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronDown,
   BarChart2,
   ShoppingCart,
   FileText,
+  Users,
   Utensils,
   List,
   FolderOpen,
+  ChevronDown,
+  Megaphone,
+  Image,
+  Bell,
   Boxes,
   Box,
   FlaskConical,
   Leaf,
-  Users,
-  LineChart,
-  MessageCircle,
-  Bell,
-  Percent,
   Settings,
   LogOut,
-} from "lucide-vue-next";
+  Percent,
+} from 'lucide-vue-next';
 
-import defaultAvatar from "@/assets/default-avatar.png";
-const notificationCount = inject("notificationCount", 0);
-
-const isMarketingOpen = ref(false);
 const { t } = useI18n();
-const isMenuOpen = ref(false);
-const isInventoryOpen = ref(false);
-const collapsed = ref(false);
-const showProfileMenu = ref(false);
-const route = useRoute();
-const router = useRouter();
-const toast = useToast();
+const { settings, fetchSettings } = useSettings();
 
+/** helper: translated text with fallback keys (returns first real translation) */
+const tt = (...keys) => {
+  for (const k of keys) {
+    const v = t(k);
+    if (v && v !== k) return v;
+  }
+  return keys[keys.length - 1];
+};
+
+/* Logo URL handling */
+const appLogoUrl = computed(() => {
+  if (!settings.value.shop_logo) return '/logo.png';
+  if (/^https?:\/\//.test(settings.value.shop_logo)) return settings.value.shop_logo;
+  return settings.value.shop_logo.startsWith('/storage/')
+    ? settings.value.shop_logo
+    : `/storage/${settings.value.shop_logo.replace(/^public\//, '')}`;
+});
+function onLogoError(e) {
+  if (e?.target) e.target.src = '/logo.png';
+}
+onMounted(fetchSettings);
+
+/* Sidebar collapse */
+const sidebarStore = useSidebarStore();
+const collapsed = computed({
+  get: () => sidebarStore.collapsed,
+  set: (val) => sidebarStore.setCollapsed(val),
+});
+function toggleSidebar() {
+  sidebarStore.toggle();
+}
+
+/* Role-based visibility */
 const userStore = useUserStore();
 const currentUser = computed(() => userStore.currentUser);
-const userRole = computed(() => userStore.userRole);
+onMounted(() => userStore.fetchUser());
 
-const toggleProfileMenu = () =>
-  (showProfileMenu.value = !showProfileMenu.value);
+function normalizeRoleName(user) {
+  if (!user) return '';
+  const r = user.role?.name || user.role || user.roles?.[0]?.name || '';
+  return String(r).toLowerCase();
+}
+const roleName = computed(() => normalizeRoleName(currentUser.value));
+const isCashier = computed(() => roleName.value === 'cashier');
+
+/**
+ * Cashier whitelist:
+ * Add "inventory" so cashiers see Stock + Ingredient in the sidebar.
+ * (Recipe remains hidden below with v-if="!isCashier")
+ */
+const cashierWhitelist = new Set(['dashboard', 'pos', 'orders', 'menu', 'inventory']);
+function showKey(key) {
+  return isCashier.value ? cashierWhitelist.has(key) : true;
+}
+
+/* Dropdowns */
+const route = useRoute();
+const isMenuOpen = ref(false);
+const isInventoryOpen = ref(false);
+const isMarketingOpen = ref(false);
+watchEffect(() => {
+  isMenuOpen.value = route.path.startsWith('/menu/');
+  isInventoryOpen.value = route.path.startsWith('/inventory/');
+  isMarketingOpen.value = route.path.startsWith('/marketing/');
+});
+
+/* Profile actions */
+const showProfileMenu = ref(false);
+const toggleProfileMenu = () => (showProfileMenu.value = !showProfileMenu.value);
+const router = useRouter();
 const goToSettings = () => {
   showProfileMenu.value = false;
-  router.push("/settings");
+  router.push('/settings');
 };
 const logout = async () => {
   try {
-    await api.post("/logout");
-    localStorage.removeItem("token");
+    await api.post('/logout');
+    localStorage.removeItem('token');
     userStore.logout();
-    toast.success("Logged out successfully");
-    router.push("/login");
+    router.push('/login');
   } catch (error) {
-    toast.error("Logout failed");
-    console.error("❌ Logout error:", error);
+    console.error('❌ Logout error:', error);
   }
 };
 const onAvatarError = (e) => {
-  if (e && e.target) {
+  if (e?.target) {
     e.target.onerror = null;
     e.target.src = defaultAvatar;
   }
 };
-
-onMounted(() => {
-  userStore.fetchUser();
-});
-
-watchEffect(() => {
-  const path = route.path;
-  isMenuOpen.value = path.startsWith("/menu/");
-  isInventoryOpen.value = path.startsWith("/inventory/");
-});
 </script>
 
 <style scoped>
-.custom-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.custom-scrollbar::-webkit-scrollbar {
-  display: none;
-}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
 }
-.sidebar-logo-text {
-  @apply w-full text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500;
-  transition: all 0.3s ease;
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
-.sidebar-logo-text:hover {
-  @apply drop-shadow-[0_0_5px_rgba(236,72,153,0.7)];
-}
-.sidebar-icon:hover {
-  transform: scale(1.1);
-  transition: transform 0.2s ease;
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 </style>
