@@ -9,8 +9,6 @@
     <router-view />
   </div>
 </template>
- //test
- 
 <script setup>
 import { provide, onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
