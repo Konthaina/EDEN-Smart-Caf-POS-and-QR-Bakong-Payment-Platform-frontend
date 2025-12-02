@@ -44,6 +44,3 @@ const hiddenPages = [
 ];
 const showBanner = computed(() => !hiddenPages.includes(route.name));
 </script>
-
-
-//test
