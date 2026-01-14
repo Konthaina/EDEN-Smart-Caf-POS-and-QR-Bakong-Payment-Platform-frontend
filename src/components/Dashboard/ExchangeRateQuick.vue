@@ -38,7 +38,7 @@
         <span class="hidden sm:inline">{{
           t("setting.view_only") || "View only"
         }}</span>
-        <span aria-hidden="true">🔒</span>
+        <Lock class="h-4 w-4" aria-hidden="true" />
       </span>
     </button>
 
@@ -130,7 +130,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useToast } from "vue-toastification";
-import { Pencil } from "lucide-vue-next";
+import { Pencil, Lock } from "lucide-vue-next";
 import api from "@/plugins/axios";
 import useSettings from "@/composables/useSettings";
 
