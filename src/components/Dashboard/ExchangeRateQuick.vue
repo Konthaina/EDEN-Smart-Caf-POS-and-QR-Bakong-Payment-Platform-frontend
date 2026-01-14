@@ -2,7 +2,7 @@
   <div class="flex items-center gap-3">
     <!-- Pill -->
     <button
-      class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100 shadow-sm"
+      class="inline-flex items-center gap-2 px-3 py-2 rounded-full border text-sm bg-white/80 dark:bg-gray-800/80 backdrop-blur border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100 shadow-sm"
       :title="
         canEdit
           ? t('setting.exchange_rate_click_to_change') ||
@@ -28,10 +28,10 @@
 
       <span v-if="canEdit" class="inline-flex items-center gap-1 opacity-90">
         <span>·</span>
-        <span class="hidden sm:inline">{{
+        <span class="hidden sm:inline px-2">{{
           t("setting.change_rate_here") || "Change rate here"
         }}</span>
-        <span aria-hidden="true">✏️</span>
+        <Pencil class="h-4 w-4" aria-hidden="true" />
       </span>
       <span v-else class="inline-flex items-center gap-1 opacity-70">
         <span>·</span>
@@ -41,14 +41,6 @@
         <span aria-hidden="true">🔒</span>
       </span>
     </button>
-
-    <!-- Helper caption -->
-    <span v-if="canEdit" class="text-xs text-gray-500 dark:text-gray-400">
-      {{
-        t("setting.exchange_rate_change_here_caption") ||
-        "Admins / Cashiers can change the exchange rate here."
-      }}
-    </span>
 
     <!-- Modal -->
     <teleport to="body">
@@ -138,6 +130,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useToast } from "vue-toastification";
+import { Pencil } from "lucide-vue-next";
 import api from "@/plugins/axios";
 import useSettings from "@/composables/useSettings";
 
