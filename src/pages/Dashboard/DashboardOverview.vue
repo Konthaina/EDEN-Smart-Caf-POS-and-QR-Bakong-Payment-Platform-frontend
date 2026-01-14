@@ -1,8 +1,8 @@
 <template>
   <MainLayout>
     <!-- PAGE SHELL (fixed viewport height + invisible inner scroll) -->
-    <div class="h-[94vh] flex flex-col min-h-0">
-      <div class="px-2 sm:px-4 md:px-6 pt-6 pb-0 flex-1 overflow-y-auto no-scrollbar">
+    <div class="h-[100vh] flex flex-col min-h-0">
+      <div class="px-2 sm:px-4 md:px-6 pt-6 pb-6 flex-1 overflow-y-auto no-scrollbar">
 
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
