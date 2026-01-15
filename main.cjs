@@ -11,6 +11,7 @@ function createWindow() {
         height: 800,
         minWidth: 800,
         minHeight: 600,
+        autoHideMenuBar: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.cjs'),
             nodeIntegration: false,
@@ -18,6 +19,7 @@ function createWindow() {
         },
         title: 'EDEN Smart Café POS'
     })
+    win.setMenuBarVisibility(false);
 
     // Load the app
     if (isDev) {
