@@ -59,41 +59,12 @@
         </article>
       </section>
 
-      <!-- Project Overview -->
-      <section
-        class="bg-white dark:bg-gray-800 shadow rounded-xl p-6 space-y-4 text-sm text-gray-700 dark:text-gray-200 leading-relaxed"
-      >
-        <p>
-          <strong class="text-purple-700 dark:text-purple-400"
-            >Cafe Eden POS</strong
-          >
-          is a modern, web-based point-of-sale solution built to manage cafe
-          workflows efficiently — including inventory, payments, and reports —
-          with a responsive and user-friendly design.
+      <!-- version -->
+      <div class="text-center">
+        <p class="text-gray-500 dark:text-gray-300 text-sm">
+          Version 0.1.1 - Smart Café POS
         </p>
-        <ul class="list-disc ml-5 space-y-1">
-          <li>Real-time POS and QR-based ordering</li>
-          <li>Inventory and ingredient-level recipe tracking</li>
-          <li>Discounts, loyalty, and promotional support</li>
-          <li>Dashboard analytics with role-based access</li>
-        </ul>
-        <p>
-          💻 <strong>Technologies:</strong> Laravel 12, Vue 3, Tailwind CSS,
-          MySQL, Laravel Sanctum
-        </p>
-        <p>📅 <strong>Project Timeline:</strong> January – May 2025</p>
-        <!-- <p>
-          🔗
-          <a
-            href="https://github.com/Konthaina/Cafe-Eden"
-            class="text-purple-600 dark:text-purple-400 hover:underline"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View Source Code on GitHub
-          </a>
-        </p> -->
-      </section>
+      </div>
     </div>
   </AppLayout>
 </template>
@@ -107,7 +78,7 @@ const developers = [
     name: "Kon Thaina",
     role: "Frontend Developer & UI/UX Designer",
     avatar: publicUrl("images/thaina.jpg"),
-    contact: "https://t.me/konthaina87",
+    contact: "https://t.me/konthaina",
   },
   {
     name: "Koy Hokleng",

@@ -1,7 +1,7 @@
 {
   "name": "cafe-pos-frontend",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "main": "main.cjs",
   "scripts": {
@@ -10,10 +10,10 @@
     "preview": "vite preview",
     "electron:dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
     "electron:build": "cross-env ELECTRON=true vite build",
-    "dist": "npm run electron:build && electron-builder",
-    "dist:win": "npm run electron:build && electron-builder --win",
-    "dist:mac": "npm run electron:build && electron-builder --mac",
-    "dist:linux": "npm run electron:build && electron-builder --linux"
+    "dist": "npm run electron:build && node dist-with-date.cjs",
+    "dist:win": "npm run electron:build && node dist-with-date.cjs --win",
+    "dist:mac": "npm run electron:build && node dist-with-date.cjs --mac",
+    "dist:linux": "npm run electron:build && node dist-with-date.cjs --linux"
   },
   "build": {
     "appId": "com.eden.smartcafe.pos",
@@ -22,6 +22,7 @@
       "output": "release",
       "buildResources": "build"
     },
+    "artifactName": "${productName}-${version}-${env.RELEASE_DATE}-${os}-${arch}.${ext}",
     "files": [
       "dist/**/*",
       "main.cjs",
