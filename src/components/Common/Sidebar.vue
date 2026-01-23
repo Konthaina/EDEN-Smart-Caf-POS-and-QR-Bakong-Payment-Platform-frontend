@@ -226,9 +226,12 @@
         <span class="text-purple-500 text-[13px]">⚡</span>
         <span v-if="!collapsed">
           {{ t('sidebar.powered_by') }}
-          <a href="/about"
-            class="ml-1 font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 hover:underline">Thesis
-            Developer</a>
+          <RouterLink
+            to="/about"
+            class="ml-1 font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 hover:underline"
+          >
+            Thesis Developer
+          </RouterLink>
         </span>
       </div>
     </div>

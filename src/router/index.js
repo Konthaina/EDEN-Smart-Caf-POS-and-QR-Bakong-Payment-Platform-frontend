@@ -384,16 +384,16 @@ const routes = [
 
   // --- Not Found & About ---
   {
-    path: "/:pathMatch(.*)*",
-    name: "NotFound",
-    component: () => import("@/components/Common/NotFound.vue"),
-    meta: { title: "404 Not Found - Cafe Eden" },
-  },
-  {
     path: "/about",
     name: "About",
     component: About,
     meta: { title: "About Developer - Cafe Eden" },
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: () => import("@/components/Common/NotFound.vue"),
+    meta: { title: "404 Not Found - Cafe Eden" },
   },
 ];
 
