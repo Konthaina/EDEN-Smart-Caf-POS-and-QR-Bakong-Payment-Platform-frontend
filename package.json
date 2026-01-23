@@ -22,7 +22,7 @@
       "output": "release",
       "buildResources": "build"
     },
-    "artifactName": "${productName}-${version}-${env.RELEASE_DATE}-${os}-${arch}.${ext}",
+    "artifactName": "${productName} ${version} ${env.RELEASE_DATE} ${os} ${arch}.${ext}",
     "files": [
       "dist/**/*",
       "main.cjs",
