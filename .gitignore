@@ -13,11 +13,25 @@ dist-ssr
 release
 *.local
 
+# Env files
+.env
+
+# Tooling caches and coverage
+.vite
+.cache
+.parcel-cache
+.eslintcache
+.stylelintcache
+.nyc_output
+coverage
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
+Thumbs.db
+Desktop.ini
 *.suo
 *.ntvs*
 *.njsproj
