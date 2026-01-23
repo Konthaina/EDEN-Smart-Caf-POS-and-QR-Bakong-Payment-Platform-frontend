@@ -100,30 +100,31 @@
 
 <script setup>
 import AppLayout from "@/components/Common/AppLayout.vue";
+import { publicUrl } from "@/config/urls";
 
 const developers = [
   {
     name: "Kon Thaina",
     role: "Frontend Developer & UI/UX Designer",
-    avatar: "/images/thaina.jpg",
+    avatar: publicUrl("images/thaina.jpg"),
     contact: "https://t.me/konthaina87",
   },
   {
     name: "Koy Hokleng",
     role: "Team Leader & Full-stack Developer",
-    avatar: "/images/hokleng.jpg",
+    avatar: publicUrl("images/hokleng.jpg"),
     contact: "https://t.me/Stephen2606",
   },
   {
     name: "Yem Mai",
     role: "Frontend Developer & DB Administrator",
-    avatar: "/images/mai.jpg",
+    avatar: publicUrl("images/mai.jpg"),
     contact: "https://t.me/Yem_Mike",
   },
   {
     name: "Sruoy Veasna",
     role: "Backend Developer & API Specialist",
-    avatar: "/images/veasna.jpg",
+    avatar: publicUrl("images/veasna.jpg"),
     contact: "https://t.me/veasnasruoy",
   },
 ];

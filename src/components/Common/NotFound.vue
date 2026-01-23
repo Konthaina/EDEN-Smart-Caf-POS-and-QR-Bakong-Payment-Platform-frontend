@@ -1,7 +1,7 @@
 <!-- src/pages/NotFound.vue -->
 <template>
   <div class="flex flex-col items-center justify-center min-h-screen bg-[#FAF7F3]">
-    <img src="/404-coffee.png" alt="404" class="h-20 mb-6" />
+    <img :src="publicUrl('404-coffee.png')" alt="404" class="h-20 mb-6" />
     <p class="text-orange-600 text-lg mb-4">Oops! Page not found</p>
     <router-link
       to="/"
@@ -11,3 +11,7 @@
     </router-link>
   </div>
 </template>
+
+<script setup>
+import { publicUrl } from "@/config/urls";
+</script>

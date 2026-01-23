@@ -254,6 +254,7 @@ import { ref, computed, onMounted, onUnmounted, onDeactivated, h } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
 import { useI18n } from "vue-i18n";
 import api from "@/plugins/axios";
+import { storageUrl } from "@/config/urls";
 import AppLayout from "@/components/Common/AppLayout.vue";
 import RecipeEditModal from "@/components/Menu/RecipeEditModal.vue";
 
@@ -345,11 +346,7 @@ async function _get(url, config = {}) {
 
 /* ===== Utils ===== */
 function resolveImage(img) {
-  const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
-  if (!img) return `${import.meta.env.BASE_URL}menu.png`;
-  if (img.startsWith("http")) return img;
-  if (img.startsWith("/storage")) return img;
-  return `${API_BASE}/storage/${img}`;
+  return storageUrl(img, "menu.png");
 }
 function localizedMenuName(item) {
   return locale.value === "km" ? item.name_kh || item.name : item.name;

@@ -2,11 +2,12 @@
 import axios from "axios";
 import router from "@/router";
 import { useToast } from "vue-toastification";
+import { API_BASE_URL } from "@/config/urls";
 
 const toast = typeof useToast === "function" ? useToast() : window.$toast;
 
 const instance = axios.create({
-  baseURL: "http://127.0.0.1:8000/api",
+  baseURL: API_BASE_URL,
 });
 
 // -------- Options you can tweak --------

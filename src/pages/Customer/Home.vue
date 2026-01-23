@@ -207,6 +207,7 @@
 <script setup>
 import { ref, computed, onMounted, watch, nextTick } from "vue";
 import axios from "@/plugins/axios";
+import { storageUrl } from "@/config/urls";
 import { useRoute, useRouter } from "vue-router";
 import BottomNav from "@/components/Customer/BottomNav.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -309,12 +310,7 @@ const cartTotalQuantity = computed(() =>
 );
 
 // Fetch helpers
-const getImageUrl = (img) =>
-  !img
-    ? "/menu.png"
-    : img.startsWith("http")
-    ? img
-    : `http://127.0.0.1:8000/storage/${img}`;
+const getImageUrl = (img) => storageUrl(img, "menu.png");
 const fetchCategories = async () => {
   try {
     const { data } = await axios.get("/categories");

@@ -120,6 +120,7 @@
 
 <script setup>
 import { computed } from "vue";
+import { storageUrl } from "@/config/urls";
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -213,10 +214,5 @@ const customizationsText = computed(() => {
 });
 
 /* ---------- Image ---------- */
-const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
-const getImageUrl = (img) => {
-  if (!img) return "/menu.png";
-  if (/^https?:\/\//i.test(img)) return img;
-  return `${API_BASE}/storage/${img}`;
-};
+const getImageUrl = (img) => storageUrl(img, "menu.png");
 </script>

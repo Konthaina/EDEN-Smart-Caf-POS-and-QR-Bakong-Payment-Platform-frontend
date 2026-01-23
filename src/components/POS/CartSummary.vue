@@ -149,6 +149,7 @@
 <script setup>
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { storageUrl } from "@/config/urls";
 
 const { locale } = useI18n();
 
@@ -165,13 +166,7 @@ const props = defineProps({
 });
 
 /* ---------------- helpers ---------------- */
-const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
-const getImage = (img) =>
-  !img
-    ? "/menu.png"
-    : /^https?:\/\//i.test(img)
-    ? img
-    : `${API_BASE}/storage/${img}`;
+const getImage = (img) => storageUrl(img, "menu.png");
 
 const num = (v) => (Number.isFinite(Number(v)) ? Number(v) : 0);
 

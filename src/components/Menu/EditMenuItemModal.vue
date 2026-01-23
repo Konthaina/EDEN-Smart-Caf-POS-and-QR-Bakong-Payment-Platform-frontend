@@ -261,6 +261,7 @@
 <script setup>
 import { ref, watch, computed } from "vue";
 import api from "@/plugins/axios";
+import { storageUrl } from "@/config/urls";
 import ManageVariantsModal from "@/components/Menu/ManageVariantsModal.vue";
 import { createToastInterface } from "vue-toastification";
 import { useMenuStore } from "@/store/menu";
@@ -336,9 +337,7 @@ function toggleSelectAll() {
 
 function previewFromPath(path) {
   if (!path) return null;
-  const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
-  if (/^https?:\/\//i.test(path)) return path;
-  return `${API_BASE}/storage/${path}`;
+  return storageUrl(path);
 }
 function toLocalDT(iso) {
   if (!iso) return "";

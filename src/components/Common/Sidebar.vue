@@ -245,6 +245,7 @@ import api from '@/plugins/axios';
 import defaultAvatar from '@/assets/default-avatar.png';
 import useSettings from '@/composables/useSettings';
 import { useSidebarStore } from '@/store/sidebar';
+import { publicUrl, storageUrl } from '@/config/urls';
 import {
   BarChart2,
   ShoppingCart,
@@ -279,15 +280,11 @@ const tt = (...keys) => {
 };
 
 /* Logo URL handling */
-const appLogoUrl = computed(() => {
-  if (!settings.value.shop_logo) return '/logo.png';
-  if (/^https?:\/\//.test(settings.value.shop_logo)) return settings.value.shop_logo;
-  return settings.value.shop_logo.startsWith('/storage/')
-    ? settings.value.shop_logo
-    : `/storage/${settings.value.shop_logo.replace(/^public\//, '')}`;
-});
+const appLogoUrl = computed(() =>
+  storageUrl(settings.value.shop_logo, "logo.png")
+);
 function onLogoError(e) {
-  if (e?.target) e.target.src = '/logo.png';
+  if (e?.target) e.target.src = publicUrl("logo.png");
 }
 onMounted(fetchSettings);
 

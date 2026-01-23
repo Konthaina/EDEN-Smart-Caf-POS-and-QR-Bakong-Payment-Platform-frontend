@@ -142,21 +142,17 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import useSettings from "@/composables/useSettings";
+import { publicUrl, storageUrl } from "@/config/urls";
 
 const { locale } = useI18n();
 const { settings } = useSettings();
 
 /* ---------- logo ---------- */
-const shopLogoUrl = computed(() => {
-  if (!settings.value.shop_logo) return "/logo.png";
-  if (/^https?:\/\//.test(settings.value.shop_logo))
-    return settings.value.shop_logo;
-  return settings.value.shop_logo.startsWith("/storage/")
-    ? settings.value.shop_logo
-    : `/storage/${settings.value.shop_logo.replace(/^public\//, "")}`;
-});
+const shopLogoUrl = computed(() =>
+  storageUrl(settings.value.shop_logo, "logo.png")
+);
 function onLogoError(e) {
-  e.target.src = "/logo.png";
+  e.target.src = publicUrl("logo.png");
 }
 
 /* ---------- props ---------- */

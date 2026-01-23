@@ -80,18 +80,14 @@
 
 <script setup>
 import { computed } from "vue";
+import { storageUrl } from "@/config/urls";
 
 const { item } = defineProps({
   item: { type: Object, required: true },
 });
 
 /* Image URL */
-const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
-const imageUrl = computed(() => {
-  if (!item?.image) return "/menu.png";
-  if (/^https?:\/\//i.test(item.image)) return item.image;
-  return `${API_BASE}/storage/${item.image}`;
-});
+const imageUrl = computed(() => storageUrl(item?.image, "menu.png"));
 
 /* Price helpers */
 const showOriginal = computed(() => !!item?.has_active_discount);

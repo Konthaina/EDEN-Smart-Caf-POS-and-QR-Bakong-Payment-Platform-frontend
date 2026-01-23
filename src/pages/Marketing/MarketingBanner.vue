@@ -482,6 +482,7 @@
 import { ref, computed, onMounted, watch, h } from "vue";
 import { useI18n } from "vue-i18n";
 import api from "@/plugins/axios";
+import { publicUrl, storageUrl } from "@/config/urls";
 import AppLayout from "@/components/Common/AppLayout.vue";
 import ConfirmModal from "@/components/Common/ConfirmModal.vue";
 import { useToast } from "vue-toastification";
@@ -537,12 +538,8 @@ watch(
 
 /* ── Image URL helper ──────────────────────────────────────────────────── */
 const bannerImageUrl = (path) => {
-  const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
-  if (!path) return `${import.meta.env.BASE_URL}banner.png`;
-  if (/^https?:\/\//i.test(path)) return path;
-  if (path.startsWith("/storage")) return `${API_BASE}${path}`;
-  if (path.startsWith("storage/")) return `${API_BASE}/${path}`;
-  return `${API_BASE}/storage/${path}`;
+  if (!path) return publicUrl("banner.png");
+  return storageUrl(path, "banner.png");
 };
 
 /* ── Data fetch ────────────────────────────────────────────────────────── */

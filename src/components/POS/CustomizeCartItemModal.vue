@@ -287,6 +287,7 @@
 
 <script setup>
 import { computed, ref, watch } from "vue";
+import { storageUrl } from "@/config/urls";
 
 const props = defineProps({
   mode: { type: String, default: "add" },
@@ -323,13 +324,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["close", "apply"]);
 
-const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
-const imageUrl = computed(() => {
-  const img = props.item?.image;
-  if (!img) return "/menu.png";
-  if (/^https?:\/\//i.test(img)) return img;
-  return `${API_BASE}/storage/${img}`;
-});
+const imageUrl = computed(() => storageUrl(props.item?.image, "menu.png"));
 
 /* ---------- VARIANTS ---------- */
 const BASE_ID = "__base__";

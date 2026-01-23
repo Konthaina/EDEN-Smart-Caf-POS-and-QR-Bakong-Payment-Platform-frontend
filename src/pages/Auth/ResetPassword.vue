@@ -31,7 +31,11 @@
           :title="locale === 'en' ? 'Switch to Khmer' : 'Switch to English'"
         >
           <img
-            :src="locale === 'en' ? '/flags/en.png' : '/flags/kh.png'"
+            :src="
+              locale === 'en'
+                ? publicUrl('flags/en.png')
+                : publicUrl('flags/kh.png')
+            "
             class="w-5 h-5 rounded-full shadow"
           />
           {{ locale === "en" ? "EN" : "ខ្មែរ" }}
@@ -68,7 +72,7 @@
         <!-- Left Image -->
         <div class="hidden md:block">
           <img
-            src="/login-image.jpg"
+            :src="publicUrl('login-image.jpg')"
             alt="Reset Password"
             class="h-full w-full object-cover"
             loading="lazy"
@@ -205,6 +209,7 @@ import { useI18n } from "vue-i18n";
 import api from "@/plugins/axios";
 import { Sun, Moon, Eye, EyeOff } from "lucide-vue-next";
 import useSettings from "@/composables/useSettings";
+import { publicUrl, storageUrl } from "@/config/urls";
 
 const { t, locale } = useI18n();
 const route = useRoute();
@@ -212,19 +217,14 @@ const router = useRouter();
 
 /* ---------- Settings (dynamic logo + app name) ---------- */
 const { settings, fetchSettings } = useSettings();
-const appLogoUrl = computed(() => {
-  if (!settings.value?.shop_logo) return "/logo.png";
-  if (/^https?:\/\//.test(settings.value.shop_logo))
-    return settings.value.shop_logo;
-  return settings.value.shop_logo.startsWith("/storage/")
-    ? settings.value.shop_logo
-    : `/storage/${settings.value.shop_logo.replace(/^public\//, "")}`;
-});
+const appLogoUrl = computed(() =>
+  storageUrl(settings.value?.shop_logo, "logo.png")
+);
 const displayAppName = computed(
   () => settings.value?.shop_name || t("sidebar.app_name")
 );
 function onLogoError(e) {
-  if (e?.target) e.target.src = "/logo.png";
+  if (e?.target) e.target.src = publicUrl("logo.png");
 }
 
 /* ---------- Mode from URL (register / forgot) ---------- */

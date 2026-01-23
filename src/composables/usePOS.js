@@ -1,4 +1,4 @@
-import axios from 'axios'
+import api from "@/plugins/axios";
 
 /**
  * ✅ Validate a promo code (discount)
@@ -6,7 +6,7 @@ import axios from 'axios'
  * @returns {Promise}
  */
 export async function applyPromoCode(code) {
-  return await axios.post('/api/discounts/validate', { code })
+  return await api.post("/discounts/validate", { code });
 }
 
 /**
@@ -15,5 +15,5 @@ export async function applyPromoCode(code) {
  * @returns {Promise}
  */
 export async function createOrder(payload) {
-  return await axios.post('/api/orders', payload)
+  return await api.post("/orders", payload);
 }

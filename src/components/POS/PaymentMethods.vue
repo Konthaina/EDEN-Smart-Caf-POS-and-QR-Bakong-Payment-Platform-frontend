@@ -132,7 +132,7 @@
     <!-- KHQR -->
     <div class="grid grid-cols-2 gap-4 mt-6">
       <div :class="methodBox('khqr')" @click="$emit('select', 'khqr')">
-        <img src="/src/assets/icons/khqr.png" class="h-10 mx-auto" alt="KHQR" />
+        <img :src="khqrIcon" class="h-10 mx-auto" alt="KHQR" />
         <p class="text-center text-sm text-gray-700 dark:text-gray-200 mt-2">
           KHQR
         </p>
@@ -146,6 +146,7 @@ import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import axios from "@/plugins/axios";
 import { useToast } from "vue-toastification";
+import khqrIcon from "@/assets/icons/khqr.png";
 
 const { locale } = useI18n();
 const toast = useToast();

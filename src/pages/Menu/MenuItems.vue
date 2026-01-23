@@ -515,6 +515,7 @@ import AddMenuItemModal from "@/components/Menu/AddMenuItemModal.vue";
 import EditMenuItemModal from "@/components/Menu/EditMenuItemModal.vue";
 import { createToastInterface } from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import { publicUrl, storageUrl } from "@/config/urls";
 
 const toast = createToastInterface();
 const menu = useMenuStore();
@@ -606,12 +607,9 @@ const safeColspan = computed(() => {
 });
 
 /** formatting helpers */
-const DEFAULT_IMG = `${import.meta.env.BASE_URL}menu.png`;
-const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+const DEFAULT_IMG = publicUrl("menu.png");
 function fullImageUrl(path) {
-  if (!path) return DEFAULT_IMG;
-  if (/^https?:\/\//i.test(path)) return path;
-  return `${API_BASE}/storage/${path}`;
+  return storageUrl(path, "menu.png");
 }
 function onImgError(ev) {
   const el = ev.target;

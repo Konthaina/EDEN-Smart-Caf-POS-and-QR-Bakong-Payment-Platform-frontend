@@ -279,6 +279,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "@/plugins/axios";
+import { storageUrl } from "@/config/urls";
 import { useRouter } from "vue-router";
 import QrcodeVue from "qrcode.vue";
 
@@ -426,10 +427,7 @@ const cancelReorderPayment = () => {
 };
 
 // --- UTILS ---
-const getImageUrl = (img) => {
-  if (!img) return "/menu.png";
-  return img.startsWith("http") ? img : `http://127.0.0.1:8000/storage/${img}`;
-};
+const getImageUrl = (img) => storageUrl(img, "menu.png");
 
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleString("en-US", {

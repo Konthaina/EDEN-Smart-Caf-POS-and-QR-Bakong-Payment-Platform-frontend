@@ -27,7 +27,11 @@
               :aria-label="$t('setting.switch_language') || 'Switch language'"
             >
               <img
-                :src="locale === 'en' ? '/flags/en.png' : '/flags/kh.png'"
+                :src="
+                  locale === 'en'
+                    ? publicUrl('flags/en.png')
+                    : publicUrl('flags/kh.png')
+                "
                 class="w-5 h-5 rounded-full shadow"
               />
               {{ locale === "en" ? "EN" : "ខ្មែរ" }}
@@ -605,6 +609,7 @@ import { ref, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useToast } from "vue-toastification";
 import api from "@/plugins/axios";
+import { publicUrl, storageUrl } from "@/config/urls";
 import useSettings from "@/composables/useSettings";
 import AppLayout from "@/components/Common/AppLayout.vue";
 import { Sun, Moon } from "lucide-vue-next";
@@ -645,7 +650,7 @@ const loading = ref(true);
 const profile = ref({});
 const form = ref({});
 const preview = ref(null);
-const defaultAvatar = "/assets/default-avatar.png";
+const defaultAvatar = publicUrl("default-avatar.png");
 const showEditModal = ref(false);
 const showPasswordModal = ref(false);
 const passwordForm = ref({ current: "", new: "", confirm: "" });
@@ -789,14 +794,9 @@ const appLogoPreview = ref(null);
 const showAppSettingModal = ref(false);
 const logoInput = ref();
 
-const appLogoUrl = computed(() => {
-  if (!settings.value.shop_logo) return "/logo.png";
-  if (/^https?:\/\//.test(settings.value.shop_logo))
-    return settings.value.shop_logo;
-  return settings.value.shop_logo.startsWith("/storage/")
-    ? settings.value.shop_logo
-    : `/storage/${String(settings.value.shop_logo).replace(/^public\//, "")}`;
-});
+const appLogoUrl = computed(() =>
+  storageUrl(settings.value.shop_logo, "logo.png")
+);
 
 const handleAppLogoChange = (e) => {
   const file = e.target.files[0];
@@ -809,7 +809,7 @@ const handleAppLogoChange = (e) => {
 };
 
 const onLogoError = (e) => {
-  e.target.src = "/logo.png";
+  e.target.src = publicUrl("logo.png");
 };
 
 function openAppSettings() {
