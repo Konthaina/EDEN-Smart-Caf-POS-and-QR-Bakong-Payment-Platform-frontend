@@ -6,8 +6,9 @@
   >
     <!-- Header -->
     <div class="flex items-center mb-4">
-      <h2 class="text-lg font-semibold text-purple-700 dark:text-purple-400">
-        🛒 {{ $t("payment.cart_items") }}
+      <h2 class="text-lg font-semibold text-purple-700 dark:text-purple-400 flex items-center gap-2">
+        <ShoppingCart class="w-5 h-5" />
+        <span>{{ $t("payment.cart_items") }}</span>
       </h2>
     </div>
 
@@ -150,6 +151,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { storageUrl } from "@/config/urls";
+import { ShoppingCart } from "lucide-vue-next";
 
 const { locale } = useI18n();
 

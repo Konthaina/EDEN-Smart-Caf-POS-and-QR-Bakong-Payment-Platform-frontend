@@ -26,7 +26,7 @@
       </div>
       <!-- Empty state -->
       <div v-else-if="notifications.length === 0" class="bg-white/90 rounded-2xl p-12 text-center text-gray-400 font-semibold text-lg mt-12 shadow">
-        <div class="text-4xl mb-3">🎉</div>
+        <PartyPopper class="w-10 h-10 mx-auto mb-3 text-orange-400" />
         No new notifications!
       </div>
       <!-- Notification List -->
@@ -118,7 +118,7 @@
 import { ref, onMounted, computed } from 'vue'
 import axios from '@/plugins/axios'
 import BottomNav from '@/components/Customer/BottomNav.vue'
-import { Bell, Gift, AlarmClock, RefreshCw } from 'lucide-vue-next'
+import { AlarmClock, Bell, Gift, PartyPopper, RefreshCw } from 'lucide-vue-next'
 
 const notifications = ref([])
 const loading = ref(true)

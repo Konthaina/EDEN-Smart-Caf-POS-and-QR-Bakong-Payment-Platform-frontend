@@ -9,7 +9,7 @@
       <h2
         class="text-lg font-semibold text-gray-800 dark:text-white flex items-center gap-2"
       >
-        ⚠️
+        <AlertTriangle class="w-5 h-5 text-amber-500" />
         {{ title || ($t && $t("common.confirm_title")) || "Confirm Deletion" }}
       </h2>
       <p class="text-sm text-gray-600 dark:text-gray-300">{{ message }}</p>
@@ -32,10 +32,12 @@
 </template>
 
 <script setup>
+import { AlertTriangle } from "lucide-vue-next";
+
 defineProps({
   show: Boolean,
   message: String,
-  title: String, // 👈 Add this line
+  title: String, // Add this line
 });
 const emit = defineEmits(["confirm", "cancel"]);
 </script>

@@ -21,9 +21,7 @@
             />
             <input type="file" accept="image/*" @change="onAvatarChange" class="hidden" />
             <span class="avatar-edit-icon">
-              <svg class="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6-6m2 2a2.828 2.828 0 11-4-4l4 4z"></path>
-              </svg>
+              <Pencil class="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />
             </span>
           </label>
           <img v-else
@@ -82,12 +80,16 @@
           <div class="font-bold text-xl text-gray-900 mt-2 break-words text-center">{{ profile.name }}</div>
           <div class="text-gray-500 text-sm mb-6 font-medium">{{ profile.role ? formatRole(profile.role) : 'Customer' }}</div>
           <div class="w-full space-y-3">
-            <ProfileField label="Your Email" :value="profile.email" />
-            <ProfileField label="Phone Number" :value="profile.profile?.phone" />
-            <ProfileField label="Gender" :value="profile.profile?.gender" />
-            <ProfileField label="Birthdate" :value="profile.profile?.birthdate ? formatDate(profile.profile.birthdate) : '-'" />
-            <ProfileField label="Address" :value="profile.profile?.address" />
-            <ProfileField label="Joined" :value="formatDate(profile.created_at)" />
+            <ProfileField label="Your Email" :value="profile.email" :icon="Mail" />
+            <ProfileField label="Phone Number" :value="profile.profile?.phone" :icon="Phone" />
+            <ProfileField label="Gender" :value="profile.profile?.gender" :icon="Users" />
+            <ProfileField
+              label="Birthdate"
+              :value="profile.profile?.birthdate ? formatDate(profile.profile.birthdate) : '-'"
+              :icon="Calendar"
+            />
+            <ProfileField label="Address" :value="profile.profile?.address" :icon="MapPin" />
+            <ProfileField label="Joined" :value="formatDate(profile.created_at)" :icon="CalendarCheck" />
           </div>
           <button class="profile-btn-edit mt-4" @click="showChangePasswordModal = true">Change Password</button>
           <button class="profile-btn-edit" @click="startEditProfile">Edit Profile</button>
@@ -142,7 +144,7 @@
 import { ref, onMounted } from 'vue'
 import axios from '@/plugins/axios'
 import ProfileField from '@/components/Customer/ProfileField.vue'
-import { ArrowLeft } from 'lucide-vue-next'
+import { ArrowLeft, Calendar, CalendarCheck, Mail, MapPin, Pencil, Phone, Users } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 

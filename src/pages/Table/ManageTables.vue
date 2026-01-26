@@ -6,6 +6,7 @@ import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import QRCodeVue from "qrcode.vue";
 import { saveAs } from "file-saver";
+import { Armchair, ChevronDown, ChevronUp, ChevronsUpDown, Search } from "lucide-vue-next";
 
 const toast = useToast();
 const { t } = useI18n();
@@ -148,14 +149,11 @@ function ariaSort(col) {
     : "none";
 }
 
-/* Tri-state icon: neutral chevrons when unsorted, solid ▲/▼ when active */
+/* Tri-state icon: neutral chevrons when unsorted, solid chevron when active */
 const SortIcon = ({ active, dir }) =>
   h(
-    "svg",
+    "span",
     {
-      width: 12,
-      height: 12,
-      viewBox: "0 0 20 20",
       class:
         "inline ml-1 " +
         (active
@@ -164,13 +162,8 @@ const SortIcon = ({ active, dir }) =>
       "aria-hidden": "true",
     },
     [
-      h("path", {
-        d: active
-          ? dir === "asc"
-            ? "M10 5l5 7H5l5-7z"
-            : "M10 15l-5-7h10l-5 7z"
-          : "M7 7l3-3 3 3H7zM7 13l3 3 3-3H7z",
-        fill: "currentColor",
+      h(active ? (dir === "asc" ? ChevronUp : ChevronDown) : ChevronsUpDown, {
+        class: "w-3 h-3",
       }),
     ]
   );
@@ -277,16 +270,7 @@ async function fetchUsers() {
                 class="absolute left-3 top-2.5 text-gray-400"
                 aria-hidden="true"
               >
-                <svg width="18" height="18" viewBox="0 0 20 20">
-                  <path
-                    d="M13.5 13.5 17 17M15 9a6 6 0 1 1-12 0 6 6 0 0 1 12 0Z"
-                    fill="none"
-                    stroke="#a78bfa"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                <Search class="w-4 h-4 text-purple-400" />
               </span>
               <input
                 v-model="search"
@@ -417,7 +401,7 @@ async function fetchUsers() {
                         class="text-center py-10 text-gray-500 dark:text-gray-400"
                       >
                         <div class="flex flex-col items-center gap-3">
-                          <div class="text-3xl">🪑</div>
+                          <Armchair class="w-10 h-10 text-purple-500" />
                           <div class="font-semibold">
                             {{ t("table.empty_title") || t("table.no_tables") }}
                           </div>

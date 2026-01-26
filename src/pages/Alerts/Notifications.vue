@@ -3,7 +3,7 @@
     <div class="py-10 px-2">
       <div class="max-w-2xl mx-auto">
         <div class="flex items-center gap-3 mb-8">
-          <div class="text-3xl">🔔</div>
+          <Bell class="w-7 h-7 text-purple-500" />
           <h1
             class="text-2xl font-bold text-gray-800 dark:text-white tracking-tight"
           >
@@ -13,12 +13,6 @@
 
         <!-- Low Stock Alerts -->
         <div v-if="lowStock.length" class="mb-10">
-          <!-- <div class="flex items-center gap-2 mb-4">
-            <div class="text-xl">⚠️</div>
-            <h2 class="text-lg font-bold text-red-700 dark:text-red-300 tracking-tight">
-              {{ $t('notifications.low_stock_alerts') }}
-            </h2>
-          </div> -->
           <div class="divide-y divide-orange-200 dark:divide-orange-800/30">
             <div
               v-for="item in lowStock"
@@ -64,24 +58,14 @@
                 v-if="item.current_stock == 0"
                 class="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-red-700 text-white dark:bg-red-900 shadow animate-bounce"
               >
-                <svg
-                  class="h-3 w-3 mr-1 fill-white dark:fill-red-200"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="12" cy="12" r="12" />
-                </svg>
+                <span class="h-2 w-2 mr-1 rounded-full bg-current"></span>
                 {{ $t("notifications.out_of_stock") }}
               </span>
               <span
                 v-else
                 class="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-orange-100 dark:bg-orange-800 text-orange-800 dark:text-orange-100 shadow-sm group-hover:bg-orange-200 group-hover:text-orange-900 transition"
               >
-                <svg
-                  class="h-3 w-3 mr-1 fill-orange-400 dark:fill-orange-200"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="12" cy="12" r="12" />
-                </svg>
+                <span class="h-2 w-2 mr-1 rounded-full bg-current"></span>
                 {{ $t("notifications.low") }}
               </span>
             </div>
@@ -92,7 +76,7 @@
           v-if="!loading && !lowStock.length"
           class="flex flex-col items-center gap-2 py-10 text-gray-500 dark:text-gray-300"
         >
-          <div class="text-4xl">🥳</div>
+          <CheckCircle class="w-10 h-10 text-emerald-500" />
           <div class="font-semibold text-lg">
             {{ $t("notifications.all_caught_up") }}
           </div>
@@ -114,6 +98,7 @@ import { ref } from "vue";
 import axios from "axios";
 import Applayout from "@/components/common/Applayout.vue";
 import { useNotificationCount } from "@/composables/useNotificationCount";
+import { Bell, CheckCircle } from "lucide-vue-next";
 const { fetchNotificationCount } = useNotificationCount();
 
 fetchNotificationCount();

@@ -28,16 +28,7 @@
                 class="absolute left-3 top-2.5 text-gray-400"
                 aria-hidden="true"
               >
-                <svg width="18" height="18" viewBox="0 0 20 20">
-                  <path
-                    d="M13.5 13.5 17 17M15 9a6 6 0 1 1-12 0 6 6 0 0 1 12 0Z"
-                    fill="none"
-                    stroke="#a78bfa"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                <Search class="w-4 h-4 text-purple-400" />
               </span>
               <input
                 v-model="search"
@@ -328,10 +319,10 @@
                     <tr v-if="filteredAndSorted.length === 0">
                       <td
                         colspan="7"
-                        class="text-center py-10 text-gray-500 dark:text-gray-400"
-                      >
-                        <div class="flex flex-col items-center gap-3">
-                          <div class="text-3xl">🧾</div>
+                      class="text-center py-10 text-gray-500 dark:text-gray-400"
+                    >
+                      <div class="flex flex-col items-center gap-3">
+                          <Receipt class="w-10 h-10 text-purple-500" />
                           <div>{{ t("discounts.no_data") }}</div>
                           <button
                             @click="openAddModal"
@@ -500,28 +491,7 @@
               :disabled="submitting || !formValid"
               class="bg-gradient-to-r from-purple-600 to-pink-500 disabled:opacity-60 disabled:cursor-not-allowed hover:from-purple-700 hover:to-pink-600 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition-all inline-flex items-center gap-2"
             >
-              <svg
-                v-if="submitting"
-                class="animate-spin h-4 w-4"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                  fill="none"
-                  class="opacity-25"
-                />
-                <path
-                  d="M4 12a8 8 0 0 1 8-8"
-                  stroke="currentColor"
-                  stroke-width="4"
-                  class="opacity-75"
-                />
-              </svg>
+              <Loader2 v-if="submitting" class="h-4 w-4 animate-spin" />
               <span>{{
                 form.id ? t("discounts.update") : t("discounts.create")
               }}</span>
@@ -550,6 +520,7 @@ import api from "@/plugins/axios";
 import AppLayout from "@/components/Common/AppLayout.vue";
 import ConfirmModal from "@/components/Common/ConfirmModal.vue";
 import { useToast } from "vue-toastification";
+import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2, Receipt, Search } from "lucide-vue-next";
 
 const { t } = useI18n();
 const toast = useToast();
@@ -732,14 +703,11 @@ function ariaSort(col) {
     : "none";
 }
 
-/* Tri-state SortIcon: neutral (unsorted) chevrons, then ▲/▼ when active */
+/* Tri-state SortIcon: neutral (unsorted) chevrons, then chevron when active */
 const SortIcon = ({ active, dir }) =>
   h(
-    "svg",
+    "span",
     {
-      width: 12,
-      height: 12,
-      viewBox: "0 0 20 20",
       class:
         "inline ml-1 " +
         (active
@@ -748,14 +716,8 @@ const SortIcon = ({ active, dir }) =>
       "aria-hidden": "true",
     },
     [
-      h("path", {
-        // neutral: stacked chevrons; active: solid up or down triangle
-        d: active
-          ? dir === "asc"
-            ? "M10 5l5 7H5l5-7z"
-            : "M10 15l-5-7h10l-5 7z"
-          : "M7 7l3-3 3 3H7zM7 13l3 3 3-3H7z",
-        fill: "currentColor",
+      h(active ? (dir === "asc" ? ChevronUp : ChevronDown) : ChevronsUpDown, {
+        class: "w-3 h-3",
       }),
     ]
   );

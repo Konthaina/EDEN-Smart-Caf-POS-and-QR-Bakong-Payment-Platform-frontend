@@ -20,7 +20,7 @@ export const useUserStore = defineStore("user", {
             localStorage.setItem("role", res.data.role.name);
           }
         } catch (err) {
-          console.error("❌ Failed to fetch user info", err);
+          console.error("Failed to fetch user info", err);
         }
       }
     },

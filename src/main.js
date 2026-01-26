@@ -24,7 +24,7 @@ app.use(Toast, {
   position: "top-right",
 });
 
-// ✅ Set locale after i18n is used
+// Set locale after i18n is used
 const savedLocale = localStorage.getItem("locale");
 if (savedLocale) {
   i18n.global.locale.value = savedLocale;

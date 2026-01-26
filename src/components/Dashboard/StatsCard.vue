@@ -19,7 +19,8 @@
       'w-12 h-12 rounded-full flex items-center justify-center group-hover:scale-105 transition-transform duration-200',
     ]">
       <div :class="[base.iconColor, 'text-2xl']">
-        {{ icon }}
+        <component v-if="icon && typeof icon !== 'string'" :is="icon" class="w-6 h-6" />
+        <span v-else>{{ icon }}</span>
       </div>
     </div>
   </component>
@@ -32,7 +33,7 @@ import { RouterLink } from "vue-router";
 const props = defineProps({
   title: String,
   value: [String, Number],
-  icon: String,
+  icon: [Object, Function, String],
   color: { type: String, default: "purple" },
   /** Optional: vue-router LocationObject, e.g. { name:'RevenueDetail', query:{ period:'today' } } */
   to: { type: [String, Object], default: null },

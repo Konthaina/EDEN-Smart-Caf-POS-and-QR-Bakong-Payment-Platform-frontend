@@ -6,8 +6,9 @@
       <div class="flex items-center gap-2">
         <span
           class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-900/40"
-          >🥚</span
         >
+          <Egg class="w-4 h-4 text-emerald-600 dark:text-emerald-200" />
+        </span>
         <h3 class="font-semibold text-gray-800 dark:text-white">
           Low Stock Alerts
         </h3>
@@ -78,6 +79,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import api from "@/plugins/axios";
+import { Egg } from "lucide-vue-next";
 
 // Optional prop kept for backwards compatibility (used only if nothing else is available)
 const props = defineProps({

@@ -317,7 +317,7 @@ const generateKHQR = async () => {
     qrCode.value = res.data.qr_string;
     emit("bakongQr", res.data.qr_string);
   } catch {
-    toast.error("❌ Failed to generate KHQR");
+    toast.error("Failed to generate KHQR.");
   }
 };
 

@@ -28,16 +28,16 @@
 
         <!-- Stats Cards -->
         <div class="dashboard-stats-grid mt-6">
-          <StatsCard :title="$t('dashboard.total_sales')" :value="formattedRevenue" icon="💵" color="green"
+          <StatsCard :title="$t('dashboard.total_sales')" :value="formattedRevenue" :icon="DollarSign" color="green"
             :to="{ name: 'DashboardRevenueDetail', query: { period: 'today' } }" />
 
           <StatsCard :title="$t('dashboard.total_orders')" :value="Number(summary.order_count || 0).toFixed(0)"
-            icon="📦" color="blue" :to="{ name: 'DashboardOrdersDetail', query: { period: 'today' } }" />
+            :icon="Package" color="blue" :to="{ name: 'DashboardOrdersDetail', query: { period: 'today' } }" />
 
-          <StatsCard :title="$t('dashboard.total_customers')" :value="Number(totalCustomers).toFixed(0)" icon="👥"
+          <StatsCard :title="$t('dashboard.total_customers')" :value="Number(totalCustomers).toFixed(0)" :icon="Users"
             color="indigo" :to="{ name: 'DashboardCustomersDetail', query: { period: 'today' } }" />
 
-          <StatsCard :title="$t('dashboard.top_item')" :value="topItem" icon="🍽️" color="purple"
+          <StatsCard :title="$t('dashboard.top_item')" :value="topItem" :icon="Utensils" color="purple"
             :to="{ name: 'DashboardTopItemsDetail', query: { period: 'month' } }" />
         </div>
 
@@ -74,7 +74,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useDashboardStore } from '@/store/dashboard'
 import api from '@/plugins/axios'
-import { LogOut } from 'lucide-vue-next'
+import { DollarSign, LogOut, Package, Users, Utensils } from 'lucide-vue-next'
 
 import MainLayout from '@/components/Common/AppLayout.vue'
 import StatsCard from '@/components/Dashboard/StatsCard.vue'

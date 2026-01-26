@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 const funTips = [
-  "☕ Pro Tip: You can search orders by customer name!",
+  "Pro Tip: You can search orders by customer name!",
   "Did you know? You can use keyboard shortcuts in the POS.",
   "Try dark mode for a better late-night café vibe!",
   "You can print daily sales reports from the dashboard.",
@@ -15,7 +15,7 @@ const funTips = [
   "Customize your cafe logo in settings.",
   "Track low-stock ingredients automatically.",
   "Loyalty points encourage customer returns.",
-  "💡 Did you backup your sales data this week?",
+  "Did you backup your sales data this week?",
   "Stay hydrated! (and so should your coffee beans!)",
 ];
 

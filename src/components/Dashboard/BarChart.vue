@@ -3,8 +3,9 @@
     <!-- Header -->
     <div class="flex justify-between items-center">
       <div>
-        <h2 class="text-base font-semibold text-gray-800 dark:text-white">
-          📈 {{ $t("revenue.title") }}
+        <h2 class="text-base font-semibold text-gray-800 dark:text-white flex items-center gap-2">
+          <BarChart3 class="w-5 h-5 text-indigo-500" />
+          <span>{{ $t("revenue.title") }}</span>
         </h2>
         <p class="text-xs text-gray-500 dark:text-gray-300">
           {{ $t("revenue.subtitle") }}
@@ -24,7 +25,7 @@
           class="inline-flex items-center gap-2 text-xs sm:text-sm px-3 py-1.5 rounded-md border border-indigo-300 dark:border-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-800/40 transition"
           :title="viewLabel">
           <span>{{ viewLabel }}</span>
-          <span aria-hidden>›</span>
+          <ChevronRight class="w-4 h-4" aria-hidden="true" />
         </RouterLink>
       </div>
     </div>
@@ -32,8 +33,9 @@
     <!-- Chart -->
     <div class="relative h-[400px]">
       <Bar v-if="loaded" :data="chartData" :options="chartOptions" class="absolute inset-0" />
-      <p v-else-if="error" class="text-red-500 text-center text-sm py-10">
-        ⚠️ {{ error }}
+      <p v-else-if="error" class="text-red-500 text-center text-sm py-10 flex items-center justify-center gap-2">
+        <AlertTriangle class="w-4 h-4" />
+        <span>{{ error }}</span>
       </p>
       <p v-else class="text-gray-400 dark:text-gray-300 text-center text-sm py-10">
         {{ $t("revenue.loading") }}
@@ -47,6 +49,7 @@ import { ref, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { Bar } from "vue-chartjs";
 import { RouterLink } from "vue-router";
+import { AlertTriangle, BarChart3, ChevronRight } from "lucide-vue-next";
 import {
   Chart as ChartJS,
   Title,
@@ -129,7 +132,7 @@ const chartOptions = computed(() => ({
       bodyColor: "#F9FAFB",
       callbacks: {
         title: (items) => items[0]?.label || "",
-        label: (ctx) => `📈 $${ctx.raw} ${t("revenue.tooltip")}`,
+        label: (ctx) => `$${ctx.raw} ${t("revenue.tooltip")}`,
       },
     },
   },

@@ -263,7 +263,7 @@
     <!-- Success Modal -->
     <div v-if="showSuccessModal" class="modal-backdrop">
       <div class="modal-content max-w-xs mx-auto text-center">
-        <div class="text-5xl mb-2">✅</div>
+        <CheckCircle class="w-14 h-14 mx-auto mb-2 text-emerald-500" />
         <div class="font-semibold text-xl mb-3 text-brown-900">
           Order Placed!
         </div>
@@ -282,6 +282,7 @@ import axios from "@/plugins/axios";
 import { storageUrl } from "@/config/urls";
 import { useRouter } from "vue-router";
 import QrcodeVue from "qrcode.vue";
+import { CheckCircle } from "lucide-vue-next";
 
 const router = useRouter();
 

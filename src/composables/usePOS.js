@@ -1,7 +1,7 @@
 import api from "@/plugins/axios";
 
 /**
- * ✅ Validate a promo code (discount)
+ * Validate a promo code (discount)
  * @param {string} code
  * @returns {Promise}
  */
@@ -10,7 +10,7 @@ export async function applyPromoCode(code) {
 }
 
 /**
- * ✅ Create an order
+ * Create an order
  * @param {object} payload
  * @returns {Promise}
  */

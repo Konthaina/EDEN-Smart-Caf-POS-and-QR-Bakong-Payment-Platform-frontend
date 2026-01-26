@@ -48,10 +48,11 @@
 
             <!-- Summary cards -->
             <div class="grid md:grid-cols-4 gap-4">
-                <StatsCard title="Total Revenue" :value="`${totalRevenue.toFixed(2)} USD`" icon="💵" color="green" />
-                <StatsCard title="Orders" :value="filtered.length" icon="🧾" color="indigo" />
-                <StatsCard title="Avg Order" :value="`$${avgOrder.toFixed(2)}`" icon="📊" color="purple" />
-                <StatsCard title="Completed" :value="completed.length" icon="✅" color="blue" />
+                <StatsCard title="Total Revenue" :value="`${totalRevenue.toFixed(2)} USD`" :icon="DollarSign"
+                    color="green" />
+                <StatsCard title="Orders" :value="filtered.length" :icon="Receipt" color="indigo" />
+                <StatsCard title="Avg Order" :value="`$${avgOrder.toFixed(2)}`" :icon="BarChart3" color="purple" />
+                <StatsCard title="Completed" :value="completed.length" :icon="CheckCircle" color="blue" />
             </div>
 
             <!-- Filters -->
@@ -180,16 +181,16 @@ import api from "@/plugins/axios";
 import MainLayout from "@/components/Common/AppLayout.vue";
 import BackToDashboard from "@/components/Common/BackToDashboard.vue";
 import StatsCard from "@/components/Dashboard/StatsCard.vue";
+import { BarChart3, CheckCircle, ChevronDown, ChevronUp, DollarSign, Receipt } from "lucide-vue-next";
 
 /* tiny sort icon */
 const SortIcon = {
     props: { active: Boolean, desc: Boolean },
+    components: { ChevronDown, ChevronUp },
     template: `
     <span class="inline-block ml-1 align-middle opacity-60" v-if="active">
-      <svg width="10" height="10" viewBox="0 0 20 20" class="inline-block">
-        <path v-if="desc" d="M10 14l-6-8h12l-6 8z" fill="currentColor"/>
-        <path v-else d="M10 6l6 8H4l6-8z" fill="currentColor"/>
-      </svg>
+      <ChevronDown v-if="desc" class="w-3 h-3" />
+      <ChevronUp v-else class="w-3 h-3" />
     </span>
   `
 };

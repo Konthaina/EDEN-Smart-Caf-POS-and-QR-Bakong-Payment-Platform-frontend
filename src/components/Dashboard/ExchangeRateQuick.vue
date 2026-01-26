@@ -144,7 +144,7 @@ const draft = ref("");
 
 const profileRole = ref(""); // 'Super Admin' | 'Admin' | 'Cashier' | ...
 
-// ✅ Allow Cashier to edit (along with Admin / Super Admin)
+// Allow Cashier to edit (along with Admin / Super Admin)
 const canEdit = computed(() => {
   const r = String(profileRole.value || "").toLowerCase();
   const allowed = ["super admin", "superadmin", "admin", "cashier"];

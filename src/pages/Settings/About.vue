@@ -3,11 +3,14 @@
     <div class="p-8 max-w-5xl mx-auto space-y-10">
       <!-- Header -->
       <div class="text-center">
-        <h1
-          class="text-4xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent"
-        >
-          👨‍💻 Meet the Developers
-        </h1>
+        <div class="flex items-center justify-center gap-3">
+          <Code2 class="w-9 h-9 text-purple-600" />
+          <h1
+            class="text-4xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent"
+          >
+            Meet the Developers
+          </h1>
+        </div>
         <p
           class="text-gray-500 dark:text-gray-300 mt-2 max-w-2xl mx-auto text-sm"
         >
@@ -41,18 +44,7 @@
               rel="noopener noreferrer"
               class="inline-flex items-center gap-1 text-sm text-purple-600 hover:underline dark:text-purple-400"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-4 h-4"
-                viewBox="0 0 240 240"
-                fill="none"
-              >
-                <circle cx="120" cy="120" r="120" fill="#37AEE2" />
-                <path
-                  d="M98.2 156.8l-.3.3-.2.2v.1l-8.3 27.2c1.2 0 1.8-.5 2.4-1l19.9-14.6 27.5 20.1c5 2.7 8.6 1.3 9.9-4.6l18-84.7c1.8-7.2-2.7-10.5-7.3-8.6L49 125.4c-7 2.7-7 6.5-1.2 8.2l35.5 11 82.3-51.8c3.9-2.4 7.5-1.1 4.6 1.5l-66.7 60.1z"
-                  fill="white"
-                />
-              </svg>
+              <Send class="w-4 h-4" />
               Telegram
             </a>
           </div>
@@ -72,6 +64,7 @@
 <script setup>
 import AppLayout from "@/components/Common/AppLayout.vue";
 import { publicUrl } from "@/config/urls";
+import { Code2, Send } from "lucide-vue-next";
 
 const developers = [
   {

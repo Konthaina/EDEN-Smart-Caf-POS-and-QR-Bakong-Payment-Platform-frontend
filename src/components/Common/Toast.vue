@@ -6,33 +6,15 @@
       :class="toastType === 'success' ? 'bg-green-500' : 'bg-red-500'"
     >
       <!-- Icon -->
-      <svg
-        v-if="toastType === 'success'"
-        xmlns="http://www.w3.org/2000/svg"
-        class="w-5 h-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
-      <svg
-        v-else
-        xmlns="http://www.w3.org/2000/svg"
-        class="w-5 h-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
+      <Check v-if="toastType === 'success'" class="w-5 h-5" />
+      <X v-else class="w-5 h-5" />
 
       <!-- Message -->
       <span class="text-sm font-medium break-words">{{ message }}</span>
 
       <!-- Close button -->
-      <button @click="visible = false" class="ml-auto text-white hover:text-gray-200 transition text-lg leading-none">
-        ×
+      <button @click="visible = false" class="ml-auto text-white hover:text-gray-200 transition leading-none">
+        <X class="w-4 h-4" />
       </button>
     </div>
   </transition>
@@ -40,6 +22,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { Check, X } from 'lucide-vue-next'
 
 const visible = ref(false)
 const message = ref('')

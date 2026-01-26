@@ -31,15 +31,7 @@
                 class="absolute left-3 top-2.5 text-gray-400"
                 aria-hidden="true"
               >
-                <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
-                  <path
-                    d="M13.5 13.5L17 17M9 15a6 6 0 100-12 6 6 0 000 12z"
-                    stroke="#a78bfa"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                <Search class="w-4 h-4 text-purple-400" />
               </span>
               <input
                 v-model="search"
@@ -189,7 +181,7 @@
                       class="text-center py-10 text-gray-500 dark:text-gray-400"
                     >
                       <div class="flex flex-col items-center gap-3">
-                        <div class="text-4xl">🔔</div>
+                        <Bell class="w-10 h-10 text-purple-500" />
                         <div
                           class="font-semibold text-gray-700 dark:text-gray-200"
                         >
@@ -534,6 +526,7 @@ import api from "@/plugins/axios";
 import { createToastInterface } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
+import { Bell, ChevronDown, ChevronUp, ChevronsUpDown, Search } from "lucide-vue-next";
 
 const { t, locale } = useI18n();
 const toast = createToastInterface();
@@ -681,16 +674,14 @@ const SortIcon = (props) =>
       "aria-hidden": "true",
     },
     [
-      h("svg", { width: 12, height: 12, viewBox: "0 0 20 20" }, [
-        h("path", {
-          d: props.active
-            ? props.dir === "asc"
-              ? "M10 5l5 7H5l5-7z"
-              : "M10 15l-5-7h10l-5 7z"
-            : "M7 7l3-3 3 3H7zM7 13l3 3 3-3H7z",
-          fill: "currentColor",
-        }),
-      ]),
+      h(
+        props.active
+          ? props.dir === "asc"
+            ? ChevronUp
+            : ChevronDown
+          : ChevronsUpDown,
+        { class: "w-3 h-3" }
+      ),
     ]
   );
 

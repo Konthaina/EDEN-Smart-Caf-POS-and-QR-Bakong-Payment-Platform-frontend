@@ -297,7 +297,7 @@
   "order.status.pending": "កំពុងដំណើរការ",
   "order.status.completed": "បានបញ្ចប់",
   "order.status.cancelled": "បានបោះបង់",
-  "order.download": "⬇ ទាញយក",
+  "order.download": "ទាញយក",
   "order.showing": "កំពុងបង្ហាញ",
   "order.orders": "ការកម្ម៉ង់",
   "order.no_orders": "រកមិនឃើញការកម្ម៉ង់ទេ។",
@@ -577,7 +577,7 @@
       "quantity": "បរិមាណ"
     },
     "confirm": {
-      "title": "⚠️ បញ្ជាក់ការលុប",
+      "title": "បញ្ជាក់ការលុប",
       "body": "តើអ្នកប្រាកដចង់យកគ្រឿងផ្សំនេះចេញពីរូបមន្តឬ?"
     },
     "successAdd": "បានបន្ថែមគ្រឿងផ្សំចូលរូបមន្ត!",
@@ -601,7 +601,7 @@
     "namePlaceholder": "ឧ. ស្ករ ទឹកដោះគោ",
     "unitPlaceholder": "ឧ. kg, ml, pcs",
     "noData": "គ្មានគ្រឿងផ្សំទេ។",
-    "confirmDeleteTitle": "⚠️ បញ្ជាក់ការលុប",
+    "confirmDeleteTitle": "បញ្ជាក់ការលុប",
     "confirmDeleteText": "តើអ្នកប្រាកដចង់លុបគ្រឿងផ្សំនេះឬ?",
     "successAdd": "បានបន្ថែមគ្រឿងផ្សំដោយជោគជ័យ!",
     "successUpdate": "បានកែប្រែដោយជោគជ័យ!",
@@ -760,7 +760,7 @@
     "days_left": "ថ្ងៃសល់ប្រហែល",
     "critical": "គ្រោះថ្នាក់",
     "warning": "ព្រមាន",
-    "no_low_stock": "គ្មានស្តុកទាប 🚀",
+    "no_low_stock": "គ្មានស្តុកទាប",
     "frequently_bought": "យោបល់ AI សម្រាប់ទំនិញដែលទិញរួមគ្នាញឹកញាប់។",
     "buy_id": "ពេលអតិថិជនទិញ",
     "recommend_id": "ណែនាំឱ្យដាក់បន្ថែម",

@@ -24,19 +24,7 @@
         type="button"
         @click="openMobileCart()"
       >
-        <svg
-          class="w-6 h-6 mr-1"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 0 0 6.6 17h10.8a1 1 0 0 0 .95-.7L19 13M7 13V6a4 4 0 1 1 8 0v7"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
+        <ShoppingCart class="w-6 h-6 mr-1" />
         <span>{{ t("pos.cart") || "Cart" }}</span>
         <span
           class="absolute -top-2 -right-2 bg-red-500 dark:bg-red-400 text-white dark:text-gray-900 text-xs w-6 h-6 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900"
@@ -59,19 +47,7 @@
         "
         :title="t('pos.cart') || 'Cart'"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 0 0 6.6 17h10.8a1 1 0 0 0 .95-.7L19 13M7 13V6a4 4 0 1 1 8 0v7"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
+        <ShoppingCart class="w-5 h-5" />
         <span>{{ t("pos.cart") || "Cart" }}</span>
         <span
           v-if="totalQtyLocal > 0"
@@ -126,18 +102,7 @@
                 @click="viewMode = 'grid'"
                 aria-label="Grid view"
               >
-                <svg
-                  class="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                >
-                  <rect x="3" y="3" width="7" height="7" rx="2" />
-                  <rect x="14" y="3" width="7" height="7" rx="2" />
-                  <rect x="14" y="14" width="7" height="7" rx="2" />
-                  <rect x="3" y="14" width="7" height="7" rx="2" />
-                </svg>
+                <LayoutGrid class="w-6 h-6" />
               </button>
               <button
                 type="button"
@@ -150,18 +115,7 @@
                 @click="viewMode = 'list'"
                 aria-label="List view"
               >
-                <svg
-                  class="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="5" cy="7" r="2" />
-                  <rect x="9" y="6" width="13" height="2" rx="1" />
-                  <circle cx="5" cy="17" r="2" />
-                  <rect x="9" y="16" width="13" height="2" rx="1" />
-                </svg>
+                <List class="w-6 h-6" />
               </button>
             </div>
           </div>
@@ -276,6 +230,7 @@ import { useI18n } from "vue-i18n";
 import AppLayout from "@/components/Common/AppLayout.vue";
 import ProductCard from "@/components/POS/ProductCard.vue";
 import Cart from "@/components/POS/Cart.vue";
+import { LayoutGrid, List, ShoppingCart } from "lucide-vue-next";
 import PaymentModal from "@/components/POS/PaymentModal.vue";
 import CustomizeCartItemModal from "@/components/POS/CustomizeCartItemModal.vue";
 import { usePOSStore } from "@/store/pos";

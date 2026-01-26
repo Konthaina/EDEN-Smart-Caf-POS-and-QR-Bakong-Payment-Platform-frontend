@@ -36,7 +36,7 @@
                 @click="openAddModal"
                 class="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-5 py-2 rounded-xl font-medium shadow-sm transition"
               >
-                <span class="text-lg font-bold">+</span>
+                <Plus class="w-4 h-4" />
                 <span>{{ $t("menu.add") }}</span>
               </button>
             </div>
@@ -46,15 +46,7 @@
           <div class="flex justify-between items-center">
             <div class="relative w-72">
               <span class="absolute left-3 top-2.5 text-gray-400">
-                <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
-                  <path
-                    d="M13.5 13.5L17 17M9 15a6 6 0 100-12 6 6 0 000 12z"
-                    stroke="#a78bfa"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                <Search class="w-4 h-4 text-purple-400" />
               </span>
               <input
                 v-model="search"
@@ -87,14 +79,7 @@
                   @click="toggleColsMenu"
                 >
                   {{ $t("columns") || "Columns" }}
-                  <svg
-                    viewBox="0 0 20 20"
-                    width="12"
-                    height="12"
-                    class="inline ml-1"
-                  >
-                    <path d="M5 7l5 6 5-6" fill="currentColor" />
-                  </svg>
+                  <ChevronDown class="w-3 h-3" />
                 </button>
 
                 <!-- Columns dropdown -->
@@ -515,6 +500,7 @@ import AddMenuItemModal from "@/components/Menu/AddMenuItemModal.vue";
 import EditMenuItemModal from "@/components/Menu/EditMenuItemModal.vue";
 import { createToastInterface } from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import { ChevronDown, ChevronUp, ChevronsUpDown, Plus, Search } from "lucide-vue-next";
 import { publicUrl, storageUrl } from "@/config/urls";
 
 const toast = createToastInterface();
@@ -821,14 +807,7 @@ const SortIcon = (props) => {
           "inline-block ml-1 align-middle text-gray-400 dark:text-gray-500",
         "aria-hidden": "true",
       },
-      [
-        h("svg", { width: 12, height: 12, viewBox: "0 0 20 20" }, [
-          h("path", {
-            d: "M7 7l3-3 3 3H7zM7 13h6l-3 3-3-3z",
-            fill: "currentColor",
-          }),
-        ]),
-      ]
+      [h(ChevronsUpDown, { class: "w-3 h-3" })]
     );
   }
   return h(
@@ -838,14 +817,7 @@ const SortIcon = (props) => {
         "inline-block ml-1 align-middle text-purple-600 dark:text-purple-300",
       "aria-hidden": "true",
     },
-    [
-      h("svg", { width: 12, height: 12, viewBox: "0 0 20 20" }, [
-        h("path", {
-          d: dir === "asc" ? "M10 5l5 7H5l5-7z" : "M10 15l-5-7h10l-5 7z",
-          fill: "currentColor",
-        }),
-      ]),
-    ]
+    [h(dir === "asc" ? ChevronUp : ChevronDown, { class: "w-3 h-3" })]
   );
 };
 

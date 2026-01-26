@@ -40,15 +40,7 @@
           <div class="flex justify-between items-center">
             <div class="relative w-72">
               <span class="absolute left-3 top-2.5 text-gray-400">
-                <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
-                  <path
-                    d="M13.5 13.5L17 17M9 15a6 6 0 100-12 6 6 0 000 12z"
-                    stroke="#a78bfa"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                <Search class="w-4 h-4 text-purple-400" />
               </span>
               <input
                 v-model="search"
@@ -86,12 +78,10 @@
                       <span class="inline-flex items-center gap-1">
                         {{ $t("categories.name") }}
                         <span v-if="sortKey==='name'" class="ml-1 opacity-70 text-purple-600 dark:text-purple-300">
-                          {{ sortDir==='asc' ? '▲' : '▼' }}
+                          <ChevronUp v-if="sortDir==='asc'" class="w-3 h-3" />
+                          <ChevronDown v-else class="w-3 h-3" />
                         </span>
-                        <svg v-else class="ml-1 w-3.5 h-3.5 inline text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M7 7l3-3 3 3" />
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M7 13l3 3 3-3" />
-                        </svg>
+                        <ChevronsUpDown v-else class="ml-1 w-3.5 h-3.5 inline text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors" />
                       </span>
                     </th>
 
@@ -104,12 +94,10 @@
                       <span class="inline-flex items-center gap-1">
                         Items
                         <span v-if="sortKey==='items'" class="ml-1 opacity-70 text-purple-600 dark:text-purple-300">
-                          {{ sortDir==='asc' ? '▲' : '▼' }}
+                          <ChevronUp v-if="sortDir==='asc'" class="w-3 h-3" />
+                          <ChevronDown v-else class="w-3 h-3" />
                         </span>
-                        <svg v-else class="ml-1 w-3.5 h-3.5 inline text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M7 7l3-3 3 3" />
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M7 13l3 3 3-3" />
-                        </svg>
+                        <ChevronsUpDown v-else class="ml-1 w-3.5 h-3.5 inline text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors" />
                       </span>
                     </th>
 
@@ -122,12 +110,10 @@
                       <span class="inline-flex items-center gap-1">
                         Status
                         <span v-if="sortKey==='status'" class="ml-1 opacity-70 text-purple-600 dark:text-purple-300">
-                          {{ sortDir==='asc' ? '▲' : '▼' }}
+                          <ChevronUp v-if="sortDir==='asc'" class="w-3 h-3" />
+                          <ChevronDown v-else class="w-3 h-3" />
                         </span>
-                        <svg v-else class="ml-1 w-3.5 h-3.5 inline text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M7 7l3-3 3 3" />
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M7 13l3 3 3-3" />
-                        </svg>
+                        <ChevronsUpDown v-else class="ml-1 w-3.5 h-3.5 inline text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors" />
                       </span>
                     </th>
 
@@ -279,6 +265,7 @@ import CategoryModal from "@/components/Menu/CategoryModal.vue";
 import api from "@/plugins/axios";
 import { createToastInterface } from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import { ChevronDown, ChevronUp, ChevronsUpDown, Search } from "lucide-vue-next";
 
 const COLSPAN = 5;
 

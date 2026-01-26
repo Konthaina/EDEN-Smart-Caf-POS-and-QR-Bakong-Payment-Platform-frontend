@@ -413,9 +413,10 @@
           >
             <button
               @click="showPasswordModal = true"
-              class="text-sm text-red-600 hover:underline"
+              class="inline-flex items-center gap-2 text-sm text-red-600 hover:underline"
             >
-              🔒 {{ $t("profile.change_password") }}
+              <Lock class="w-4 h-4" />
+              <span>{{ $t("profile.change_password") }}</span>
             </button>
             <div class="flex gap-3">
               <button
@@ -612,7 +613,7 @@ import api from "@/plugins/axios";
 import { publicUrl, storageUrl } from "@/config/urls";
 import useSettings from "@/composables/useSettings";
 import AppLayout from "@/components/Common/AppLayout.vue";
-import { Sun, Moon } from "lucide-vue-next";
+import { Lock, Moon, Sun } from "lucide-vue-next";
 
 // i18n / toast / tab
 const { locale } = useI18n();

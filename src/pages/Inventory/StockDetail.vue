@@ -13,7 +13,8 @@
               class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 text-purple-700 dark:text-purple-300"
               title="Back"
             >
-              ← <span>{{ $t("common.back") || "Back" }}</span>
+              <ArrowLeft class="w-4 h-4" />
+              <span>{{ $t("common.back") || "Back" }}</span>
             </button>
 
             <div class="text-xs text-gray-500 dark:text-gray-400">
@@ -95,7 +96,8 @@
                             : 'text-gray-500 dark:text-gray-400'
                         "
                       >
-                        ⚠️ {{ $t("stock.low") || "Low" }}
+                        <AlertTriangle class="w-3.5 h-3.5 inline-block mr-1 align-text-bottom" />
+                        {{ $t("stock.low") || "Low" }}
                         {{ $t("stock.alertAt") || "alert at" }}:
                         <span class="font-semibold"
                           >{{ lowQtyDisplay }} {{ unit }}</span
@@ -320,6 +322,7 @@
 import AppLayout from "@/components/Common/AppLayout.vue";
 import { ref, computed } from "vue";
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
+import { AlertTriangle, ArrowLeft } from "lucide-vue-next";
 import api from "@/plugins/axios";
 import { createToastInterface } from "vue-toastification";
 import { useI18n } from "vue-i18n";

@@ -3,8 +3,9 @@
     <!-- Header -->
     <div class="flex items-center justify-between gap-3">
       <div>
-        <h2 class="text-base font-semibold text-gray-800 dark:text-white">
-          🍩 {{ $t("top_items.title") }}
+        <h2 class="text-base font-semibold text-gray-800 dark:text-white flex items-center gap-2">
+          <PieChart class="w-5 h-5 text-indigo-500" />
+          <span>{{ $t("top_items.title") }}</span>
         </h2>
         <p class="text-xs text-gray-500 dark:text-gray-300">
           {{ $t("top_items.subtitle") }}
@@ -25,7 +26,7 @@
           class="inline-flex items-center gap-2 text-xs sm:text-sm px-3 py-1.5 rounded-md border border-indigo-300 dark:border-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-800/40 transition"
           :title="viewLabel">
           <span>{{ viewLabel }}</span>
-          <span aria-hidden>›</span>
+          <ChevronRight class="w-4 h-4" aria-hidden="true" />
         </RouterLink>
       </div>
     </div>
@@ -33,8 +34,9 @@
     <!-- Chart -->
     <div class="relative h-[300px]">
       <Doughnut v-if="hasData" :data="chartData" :options="chartOptions" class="absolute inset-0" />
-      <p v-else class="text-gray-400 dark:text-gray-300 text-sm text-center pt-12">
-        ⚠️ {{ $t("top_items.no_data") }}
+      <p v-else class="text-gray-400 dark:text-gray-300 text-sm text-center pt-12 flex items-center justify-center gap-2">
+        <AlertTriangle class="w-4 h-4" />
+        <span>{{ $t("top_items.no_data") }}</span>
       </p>
     </div>
   </div>
@@ -47,6 +49,7 @@ import { useI18n } from "vue-i18n";
 import { Doughnut } from "vue-chartjs";
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from "chart.js";
 import api from "@/plugins/axios";
+import { AlertTriangle, ChevronRight, PieChart } from "lucide-vue-next";
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 

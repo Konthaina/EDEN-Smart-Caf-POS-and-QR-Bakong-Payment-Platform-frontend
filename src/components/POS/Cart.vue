@@ -9,24 +9,13 @@
       title="Close"
       type="button"
     >
-      <svg
-        viewBox="0 0 20 20"
-        class="w-6 h-6"
-        fill="none"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 6l8 8M6 14L14 6"
-        />
-      </svg>
+      <X class="w-6 h-6" />
     </button>
 
     <!-- Header -->
-    <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-3 pr-10">
-      🛒 {{ $t("cart.title") }}
+    <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-3 pr-10 flex items-center gap-2">
+      <ShoppingCart class="w-5 h-5 text-purple-600 dark:text-purple-300" />
+      <span>{{ $t("cart.title") }}</span>
     </h2>
 
     <!-- Item List -->
@@ -88,6 +77,7 @@ import { useI18n } from "vue-i18n";
 import { usePOSStore } from "@/store/pos";
 import CartItem from "./CartItem.vue";
 import CustomizeCartItemModal from "./CustomizeCartItemModal.vue";
+import { ShoppingCart, X } from "lucide-vue-next";
 
 useI18n();
 const { cart } = usePOSStore();

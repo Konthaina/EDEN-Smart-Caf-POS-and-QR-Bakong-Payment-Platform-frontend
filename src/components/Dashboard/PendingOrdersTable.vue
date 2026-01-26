@@ -4,7 +4,7 @@
             <div class="flex items-center gap-2">
                 <span
                     class="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-violet-100 dark:bg-violet-900/40">
-                    ⏳
+                    <Hourglass class="w-4 h-4 text-violet-600 dark:text-violet-200" />
                 </span>
                 <h3 class="text-sm font-semibold text-gray-800 dark:text-white">Recent Pending Orders</h3>
             </div>
@@ -59,6 +59,7 @@
 import { onMounted, ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import api from '@/plugins/axios'
+import { Hourglass } from 'lucide-vue-next'
 
 const props = defineProps({ limit: { type: Number, default: 6 } })
 const orders = ref([])

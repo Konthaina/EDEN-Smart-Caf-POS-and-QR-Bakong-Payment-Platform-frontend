@@ -18,14 +18,7 @@
             <div class="relative" ref="colsMenuRef">
               <button class="input !py-2" @click="toggleColsMenu">
                 Columns
-                <svg
-                  viewBox="0 0 20 20"
-                  width="12"
-                  height="12"
-                  class="inline ml-2"
-                >
-                  <path d="M5 7l5 6 5-6" fill="currentColor" />
-                </svg>
+                <ChevronDown class="w-3 h-3 ml-2" />
               </button>
 
               <!-- Columns dropdown -->
@@ -113,7 +106,8 @@
                 @click="downloadReport"
                 class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-4 py-2 rounded-full shadow-sm text-sm transition"
               >
-                {{ $t("order.download") }}
+                <Download class="w-4 h-4 mr-2 inline-block" />
+                <span>{{ $t("order.download") }}</span>
               </button>
             </div>
           </div>
@@ -431,6 +425,7 @@ import MainLayout from "@/components/Common/AppLayout.vue";
 import { createToastInterface } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import { useI18n } from "vue-i18n";
+import { ChevronDown, ChevronUp, ChevronsUpDown, Download } from "lucide-vue-next";
 
 const { t } = useI18n();
 const toast = createToastInterface();
@@ -680,14 +675,7 @@ const SortIcon = (props) => {
           "inline-block ml-1 align-middle text-gray-400 dark:text-gray-500",
         "aria-hidden": "true",
       },
-      [
-        h("svg", { width: 12, height: 12, viewBox: "0 0 20 20" }, [
-          h("path", {
-            d: "M7 7l3-3 3 3H7zM7 13h6l-3 3-3-3z",
-            fill: "currentColor",
-          }),
-        ]),
-      ]
+      [h(ChevronsUpDown, { class: "w-3 h-3" })]
     );
   }
   return h(
@@ -697,14 +685,7 @@ const SortIcon = (props) => {
         "inline-block ml-1 align-middle text-purple-600 dark:text-purple-300",
       "aria-hidden": "true",
     },
-    [
-      h("svg", { width: 12, height: 12, viewBox: "0 0 20 20" }, [
-        h("path", {
-          d: dir === "asc" ? "M10 5l5 7H5l5-7z" : "M10 15l-5-7h10l-5 7z",
-          fill: "currentColor",
-        }),
-      ]),
-    ]
+    [h(dir === "asc" ? ChevronUp : ChevronDown, { class: "w-3 h-3" })]
   );
 };
 

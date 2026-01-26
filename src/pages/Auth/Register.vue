@@ -233,18 +233,7 @@
               v-else
               class="flex items-center gap-2 text-green-600 dark:text-green-400"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414l2.293 2.293 6.543-6.543a1 1 0 011.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+              <CheckCircle class="w-5 h-5" />
               <span>{{ $t("otp.verified") || "Code verified" }}</span>
               <span v-if="ttlLeftSec > 0" class="text-xs text-gray-500"
                 >• {{ Math.ceil(ttlLeftSec / 60) }} min left</span
@@ -340,7 +329,7 @@ import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import api from "@/plugins/axios";
 import { useToast } from "vue-toastification";
-import { Sun, Moon, Eye, EyeOff, Loader2 } from "lucide-vue-next";
+import { CheckCircle, Eye, EyeOff, Loader2, Moon, Sun } from "lucide-vue-next";
 import useSettings from "@/composables/useSettings";
 import { publicUrl, storageUrl } from "@/config/urls";
 

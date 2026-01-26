@@ -33,9 +33,9 @@
 
       <!-- KPI cards -->
       <div class="grid md:grid-cols-3 gap-4">
-        <StatsCard title="Total" :value="totalCount" icon="👥" color="indigo" />
-        <StatsCard title="New in Period" :value="newInPeriodCount" icon="✨" color="green" />
-        <StatsCard title="Returning (rough)" :value="returningCount" icon="♻️" color="purple" />
+        <StatsCard title="Total" :value="totalCount" :icon="Users" color="indigo" />
+        <StatsCard title="New in Period" :value="newInPeriodCount" :icon="UserPlus" color="green" />
+        <StatsCard title="Returning (rough)" :value="returningCount" :icon="Repeat" color="purple" />
       </div>
 
       <!-- Filters -->
@@ -147,6 +147,7 @@ import api from "@/plugins/axios";
 import MainLayout from "@/components/Common/AppLayout.vue";
 import BackToDashboard from "@/components/Common/BackToDashboard.vue";
 import StatsCard from "@/components/Dashboard/StatsCard.vue";
+import { Repeat, UserPlus, Users } from "lucide-vue-next";
 
 const route = useRoute();
 const router = useRouter();

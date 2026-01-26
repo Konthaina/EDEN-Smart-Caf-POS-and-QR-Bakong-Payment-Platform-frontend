@@ -7,7 +7,7 @@
         class="fixed top-4 left-1/2 -translate-x-1/2 bg-red-100 dark:bg-red-300 border border-red-300 dark:border-red-400 text-red-800 px-6 py-3 rounded-xl shadow-lg z-50 flex items-center gap-3 max-w-lg khmer-support"
         :lang="locale"
       >
-        <span class="text-xl">⚠️</span>
+        <AlertTriangle class="w-5 h-5 text-red-600" />
         <div class="text-sm">
           {{ $t("stock.lowStockAlert") }}:
           <strong>
@@ -22,7 +22,7 @@
           @click="showLowStockAlert = false"
           class="ml-auto text-red-600 hover:text-red-800 text-sm font-bold"
         >
-          ✖
+          <X class="w-4 h-4" />
         </button>
       </div>
     </transition>
@@ -54,15 +54,7 @@
           <div class="flex justify-between items-center">
             <div class="relative w-72">
               <span class="absolute left-3 top-2.5 text-gray-400">
-                <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
-                  <path
-                    d="M13.5 13.5L17 17M9 15a6 6 0 100-12 6 6 0 000 12z"
-                    stroke="#a78bfa"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                <Search class="w-4 h-4 text-purple-400" />
               </span>
               <input
                 v-model="search"
@@ -189,7 +181,8 @@
                         v-if="isLow(stock)"
                         class="text-[11px] text-red-600 font-medium mt-1 inline-block"
                       >
-                        ⚠️ {{ $t("stock.low") || "Low" }}
+                        <AlertTriangle class="w-3.5 h-3.5 inline-block mr-1 align-text-bottom" />
+                        {{ $t("stock.low") || "Low" }}
                       </span>
                     </td>
 
@@ -353,6 +346,14 @@ import api from "@/plugins/axios";
 import { createToastInterface } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import { useI18n } from "vue-i18n";
+import {
+  AlertTriangle,
+  ChevronDown,
+  ChevronUp,
+  ChevronsUpDown,
+  Search,
+  X,
+} from "lucide-vue-next";
 
 const { locale } = useI18n();
 const toast = createToastInterface();
@@ -630,14 +631,7 @@ const SortIcon = (props) => {
           "inline-block ml-1 align-middle text-gray-400 dark:text-gray-500",
         "aria-hidden": "true",
       },
-      [
-        h("svg", { width: 12, height: 12, viewBox: "0 0 20 20" }, [
-          h("path", {
-            d: "M7 7l3-3 3 3H7zM7 13h6l-3 3-3-3z",
-            fill: "currentColor",
-          }),
-        ]),
-      ]
+      [h(ChevronsUpDown, { class: "w-3 h-3" })]
     );
   }
   return h(
@@ -647,14 +641,7 @@ const SortIcon = (props) => {
         "inline-block ml-1 align-middle text-purple-600 dark:text-purple-300",
       "aria-hidden": "true",
     },
-    [
-      h("svg", { width: 12, height: 12, viewBox: "0 0 20 20" }, [
-        h("path", {
-          d: dir === "asc" ? "M10 5l5 7H5l5-7z" : "M10 15l-5-7h10l-5 7z",
-          fill: "currentColor",
-        }),
-      ]),
-    ]
+    [h(dir === "asc" ? ChevronUp : ChevronDown, { class: "w-3 h-3" })]
   );
 };
 

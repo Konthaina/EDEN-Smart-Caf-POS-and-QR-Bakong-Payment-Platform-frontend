@@ -20,13 +20,10 @@
       </span>
       <button @click="toggleSidebar" :title="t('sidebar.collapse')"
         class="ml-auto p-2 rounded-lg transition-all duration-150 outline-none">
-        <svg :class="[
+        <ChevronRight :class="[
           'w-6 h-6 text-purple-500 transition-transform duration-300',
           collapsed ? 'rotate-180' : '',
-        ]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          viewBox="0 0 24 24">
-          <path d="M9 6l6 6-6 6" />
-        </svg>
+        ]" />
       </button>
     </div>
 
@@ -223,7 +220,7 @@
       </transition>
 
       <div class="text-center text-[11px] text-gray-500 dark:text-gray-400 py-3 flex items-center justify-center gap-2">
-        <span class="text-purple-500 text-[13px]">⚡</span>
+        <Zap class="w-4 h-4 text-purple-500" />
         <span v-if="!collapsed">
           {{ t('sidebar.powered_by') }}
           <RouterLink
@@ -268,6 +265,8 @@ import {
   Settings,
   LogOut,
   Percent,
+  ChevronRight,
+  Zap,
 } from 'lucide-vue-next';
 
 const { t } = useI18n();
@@ -350,7 +349,7 @@ const logout = async () => {
     userStore.logout();
     router.push('/login');
   } catch (error) {
-    console.error('❌ Logout error:', error);
+    console.error('Logout error:', error);
   }
 };
 const onAvatarError = (e) => {

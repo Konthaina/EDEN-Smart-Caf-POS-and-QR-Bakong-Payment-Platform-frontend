@@ -74,7 +74,7 @@
         aria-label="decrease"
         title="Decrease"
       >
-        −
+        <Minus class="w-4 h-4" />
       </button>
 
       <input
@@ -94,7 +94,7 @@
         aria-label="increase"
         title="Increase"
       >
-        ＋
+        <Plus class="w-4 h-4" />
       </button>
 
       <button
@@ -103,7 +103,7 @@
         :title="$t('cart.remove')"
         aria-label="remove"
       >
-        🗑
+        <Trash2 class="w-4 h-4" />
       </button>
 
       <button
@@ -112,7 +112,7 @@
         :title="$t('cart.edit')"
         aria-label="customize"
       >
-        ✎
+        <Pencil class="w-4 h-4" />
       </button>
     </div>
   </div>
@@ -121,6 +121,7 @@
 <script setup>
 import { computed } from "vue";
 import { storageUrl } from "@/config/urls";
+import { Minus, Pencil, Plus, Trash2 } from "lucide-vue-next";
 
 const props = defineProps({
   item: { type: Object, required: true },

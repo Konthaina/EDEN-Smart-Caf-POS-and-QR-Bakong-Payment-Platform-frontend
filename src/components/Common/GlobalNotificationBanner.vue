@@ -7,7 +7,7 @@
       @click="openList"
       title="View low stock"
     >
-      <span class="text-xl">🔔</span>
+      <Bell class="w-5 h-5" />
       <span class="font-semibold">
         {{
           countToUse === 1
@@ -20,7 +20,7 @@
         class="ml-2 px-2 text-white/80 hover:text-white focus:outline-none text-lg"
         aria-label="Dismiss"
       >
-        &times;
+        <X class="w-4 h-4" />
       </button>
     </div>
   </transition>
@@ -39,7 +39,7 @@
           class="px-4 py-3 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between"
         >
           <div class="flex items-center gap-2">
-            <span class="text-xl">⚠️</span>
+            <AlertTriangle class="w-5 h-5 text-amber-500" />
             <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-100">
               Low stock items
             </h3>
@@ -48,7 +48,7 @@
             class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             @click="closeList"
           >
-            ✕
+            <X class="w-4 h-4" />
           </button>
         </div>
 
@@ -140,6 +140,7 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useNotificationCount } from "@/composables/useNotificationCount";
+import { AlertTriangle, Bell, X } from "lucide-vue-next";
 
 const props = defineProps({
   /** Optional: parent can pass a count; if omitted we use the composable's count */

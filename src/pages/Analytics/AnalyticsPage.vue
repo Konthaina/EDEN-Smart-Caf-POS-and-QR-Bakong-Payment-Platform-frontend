@@ -48,7 +48,8 @@
                 <h2
                   class="text-lg sm:text-2xl font-semibold mb-4 tracking-tight flex items-center gap-2"
                 >
-                  <span>📈 {{ $t("analysis.sales_trend") }}</span>
+                  <TrendingUp class="w-5 h-5 text-blue-600" />
+                  <span>{{ $t("analysis.sales_trend") }}</span>
                   <span
                     class="ml-2 px-3 py-1 rounded-full text-[10px] sm:text-xs bg-blue-100 text-blue-700 dark:bg-blue-700/40 dark:text-blue-100"
                   >
@@ -70,9 +71,10 @@
                 class="bg-white dark:bg-gray-800/90 rounded-2xl shadow ring-1 ring-gray-100/80 dark:ring-white/10 transition hover:shadow-lg p-5 sm:p-7 overflow-x-auto no-scrollbar min-w-[280px]"
               >
                 <h2
-                  class="text-base sm:text-xl font-bold mb-3 text-indigo-700 dark:text-indigo-200"
+                  class="text-base sm:text-xl font-bold mb-3 text-indigo-700 dark:text-indigo-200 flex items-center gap-2"
                 >
-                  🏆 {{ $t("analysis.top_menu_items") }}
+                  <Trophy class="w-5 h-5" />
+                  <span>{{ $t("analysis.top_menu_items") }}</span>
                 </h2>
                 <table
                   class="w-full text-sm sm:text-base rounded-xl overflow-hidden min-w-[320px]"
@@ -122,9 +124,10 @@
                 class="bg-white dark:bg-gray-800/90 rounded-2xl shadow ring-1 ring-gray-100/80 dark:ring-white/10 transition hover:shadow-lg p-5 sm:p-7 overflow-x-auto no-scrollbar min-w-[280px]"
               >
                 <h2
-                  class="text-base sm:text-xl font-bold mb-3 text-pink-600 dark:text-pink-200"
+                  class="text-base sm:text-xl font-bold mb-3 text-pink-600 dark:text-pink-200 flex items-center gap-2"
                 >
-                  ⏰ {{ $t("analysis.peak_hours") }}
+                  <Clock class="w-5 h-5" />
+                  <span>{{ $t("analysis.peak_hours") }}</span>
                 </h2>
                 <div class="h-[260px] sm:h-[300px] lg:h-[340px]">
                   <canvas ref="peakChart" class="w-full h-full"></canvas>
@@ -139,7 +142,8 @@
               <h2
                 class="text-base sm:text-xl font-bold mb-4 text-yellow-700 dark:text-yellow-200 flex items-center gap-2"
               >
-                <span>⚠️ {{ $t("analysis.low_stock_risk") }}</span>
+                <AlertTriangle class="w-5 h-5" />
+                <span>{{ $t("analysis.low_stock_risk") }}</span>
                 <span
                   class="ml-2 px-3 py-1 rounded-full text-[10px] sm:text-xs bg-yellow-100 text-yellow-700 dark:bg-yellow-700/30 dark:text-yellow-200"
                 >
@@ -246,9 +250,10 @@
               class="bg-white dark:bg-gray-800/90 rounded-2xl shadow ring-1 ring-gray-100/80 dark:ring-white/10 transition hover:shadow-lg p-5 sm:p-7 overflow-x-auto no-scrollbar min-w-[280px]"
             >
               <h2
-                class="text-base sm:text-xl font-bold mb-4 text-green-700 dark:text-green-200"
+                class="text-base sm:text-xl font-bold mb-4 text-green-700 dark:text-green-200 flex items-center gap-2"
               >
-                🤝 {{ $t("analysis.frequently_bought") }}
+                <Handshake class="w-5 h-5" />
+                <span>{{ $t("analysis.frequently_bought") }}</span>
               </h2>
               <table
                 class="w-full text-sm sm:text-base rounded-xl overflow-hidden min-w-[320px] table-fixed"
@@ -319,9 +324,10 @@
                 class="bg-white dark:bg-gray-800/90 rounded-2xl shadow ring-1 ring-gray-100/80 dark:ring-white/10 transition hover:shadow-lg p-5 sm:p-7 overflow-x-auto no-scrollbar min-w-[280px]"
               >
                 <h2
-                  class="text-base sm:text-xl font-bold mb-3 text-cyan-700 dark:text-cyan-200"
+                  class="text-base sm:text-xl font-bold mb-3 text-cyan-700 dark:text-cyan-200 flex items-center gap-2"
                 >
-                  🎟️ {{ $t("analysis.promotion_effect") }}
+                  <Ticket class="w-5 h-5" />
+                  <span>{{ $t("analysis.promotion_effect") }}</span>
                 </h2>
                 <table
                   class="w-full text-sm sm:text-base rounded-xl overflow-hidden min-w-[320px] table-fixed"
@@ -382,9 +388,10 @@
                 class="bg-white dark:bg-gray-800/90 rounded-2xl shadow ring-1 ring-gray-100/80 dark:ring-white/10 transition hover:shadow-lg p-5 sm:p-7 overflow-x-auto no-scrollbar min-w-[280px]"
               >
                 <h2
-                  class="text-base sm:text-xl font-bold mb-3 text-pink-700 dark:text-pink-200"
+                  class="text-base sm:text-xl font-bold mb-3 text-pink-700 dark:text-pink-200 flex items-center gap-2"
                 >
-                  👑 {{ $t("analysis.top_customers") }}
+                  <Crown class="w-5 h-5" />
+                  <span>{{ $t("analysis.top_customers") }}</span>
                 </h2>
                 <table
                   class="w-full text-sm sm:text-base rounded-xl overflow-hidden min-w-[320px] table-fixed"
@@ -452,6 +459,15 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import Applayout from "@/components/common/Applayout.vue";
+import {
+  AlertTriangle,
+  Clock,
+  Crown,
+  Handshake,
+  Ticket,
+  TrendingUp,
+  Trophy,
+} from "lucide-vue-next";
 import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 

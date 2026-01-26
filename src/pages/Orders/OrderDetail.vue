@@ -11,7 +11,7 @@
           class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 text-purple-700 dark:text-purple-300"
           title="Back (Esc)"
         >
-          <ArrowLeftIcon class="w-4 h-4" />
+          <ArrowLeft class="w-4 h-4" />
           <span>{{ $t("order.detail.back") || "Back" }}</span>
         </button>
       </div>
@@ -67,15 +67,15 @@
               class="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400"
             >
               <div class="inline-flex items-center gap-2">
-                <CalendarIcon class="w-4 h-4" />
+                <Calendar class="w-4 h-4" />
                 <span>{{ formatDate(order.created_at) }}</span>
               </div>
               <div class="inline-flex items-center gap-2">
-                <UserIcon class="w-4 h-4" />
+                <User class="w-4 h-4" />
                 <span>{{ order.user?.name || "—" }}</span>
               </div>
               <div class="inline-flex items-center gap-2">
-                <CreditCardIcon class="w-4 h-4" />
+                <CreditCard class="w-4 h-4" />
                 <span>{{ capitalize(order.payment_method) || "—" }}</span>
               </div>
             </div>
@@ -90,7 +90,7 @@
               class="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-sm shadow"
               title="Accept (A)"
             >
-              <CheckIcon class="w-4 h-4" />
+              <Check class="w-4 h-4" />
               <span>Accept</span>
             </button>
             <button
@@ -100,7 +100,7 @@
               class="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-white bg-rose-600 hover:bg-rose-700 disabled:opacity-60 text-sm shadow"
               title="Cancel (C)"
             >
-              <XMarkIcon class="w-4 h-4" />
+              <X class="w-4 h-4" />
               <span>Cancel</span>
             </button>
 
@@ -109,7 +109,7 @@
               class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200"
               title="Print (P)"
             >
-              <PrinterIcon class="w-4 h-4" />
+              <Printer class="w-4 h-4" />
               <span>{{ $t("order.detail.print") || "Print" }}</span>
             </button>
           </div>
@@ -367,14 +367,14 @@
             class="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 text-purple-700 dark:text-purple-300"
             title="Back (Esc)"
           >
-            <ArrowLeftIcon class="w-5 h-5" /><span>Back</span>
+            <ArrowLeft class="w-5 h-5" /><span>Back</span>
           </button>
           <button
             @click="printReceipt"
             class="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200"
             title="Print (P)"
           >
-            <PrinterIcon class="w-5 h-5" /><span>Print</span>
+            <Printer class="w-5 h-5" /><span>Print</span>
           </button>
           <button
             v-if="order.status === 'pending'"
@@ -383,7 +383,7 @@
             class="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-sm shadow"
             title="Accept (A)"
           >
-            <CheckIcon class="w-5 h-5" /><span>Accept</span>
+            <Check class="w-5 h-5" /><span>Accept</span>
           </button>
           <button
             v-if="canCancel(order.status)"
@@ -392,7 +392,7 @@
             class="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-white bg-rose-600 hover:bg-rose-700 disabled:opacity-60 text-sm shadow"
             title="Cancel (C)"
           >
-            <XMarkIcon class="w-5 h-5" /><span>Cancel</span>
+            <X class="w-5 h-5" /><span>Cancel</span>
           </button>
         </div>
       </div>
@@ -451,17 +451,15 @@ import { useToast } from "vue-toastification";
 import api from "@/plugins/axios";
 import AppLayout from "@/components/Common/AppLayout.vue";
 import ReceiptPrint from "@/components/POS/ReceiptPrint.vue";
-
-/* Heroicons */
 import {
-  PrinterIcon,
-  ArrowLeftIcon,
-  CheckIcon,
-  XMarkIcon,
-  CalendarIcon,
-  UserIcon,
-  CreditCardIcon,
-} from "@heroicons/vue/24/outline";
+  ArrowLeft,
+  Calendar,
+  Check,
+  CreditCard,
+  Printer,
+  User,
+  X,
+} from "lucide-vue-next";
 
 const toast = useToast();
 const route = useRoute();

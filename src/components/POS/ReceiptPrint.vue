@@ -132,7 +132,10 @@
       <div
         class="mt-3 text-xs text-center text-black font-medium tracking-wide"
       >
-        {{ $t("receipt.thanks") }} ❤️
+        <span class="inline-flex items-center gap-1">
+          {{ $t("receipt.thanks") }}
+          <Heart class="w-3.5 h-3.5 text-red-500" />
+        </span>
       </div>
     </div>
   </div>
@@ -141,6 +144,7 @@
 <script setup>
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { Heart } from "lucide-vue-next";
 import useSettings from "@/composables/useSettings";
 import { publicUrl, storageUrl } from "@/config/urls";
 

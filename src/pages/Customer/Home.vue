@@ -130,7 +130,8 @@
       @click="showOrderSummary = true"
       class="cart-fab"
     >
-      🛒 <span class="cart-badge">{{ cartTotalQuantity }}</span>
+      <ShoppingCart class="w-5 h-5" />
+      <span class="cart-badge">{{ cartTotalQuantity }}</span>
     </div>
 
     <!-- Order Summary modal -->
@@ -189,7 +190,7 @@
     <!-- Order success modal -->
     <div v-if="orderSuccess" class="modal-backdrop">
       <div class="modal-content text-center">
-        <div class="text-6xl mb-4">✅</div>
+        <CheckCircle class="w-16 h-16 mx-auto mb-4 text-emerald-500" />
         <h2 class="modal-title">Order Placed!</h2>
         <p class="text-gray-600 mb-1">
           Your order has been sent to the counter.
@@ -213,6 +214,7 @@ import BottomNav from "@/components/Customer/BottomNav.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
+import { CheckCircle, ShoppingCart } from "lucide-vue-next";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
 

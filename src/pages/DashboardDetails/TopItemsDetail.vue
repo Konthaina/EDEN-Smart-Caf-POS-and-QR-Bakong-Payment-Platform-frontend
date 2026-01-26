@@ -100,7 +100,7 @@ async function load() {
     }));
 }
 
-// 🔁 single source of truth: run once now, then whenever period changes
+// Single source of truth: run once now, then whenever period changes
 watch(
     period,
     async (p, prev) => {

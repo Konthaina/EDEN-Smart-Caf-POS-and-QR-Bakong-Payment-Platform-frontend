@@ -63,15 +63,7 @@
           class="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-[#7f55e0] text-white shadow-sm hover:bg-[#6c3bd7] active:bg-[#7148c6] transition"
           aria-label="Add to cart"
         >
-          <svg
-            class="w-5 h-5"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <rect x="7" y="3" width="2" height="10" rx="1"></rect>
-            <rect x="3" y="7" width="10" height="2" rx="1"></rect>
-          </svg>
+          <Plus class="w-5 h-5" />
         </button>
       </div>
     </div>
@@ -81,6 +73,7 @@
 <script setup>
 import { computed } from "vue";
 import { storageUrl } from "@/config/urls";
+import { Plus } from "lucide-vue-next";
 
 const { item } = defineProps({
   item: { type: Object, required: true },
