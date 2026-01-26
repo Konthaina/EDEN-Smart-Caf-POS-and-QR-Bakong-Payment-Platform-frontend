@@ -128,7 +128,7 @@
 
           <!-- Table -->
           <div
-            class="flex-1 min-h-0 overflow-auto rounded-xl shadow no-scrollbar"
+            class="flex-1 min-h-0 overflow-auto rounded-xl shadow no-scrollbar bg-white dark:bg-gray-800"
           >
             <table class="w-full text-sm text-left bg-white dark:bg-gray-800">
               <thead

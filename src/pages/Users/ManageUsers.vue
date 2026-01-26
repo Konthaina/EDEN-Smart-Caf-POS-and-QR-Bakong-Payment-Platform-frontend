@@ -197,7 +197,7 @@
                   </td>
                 </tr>
 
-                <tr v-if="!paginatedRows.length">
+                <tr v-if="!loading && !paginatedRows.length">
                   <td :colspan="activeTab === 'trash' ? 6 : 5"
                     class="text-center py-6 text-gray-400 dark:text-gray-500">
                     {{ $t("user.no_data") || "No users found." }}

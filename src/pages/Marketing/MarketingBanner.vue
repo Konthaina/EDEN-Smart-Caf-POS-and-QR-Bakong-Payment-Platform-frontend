@@ -600,7 +600,7 @@ const SortIcon = ({ active, dir }) =>
     "span",
     {
       class:
-        "inline ml-1 " +
+        "inline-flex items-center ml-1 align-middle " +
         (active
           ? "text-purple-600 dark:text-purple-300"
           : "text-gray-400 dark:text-gray-500"),
