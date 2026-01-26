@@ -105,6 +105,8 @@
     "error_generic": "Reset failed. Try again."
   },
   "table": {
+    "empty_title": "No tables found.",
+    "empty_help": "Start by adding a new table for QR self-ordering.",
     "view_qr": "View QR Code",
     "qr_for": "QR Code for ",
     "manage_tables": "Manage Tables",
@@ -785,6 +787,8 @@
     "used/perday": "Average Used/Day"
   },
   "banners": {
+    "empty_title": "No banners found.",
+    "empty_help": "Start by adding a new banner to promote your cafe.",
     "delete_title": "Delete Banner",
     "search": "Search Banners",
     "sort": "Sort Banners",
@@ -813,6 +817,8 @@
     "display_order": "Display Order"
   },
   "notifications": {
+    "empty_title": "No notifications found.",
+    "empty_help": "Start by adding a new notification to inform your customers or staff.",
     "search": "Search Notifications",
     "sort": "Sort Notifications",
     "manage_notifications": "Notification Management",
