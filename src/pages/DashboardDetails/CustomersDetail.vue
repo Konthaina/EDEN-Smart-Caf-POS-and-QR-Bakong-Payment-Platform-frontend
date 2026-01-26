@@ -15,7 +15,11 @@
           </div>
 
           <div class="flex items-center gap-2">
-            <select class="border rounded-lg px-3 py-2" :value="period" @change="onChangePeriod($event.target.value)">
+            <select
+              class="border rounded-lg px-3 py-2 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700"
+              :value="period"
+              @change="onChangePeriod($event.target.value)"
+            >
               <option value="today">Today</option>
               <option value="week">This Week</option>
               <option value="month">This Month</option>
@@ -23,8 +27,10 @@
               <option value="all">All Time</option>
             </select>
 
-            <button class="border rounded-lg px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800"
-              @click="exportCSV">
+            <button
+              class="border rounded-lg px-3 py-2 text-sm bg-white text-gray-900 hover:bg-gray-50 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
+              @click="exportCSV"
+            >
               Export CSV
             </button>
           </div>
@@ -39,16 +45,18 @@
       </div>
 
       <!-- Filters -->
-      <div class="bg-white dark:bg-[#181f35] border rounded-2xl p-4 flex flex-wrap gap-3 items-center">
+      <div class="bg-white dark:bg-[#181f35] border dark:border-transparent rounded-2xl p-4 flex flex-wrap gap-3 items-center">
         <input v-model.trim="q" type="text" placeholder="Search name or email…"
-          class="border rounded-lg px-3 py-2 w-64" />
-        <select v-model="minOrders" class="border rounded-lg px-3 py-2">
+            class="border rounded-lg px-3 py-2 w-64 bg-white text-gray-900 placeholder-gray-400 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700 dark:placeholder-gray-500" />
+        <select v-model="minOrders"
+          class="border rounded-lg px-3 py-2 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700">
           <option :value="0">All customers</option>
           <option :value="1">≥ 1 order</option>
           <option :value="5">≥ 5 orders</option>
           <option :value="10">≥ 10 orders</option>
         </select>
-        <select v-model="sortKey" class="border rounded-lg px-3 py-2">
+        <select v-model="sortKey"
+          class="border rounded-lg px-3 py-2 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700">
           <option value="name">Name (A→Z)</option>
           <option value="orders">Orders (high)</option>
           <option value="spent">Total Spent (high)</option>
@@ -61,7 +69,7 @@
       </div>
 
       <!-- Table -->
-      <div class="flex-1 min-h-0 bg-white dark:bg-[#181f35] border rounded-2xl overflow-hidden flex flex-col">
+      <div class="flex-1 min-h-0 bg-white dark:bg-[#181f35] border dark:border-transparent rounded-2xl overflow-hidden flex flex-col">
         <div class="flex-1 min-h-0 overflow-auto no-scrollbar">
           <table class="min-w-full text-sm">
             <thead class="sticky top-0 bg-gray-50/70 dark:bg-[#0b1223]/70 backdrop-blur z-10">
@@ -98,7 +106,8 @@
                   {{ c.stats.last ? fmtDate(c.stats.last) : "—" }}
                 </td>
                 <td class="px-4 py-2">
-                  <RouterLink :to="{ name: 'Orders', query: { q: c.name } }" class="text-indigo-600 hover:underline">
+                  <RouterLink :to="{ name: 'Orders', query: { q: c.name } }"
+                    class="text-indigo-600 hover:underline dark:text-indigo-300">
                     View Orders
                   </RouterLink>
                 </td>
@@ -122,15 +131,26 @@
             of {{ view.length }}
           </div>
           <div class="flex items-center gap-2">
-            <select class="border rounded px-2 py-1 text-sm" v-model.number="pageSize">
+            <select
+              class="border rounded px-2 py-1 text-sm bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700"
+              v-model.number="pageSize"
+            >
               <option :value="10">10</option>
               <option :value="20">20</option>
               <option :value="50">50</option>
             </select>
-            <button class="px-3 py-1 border rounded disabled:opacity-40" :disabled="page === 1" @click="page--">
+            <button
+              class="px-3 py-1 border rounded disabled:opacity-40 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700"
+              :disabled="page === 1"
+              @click="page--"
+            >
               Prev
             </button>
-            <button class="px-3 py-1 border rounded disabled:opacity-40" :disabled="page >= maxPage" @click="page++">
+            <button
+              class="px-3 py-1 border rounded disabled:opacity-40 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700"
+              :disabled="page >= maxPage"
+              @click="page++"
+            >
               Next
             </button>
           </div>

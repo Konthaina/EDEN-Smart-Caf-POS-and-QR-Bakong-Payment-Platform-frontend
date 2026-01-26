@@ -14,8 +14,11 @@
 
                     <!-- Period -->
                     <div class="flex items-center gap-2">
-                        <select class="border rounded-lg px-3 py-2" :value="period"
-                            @change="onChangePeriod($event.target.value)">
+                        <select
+                            class="border rounded-lg px-3 py-2 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700"
+                            :value="period"
+                            @change="onChangePeriod($event.target.value)"
+                        >
                             <option value="today">Today</option>
                             <option value="week">This Week</option>
                             <option value="month">This Month</option>
@@ -23,14 +26,24 @@
                             <option value="custom">Custom Range…</option>
                         </select>
                         <template v-if="period === 'custom'">
-                            <input type="date" class="border rounded-lg px-2 py-2" v-model="from" />
-                            <input type="date" class="border rounded-lg px-2 py-2" v-model="to" />
+                            <input
+                                type="date"
+                                class="border rounded-lg px-2 py-2 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700"
+                                v-model="from"
+                            />
+                            <input
+                                type="date"
+                                class="border rounded-lg px-2 py-2 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700"
+                                v-model="to"
+                            />
                         </template>
 
                         <!-- Export -->
-                        <button @click="exportOrders('csv')"
-                            class="border rounded-lg px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800"
-                            title="Export CSV">
+                        <button
+                            @click="exportOrders('csv')"
+                            class="border rounded-lg px-3 py-2 text-sm bg-white text-gray-900 hover:bg-gray-50 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
+                            title="Export CSV"
+                        >
                             Export CSV
                         </button>
                     </div>
@@ -45,16 +58,18 @@
             </div>
 
             <!-- Filters -->
-            <div class="bg-white dark:bg-[#181f35] border rounded-2xl p-4 flex flex-wrap gap-3 items-center">
+            <div class="bg-white dark:bg-[#181f35] border dark:border-transparent rounded-2xl p-4 flex flex-wrap gap-3 items-center">
                 <input v-model.trim="q" type="text" placeholder="Search order code / customer…"
-                    class="border rounded-lg px-3 py-2 w-56" />
-                <select v-model="status" class="border rounded-lg px-3 py-2">
+                      class="border rounded-lg px-3 py-2 w-56 bg-white text-gray-900 placeholder-gray-400 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700 dark:placeholder-gray-500" />
+                <select v-model="status"
+                    class="border rounded-lg px-3 py-2 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700">
                     <option value="all">All Status</option>
                     <option value="completed">Completed</option>
                     <option value="pending">Pending</option>
                     <option value="cancelled">Cancelled</option>
                 </select>
-                <select v-model="method" class="border rounded-lg px-3 py-2">
+                <select v-model="method"
+                    class="border rounded-lg px-3 py-2 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700">
                     <option value="all">All Payments</option>
                     <option value="cash">Cash</option>
                     <option value="khqr">KHQR</option>
@@ -66,7 +81,7 @@
             </div>
 
             <!-- Orders table -->
-            <div class="flex-1 min-h-0 bg-white dark:bg-[#181f35] border rounded-2xl overflow-hidden flex flex-col">
+            <div class="flex-1 min-h-0 bg-white dark:bg-[#181f35] border dark:border-transparent rounded-2xl overflow-hidden flex flex-col">
                 <div class="flex-1 min-h-0 overflow-auto no-scrollbar">
                     <table class="min-w-full text-sm">
                         <thead class="sticky top-0 bg-gray-50/70 dark:bg-[#0b1223]/70 backdrop-blur">
@@ -95,9 +110,9 @@
                                 <td class="px-4 py-2">
                                     <span :class="[
                                         'px-2 py-0.5 rounded-full text-xs capitalize',
-                                        o.status === 'completed' && 'bg-green-100 text-green-700',
-                                        o.status === 'pending' && 'bg-yellow-100 text-yellow-700',
-                                        o.status === 'cancelled' && 'bg-red-100 text-red-700',
+                                        o.status === 'completed' && 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-200',
+                                        o.status === 'pending' && 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-200',
+                                        o.status === 'cancelled' && 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-200',
                                     ]">
                                         {{ o.status }}
                                     </span>
@@ -105,7 +120,7 @@
                                 <td class="px-4 py-2 whitespace-nowrap">{{ fmtDate(o.created_at) }}</td>
                                 <td class="px-4 py-2">
                                     <RouterLink :to="{ name: 'OrderDetail', params: { id: o.id } }"
-                                        class="text-indigo-600 hover:underline">
+                                        class="text-indigo-600 hover:underline dark:text-indigo-300">
                                         View
                                     </RouterLink>
                                 </td>
@@ -127,15 +142,28 @@
                         of {{ filtered.length }}
                     </div>
                     <div class="flex items-center gap-2">
-                        <select class="border rounded px-2 py-1 text-sm" v-model.number="pageSize">
+                        <select
+                            class="border rounded px-2 py-1 text-sm bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700"
+                            v-model.number="pageSize"
+                        >
                             <option :value="10">10</option>
                             <option :value="20">20</option>
                             <option :value="50">50</option>
                         </select>
-                        <button class="px-3 py-1 border rounded disabled:opacity-40" :disabled="page === 1"
-                            @click="page--">Prev</button>
-                        <button class="px-3 py-1 border rounded disabled:opacity-40" :disabled="page >= maxPage"
-                            @click="page++">Next</button>
+                        <button
+                            class="px-3 py-1 border rounded disabled:opacity-40 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700"
+                            :disabled="page === 1"
+                            @click="page--"
+                        >
+                            Prev
+                        </button>
+                        <button
+                            class="px-3 py-1 border rounded disabled:opacity-40 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700"
+                            :disabled="page >= maxPage"
+                            @click="page++"
+                        >
+                            Next
+                        </button>
                     </div>
                 </div>
             </div>

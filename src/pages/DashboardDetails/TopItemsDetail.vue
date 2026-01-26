@@ -9,22 +9,27 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <select class="border rounded-lg px-3 py-2" v-model="period">
+                    <select
+                        class="border rounded-lg px-3 py-2 bg-white text-gray-900 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700"
+                        v-model="period"
+                    >
                         <option value="today">Today</option>
                         <option value="week">This Week</option>
                         <option value="month">This Month</option>
                         <option value="year">This Year</option>
                     </select>
 
-                    <button class="border rounded-lg px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800"
-                        @click="exportCSV">
+                    <button
+                        class="border rounded-lg px-3 py-2 text-sm bg-white text-gray-900 hover:bg-gray-50 dark:bg-[#0b1223] dark:text-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
+                        @click="exportCSV"
+                    >
                         Export CSV
                     </button>
                 </div>
             </div>
 
             <!-- Table -->
-            <div class="bg-white dark:bg-[#181f35] border rounded-2xl overflow-hidden">
+            <div class="bg-white dark:bg-[#181f35] border dark:border-transparent rounded-2xl overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-full text-sm">
                         <thead class="sticky top-0 bg-gray-50/70 dark:bg-[#0b1223]/70 backdrop-blur">

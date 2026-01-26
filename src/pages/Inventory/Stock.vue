@@ -75,7 +75,7 @@
 
           <!-- Stock Table -->
           <div
-            class="flex-1 min-h-0 flex flex-col rounded-xl shadow-lg overflow-hidden"
+            class="flex-1 min-h-0 flex flex-col rounded-xl shadow-lg overflow-hidden bg-white dark:bg-gray-800"
           >
             <div class="flex-1 min-h-0 overflow-y-auto no-scrollbar">
               <table
