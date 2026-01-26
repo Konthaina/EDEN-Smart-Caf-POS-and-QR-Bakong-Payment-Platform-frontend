@@ -1,6 +1,6 @@
 <template>
   <aside :class="[
-    'transition-all duration-200 border h-screen flex flex-col shadow-md rounded-tr-xl rounded-br-xl',
+    'transition-all duration-200 border h-screen flex flex-col shadow-md rounded-tr-xl rounded-br-xl overflow-hidden',
     'bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-800',
     collapsed ? 'w-[90px]' : 'w-[235px]',
   ]">
