@@ -54,7 +54,7 @@
       <!-- version -->
       <div class="text-center">
         <p class="text-gray-500 dark:text-gray-300 text-sm">
-          Version 0.1.1 - Smart Café POS
+          Version 0.1.2 - Smart Café POS
         </p>
       </div>
     </div>
