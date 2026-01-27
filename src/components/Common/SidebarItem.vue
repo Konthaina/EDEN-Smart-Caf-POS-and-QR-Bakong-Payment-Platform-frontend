@@ -5,7 +5,9 @@
     :title="collapsed && label ? label : ''"
     :class="[
       collapsed
-        ? 'flex items-center justify-center px-2 py-2'
+        ? (small
+          ? 'flex items-center justify-center w-full px-2 py-2'
+          : 'flex items-center justify-center px-2 py-2')
         : 'flex items-center gap-3 px-4 py-2',
       small ? 'text-xs' : 'text-base',
       active

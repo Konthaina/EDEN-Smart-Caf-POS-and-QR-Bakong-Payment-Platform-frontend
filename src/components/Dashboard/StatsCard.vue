@@ -6,7 +6,7 @@
     'flex items-center justify-between gap-4',
   ]">
     <!-- Left: Title & Value -->
-    <div class="space-y-1">
+    <div class="space-y-1 min-w-0">
       <div class="text-sm text-gray-500 dark:text-gray-300">{{ title }}</div>
       <div :class="[base.text, 'text-2xl font-bold leading-snug']">
         {{ formattedValue }}
@@ -16,7 +16,7 @@
     <!-- Right: Icon in a colored circle -->
     <div :class="[
       base.iconBg,
-      'w-12 h-12 rounded-full flex items-center justify-center group-hover:scale-105 transition-transform duration-200',
+      'w-12 h-12 shrink-0 rounded-full flex items-center justify-center group-hover:scale-105 transition-transform duration-200',
     ]">
       <div :class="[base.iconColor, 'text-2xl']">
         <component v-if="icon && typeof icon !== 'string'" :is="icon" class="w-6 h-6" />

@@ -3,9 +3,9 @@
     <!-- PAGE SHELL -->
     <div :lang="locale" class="p-6 h-full flex flex-col min-h-0 khmer-support">
       <!-- CONTENT AREA distributes space between top and bottom clusters -->
-      <div class="flex-1 min-h-0 flex flex-col">
+      <div class="flex-1 min-h-0 flex flex-col gap-4">
         <!-- ── Top cluster: header + search ─────────────────────────── -->
-        <div class="space-y-4 shrink-0 pb-3">
+        <div class="space-y-4 shrink-0">
           <!-- Header -->
           <div class="flex justify-between items-center">
             <div>

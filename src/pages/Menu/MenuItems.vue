@@ -43,8 +43,8 @@
           </div>
 
           <!-- Search / Filter / Columns -->
-          <div class="flex justify-between items-center">
-            <div class="relative w-72">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="relative w-full sm:w-72">
               <span class="absolute left-3 top-2.5 text-gray-400">
                 <Search class="w-4 h-4 text-purple-400" />
               </span>
@@ -55,7 +55,7 @@
               />
             </div>
 
-            <div class="flex gap-3 items-center">
+            <div class="flex flex-wrap gap-3 items-center">
               <select
                 v-model="selectedCategory"
                 class="rounded-xl border border-purple-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-700 transition"
@@ -85,7 +85,7 @@
                 <!-- Columns dropdown -->
                 <div
                   v-if="showColsMenu"
-                  class="absolute right-0 mt-2 w-56 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-10 p-2"
+                  class="absolute right-0 mt-2 w-56 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-30 p-2"
                 >
                   <div
                     class="text-xs px-2 py-1 mb-1 text-gray-500 dark:text-gray-400"

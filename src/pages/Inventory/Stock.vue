@@ -29,7 +29,7 @@
 
     <!-- PAGE SHELL -->
     <div :lang="locale" class="p-6 h-full flex flex-col min-h-0 khmer-support">
-      <div class="flex-1 flex flex-col justify-between gap-6 min-h-0">
+      <div class="flex-1 flex flex-col gap-4 min-h-0">
         <!-- ── Top cluster: header + search ─────────────────────────── -->
         <div class="space-y-4">
           <!-- Header -->

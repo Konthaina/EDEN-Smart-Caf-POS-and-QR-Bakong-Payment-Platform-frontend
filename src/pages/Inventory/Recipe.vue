@@ -3,7 +3,7 @@
     <div
       class="p-6 h-full flex flex-col min-h-0 bg-gray-50 dark:bg-gray-900 rounded-xl khmer-support"
     >
-      <div class="flex-1 flex flex-col justify-between gap-6 min-h-0">
+      <div class="flex-1 flex flex-col gap-4 min-h-0">
         <!-- Header -->
         <div class="space-y-4">
           <div class="flex justify-between items-center">
@@ -11,7 +11,7 @@
               <h1 class="text-2xl font-semibold text-gray-800 dark:text-white">
                 {{ $t("recipe.title") }}
               </h1>
-              <p class="text-sm text-gray-400 dark:text-gray-300 mt-1">
+              <p class="text-sm text-gray-400 dark:text-gray-300">
                 {{ $t("recipe.subtitle") }}
               </p>
             </div>
@@ -68,13 +68,13 @@
 
         <!-- Count + Table -->
         <div class="flex-1 min-h-0 flex flex-col space-y-3">
-          <div class="font-semibold text-gray-800 dark:text-white">
+          <div class="text-sm font-semibold text-gray-800 dark:text-white">
             {{ $t("recipe.total") }}:
             <span class="font-bold">{{ filteredItems.length }}</span>
           </div>
 
           <div
-            class="flex-1 min-h-0 flex flex-col rounded-2xl border bg-white dark:bg-gray-800 overflow-hidden border-gray-300 dark:border-gray-700"
+            class="flex-1 min-h-0 flex flex-col rounded-xl bg-white dark:bg-gray-800 overflow-hidden border-gray-300 dark:border-gray-700"
           >
             <div class="flex-1 min-h-0 overflow-y-auto no-scrollbar">
               <table class="min-w-full text-sm">

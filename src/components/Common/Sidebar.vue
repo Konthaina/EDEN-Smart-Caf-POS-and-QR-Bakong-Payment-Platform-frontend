@@ -32,7 +32,7 @@
 
     <!-- Scrollable menu area -->
     <div class="flex-1 min-h-0 overflow-y-auto pr-1 no-scrollbar">
-      <div class="pt-4">
+      <div class="pt-4 pb-4">
         <!-- Management -->
         <div v-if="
           !collapsed &&
@@ -79,10 +79,11 @@
               ]" />
             </button>
 
-            <div v-if="isMenuOpen" :class="collapsed
-              ? 'ml-0 mt-1 flex flex-col gap-1 items-center'
-              : 'ml-8 mt-1 flex flex-col gap-1'
-              ">
+            <div v-if="isMenuOpen" :class="[
+              collapsed
+                ? 'ml-0 mt-1 flex flex-col gap-1 items-center bg-gray-50 dark:bg-gray-800/40 rounded-lg p-1'
+                : 'ml-6 mt-1 flex flex-col gap-1 bg-gray-50 dark:bg-gray-800/40 rounded-lg px-2 py-1',
+            ]">
               <SidebarItem to="/menu/items" :label="t('sidebar.menu_items')" :icon="List" :collapsed="collapsed" small
                 :active="route.path.startsWith('/menu/items')" />
               <SidebarItem to="/menu/categories" :label="t('sidebar.categories')" :icon="FolderOpen"
@@ -110,10 +111,11 @@
                 { 'rotate-180': isInventoryOpen },
               ]" />
             </button>
-            <div v-if="isInventoryOpen" :class="collapsed
-              ? 'ml-0 mt-1 flex flex-col gap-1 items-center'
-              : 'ml-8 mt-1 flex flex-col gap-1'
-              ">
+            <div v-if="isInventoryOpen" :class="[
+              collapsed
+                ? 'ml-0 mt-1 flex flex-col gap-1 items-center bg-gray-50 dark:bg-gray-800/40 rounded-lg p-1'
+                : 'ml-6 mt-1 flex flex-col gap-1 bg-gray-50 dark:bg-gray-800/40 rounded-lg px-2 py-1',
+            ]">
               <SidebarItem to="/inventory/stock" :label="t('sidebar.stock')" :icon="Box" :collapsed="collapsed" small
                 :active="route.path.startsWith('/inventory/stock')" />
               <SidebarItem v-if="!isCashier" to="/inventory/recipe" :label="t('sidebar.recipe')" :icon="FlaskConical"
@@ -161,10 +163,11 @@
                 { 'rotate-180': isMarketingOpen },
               ]" />
             </button>
-            <div v-if="isMarketingOpen" :class="collapsed
-              ? 'ml-0 mt-1 flex flex-col gap-1 items-center'
-              : 'ml-8 mt-1 flex flex-col gap-1'
-              ">
+            <div v-if="isMarketingOpen" :class="[
+              collapsed
+                ? 'ml-0 mt-1 flex flex-col gap-1 items-center bg-gray-50 dark:bg-gray-800/40 rounded-lg p-1'
+                : 'ml-6 mt-1 flex flex-col gap-1 bg-gray-50 dark:bg-gray-800/40 rounded-lg px-2 py-1',
+            ]">
               <SidebarItem to="/marketing/banner" :label="t('sidebar.banner')" :icon="Image" :collapsed="collapsed"
                 small :active="route.path.startsWith('/marketing/banner')" />
               <SidebarItem to="/marketing/notification" :label="t('sidebar.notification')" :icon="Bell"
@@ -196,11 +199,15 @@
           'absolute z-50 shadow-md border rounded-lg flex flex-col transition-all duration-200',
           'bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-800',
           collapsed
-            ? 'bottom-[110px] left-1/2 -translate-x-1/2 w-14 py-1 mt-4 pl-2'
+            ? 'bottom-[110px] left-1/2 -translate-x-1/2 w-14 py-1 mt-4 px-1'
             : 'bottom-[110px] left-4 right-4 w-auto py-2',
         ]">
           <button
-            class="flex flex-row items-center w-full px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition gap-2"
+            :class="[
+              'flex w-full items-center rounded transition',
+              collapsed ? 'justify-center px-0 py-2' : 'flex-row px-2 py-2 gap-2',
+              'hover:bg-gray-100 dark:hover:bg-gray-800',
+            ]"
             :title="collapsed ? t('sidebar.profile_settings') : ''"
             @click="goToSettings">
             <Settings class="w-5 h-5 text-gray-600 dark:text-gray-200" />
@@ -209,7 +216,11 @@
             </span>
           </button>
           <button
-            class="flex flex-row items-center w-full px-2 py-2 hover:bg-red-50 dark:hover:bg-red-900 rounded transition gap-2"
+            :class="[
+              'flex w-full items-center rounded transition',
+              collapsed ? 'justify-center px-0 py-2' : 'flex-row px-2 py-2 gap-2',
+              'hover:bg-red-50 dark:hover:bg-red-900',
+            ]"
             :title="collapsed ? t('sidebar.logout') : ''"
             @click="logout">
             <LogOut class="w-5 h-5 text-red-600" />
