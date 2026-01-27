@@ -180,13 +180,13 @@
     <div class="p-4 border-t bg-gray-50 border-gray-200 dark:bg-gray-900 dark:border-gray-800 relative">
       <div class="flex items-center gap-3 cursor-pointer justify-center" @click="toggleProfileMenu">
         <img :src="currentUser?.profile?.avatar_url || defaultAvatar" @error="onAvatarError"
-          class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-gray-800 shadow-md ring-2 ring-purple-300"
+          class="w-10 h-10 shrink-0 rounded-full object-cover border-2 border-white dark:border-gray-800 shadow-md ring-2 ring-purple-300"
           alt="User Avatar" />
-        <div v-if="!collapsed" class="text-sm leading-tight">
-          <p class="font-semibold text-gray-800 dark:text-white">
+        <div v-if="!collapsed" class="min-w-0 text-sm leading-tight">
+          <p class="truncate font-semibold text-gray-800 dark:text-white">
             {{ currentUser?.name || t('sidebar.loading') }}
           </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">
+          <p class="truncate text-xs text-gray-500 dark:text-gray-400">
             {{ currentUser?.email || '' }}
           </p>
         </div>

@@ -52,9 +52,12 @@
       </section>
 
       <!-- version -->
-      <div class="text-center">
+      <div class="text-center space-y-1">
         <p class="text-gray-500 dark:text-gray-300 text-sm">
-          Version 0.1.2 - Smart Café POS
+          Version {{ appVersion }} - Smart Café POS
+        </p>
+        <p class="text-gray-400 dark:text-gray-400 text-xs">
+          Built {{ buildDate }}
         </p>
       </div>
     </div>
@@ -62,9 +65,30 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import AppLayout from "@/components/Common/AppLayout.vue";
 import { publicUrl } from "@/config/urls";
 import { Code2, Send } from "lucide-vue-next";
+
+const buildDate = computed(() => {
+  const raw = import.meta.env.VITE_BUILD_TIME;
+  if (!raw) return "Unknown build time";
+  const date = new Date(raw);
+  if (Number.isNaN(date.getTime())) return raw;
+  return date.toLocaleString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZoneName: "short",
+  });
+});
+
+const appVersion = computed(
+  () => import.meta.env.VITE_APP_VERSION || "0.0.0"
+);
 
 const developers = [
   {

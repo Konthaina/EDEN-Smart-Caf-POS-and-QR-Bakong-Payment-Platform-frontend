@@ -4,6 +4,12 @@ import path from "path";
 
 export default defineConfig({
   base: process.env.ELECTRON === "true" ? "./" : "/",
+  define: {
+    "import.meta.env.VITE_BUILD_TIME": JSON.stringify(new Date().toISOString()),
+    "import.meta.env.VITE_APP_VERSION": JSON.stringify(
+      process.env.npm_package_version || "0.0.0"
+    ),
+  },
   plugins: [vue()],
   resolve: {
     alias: {
