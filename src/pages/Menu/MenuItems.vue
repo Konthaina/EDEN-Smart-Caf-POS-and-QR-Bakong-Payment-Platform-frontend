@@ -56,21 +56,43 @@
             </div>
 
             <div class="flex flex-wrap gap-3 items-center">
-              <select
-                v-model="selectedCategory"
-                class="rounded-xl border border-purple-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-700 transition"
-              >
-                <option value="">
-                  {{ $t("menu.allCategories") || "All" }}
-                </option>
-                <option
-                  v-for="cat in categoriesForFilter"
-                  :key="cat.id"
-                  :value="cat.id"
+              <div class="relative min-w-[140px]" ref="categoryMenuRef">
+                <button
+                  type="button"
+                  class="rounded-xl border border-purple-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 text-sm shadow-sm w-full text-left transition"
+                  @click="toggleCategoryMenu"
                 >
-                  {{ cat.name }}
-                </option>
-              </select>
+                  {{ categoryLabel }}
+                </button>
+                <ChevronDown
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-500 dark:text-gray-400"
+                />
+
+                <div
+                  v-if="showCategoryMenu"
+                  class="absolute left-0 mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-30 p-2"
+                >
+                  <div
+                    v-for="opt in categoryOptions"
+                    :key="opt.value"
+                  >
+                    <button
+                      type="button"
+                      class="w-full flex items-center justify-between px-2 py-1 rounded text-sm transition"
+                      :class="opt.value === selectedCategory
+                        ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200'
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                      @click="setCategory(opt.value)"
+                    >
+                      <span>{{ opt.label }}</span>
+                      <Check
+                        v-if="opt.value === selectedCategory"
+                        class="w-3 h-3 text-purple-600 dark:text-purple-300"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
 
               <!-- Columns menu trigger -->
               <div class="relative" ref="colsMenuRef">
@@ -499,11 +521,13 @@ import ConfirmModal from "@/components/Common/ConfirmModal.vue";
 import AddMenuItemModal from "@/components/Menu/AddMenuItemModal.vue";
 import EditMenuItemModal from "@/components/Menu/EditMenuItemModal.vue";
 import { createToastInterface } from "vue-toastification";
+import { useI18n } from "vue-i18n";
 import "vue-toastification/dist/index.css";
-import { ChevronDown, ChevronUp, ChevronsUpDown, Plus, Search } from "lucide-vue-next";
+import { Check, ChevronDown, ChevronUp, ChevronsUpDown, Plus, Search } from "lucide-vue-next";
 import { publicUrl, storageUrl } from "@/config/urls";
 
 const toast = createToastInterface();
+const { t } = useI18n();
 const menu = useMenuStore();
 
 /** local UI state only */
@@ -517,7 +541,32 @@ const showConfirm = ref(false);
 const selectedItem = ref(null);
 const deleteMode = ref("soft"); // 'soft' | 'permanent'
 
-/** sorting (tri-state) */
+/** Category dropdown (custom, matches Columns style) */
+const showCategoryMenu = ref(false);
+const categoryMenuRef = ref(null);
+const categoryOptions = computed(() => [
+  { value: "", label: t("menu.allCategories") || "All" },
+  ...categoriesForFilter.value.map((c) => ({
+    value: String(c.id),
+    label: c.name,
+  })),
+]);
+const categoryLabel = computed(() => {
+  const match = categoryOptions.value.find(
+    (o) => String(o.value) === String(selectedCategory.value || "")
+  );
+  return match?.label || (t("menu.allCategories") || "All");
+});
+function toggleCategoryMenu() {
+  showColsMenu.value = false;
+  showCategoryMenu.value = !showCategoryMenu.value;
+}
+function setCategory(value) {
+  selectedCategory.value = value;
+  showCategoryMenu.value = false;
+}
+
+/** sorting (toggle asc/desc) */
 const defaultSort = { by: "name", dir: "asc" };
 const sort = ref({ ...defaultSort });
 
@@ -528,9 +577,7 @@ function setSort(by) {
       ? "desc"
       : "asc";
   } else {
-    if (sort.value.dir === "asc") sort.value.dir = "desc";
-    else if (sort.value.dir === "desc") sort.value = { ...defaultSort };
-    else sort.value.dir = "asc";
+    sort.value.dir = sort.value.dir === "asc" ? "desc" : "asc";
   }
 }
 function isActive(col) {
@@ -571,8 +618,10 @@ function toggleColsMenu() {
   showColsMenu.value = !showColsMenu.value;
 }
 function onDocClick(e) {
-  if (!colsMenuRef.value) return;
-  if (!colsMenuRef.value.contains(e.target)) showColsMenu.value = false;
+  if (colsMenuRef.value && !colsMenuRef.value.contains(e.target))
+    showColsMenu.value = false;
+  if (categoryMenuRef.value && !categoryMenuRef.value.contains(e.target))
+    showCategoryMenu.value = false;
 }
 const hiddenCount = computed(
   () => toggleableColumns.filter((c) => !visibleCols.value[c.key]).length
