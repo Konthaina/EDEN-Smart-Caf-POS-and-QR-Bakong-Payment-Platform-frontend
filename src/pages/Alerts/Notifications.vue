@@ -94,33 +94,17 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import axios from "axios";
 import Applayout from "@/components/common/Applayout.vue";
 import { useNotificationCount } from "@/composables/useNotificationCount";
 import { Bell, CheckCircle } from "lucide-vue-next";
-const { fetchNotificationCount } = useNotificationCount();
 
-fetchNotificationCount();
+const {
+  lowStockItems: lowStock,
+  loadingNotifications: loading,
+  fetchLowStock,
+} = useNotificationCount();
 
-const lowStock = ref([]);
-const loading = ref(true);
-
-const fetchNotifications = async () => {
-  loading.value = true;
-  try {
-    const lowStockRes = await axios.get(
-      "http://localhost:5002/ai/inventory-stockout"
-    );
-    lowStock.value = lowStockRes.data;
-  } catch (e) {
-    // Optionally: handle error silently or show nothing
-  } finally {
-    loading.value = false;
-  }
-};
-
-fetchNotifications();
+fetchLowStock();
 </script>
 
 <style scoped>

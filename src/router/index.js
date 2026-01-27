@@ -27,8 +27,6 @@ import SalesReport from "@/pages/Reports/SalesReport.vue";
 // User Management
 import Users from "@/pages/Users/ManageUsers.vue";
 
-// Analytics
-import Analytics from "@/pages/Analytics/AnalyticsPage.vue";
 
 // Message
 import Message from "@/pages/Alerts/Messages.vue";
@@ -234,7 +232,7 @@ const routes = [
     },
   },
 
-  // --- Reports/User Management/Analytics ---
+  // --- Reports/User Management ---
   {
     path: "/reports",
     name: "Reports",
@@ -253,16 +251,6 @@ const routes = [
       requiresAuth: true,
       roles: ["Super Admin", "Admin"],
       title: "User Management - Cafe Eden",
-    },
-  },
-  {
-    path: "/analytics",
-    name: "Analytics",
-    component: Analytics,
-    meta: {
-      requiresAuth: true,
-      roles: ["Super Admin", "Admin"],
-      title: "Analytics - Cafe Eden",
     },
   },
 

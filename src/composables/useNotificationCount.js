@@ -1,46 +1,57 @@
-// src/composables/useNotificationCount.js
+﻿// src/composables/useNotificationCount.js
 import { ref } from "vue";
-import axios from "axios";
 import api from "@/plugins/axios"; // your Laravel API axios instance
 
 const notificationCount = ref(0);
 const lowStockItems = ref([]);
 const loadingNotifications = ref(false);
 
-function normalizeName(s) {
-  return String(s || "")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .replace(/[()\-_/]/g, "")
-    .trim();
+function normalizeQty(qty) {
+  const n = Number(qty);
+  return isFinite(n) ? n : 0;
 }
 
-function dedupeByName(rows) {
-  const seen = new Map();
-  for (const r of rows || []) {
-    const k = normalizeName(r.ingredient);
-    if (!k) continue;
-    if (!seen.has(k)) {
-      seen.set(k, { ...r });
-    } else {
-      const prev = seen.get(k);
-      const currStock = Number(r.current_stock ?? Infinity);
-      const prevStock = Number(prev.current_stock ?? Infinity);
-      if (currStock < prevStock) seen.set(k, { ...prev, ...r });
-    }
-  }
-  return [...seen.values()];
+function safeMax(qty, ing) {
+  const configured = Number(ing?.max_quantity ?? 0);
+  if (isFinite(configured) && configured > 0) return configured;
+  return Math.max(normalizeQty(qty), 100);
+}
+
+function lowThresholdFor(qty, ing) {
+  const raw = Number(ing?.low_alert_qty);
+  if (isFinite(raw) && raw >= 0) return raw;
+  return 0.2 * safeMax(qty, ing);
+}
+
+function isLowQty(qty, ing) {
+  return normalizeQty(qty) <= lowThresholdFor(qty, ing);
+}
+
+function mapStockToNotification(stock) {
+  const qty = normalizeQty(stock?.quantity ?? 0);
+  const ing = stock?.ingredient || {};
+
+  return {
+    ingredient: ing?.name || ing?.name_kh || "",
+    current_stock: qty,
+    stock_id: stock?.id ?? null,
+    ingredient_id: ing?.id ?? null,
+    unit: ing?.unit ?? null,
+    days_left: null,
+    daily_used: null,
+  };
 }
 
 /** Public composable */
 export function useNotificationCount() {
-  // Only the count (fast – for the pill/badge)
+  // Only the count (fast - for the pill/badge)
   const fetchNotificationCount = async () => {
     try {
-      const { data } = await axios.get(
-        "http://localhost:5002/ai/inventory-stockout"
-      );
-      notificationCount.value = (data || []).length;
+      const { data: stocks } = await api.get("/stocks");
+      const lowCount = (stocks || []).filter((s) =>
+        isLowQty(s?.quantity, s?.ingredient)
+      ).length;
+      notificationCount.value = lowCount;
     } catch {
       notificationCount.value = 0;
     }
@@ -50,36 +61,15 @@ export function useNotificationCount() {
   const fetchLowStock = async () => {
     loadingNotifications.value = true;
     try {
-      // 1) AI service rows
-      const { data: lowRaw } = await axios.get(
-        "http://localhost:5002/ai/inventory-stockout"
-      );
-      const low = dedupeByName(lowRaw);
-
-      // 2) Real stocks (so we know stock.id)
       const { data: stocks } = await api.get("/stocks"); // [{ id, quantity, ingredient:{ id, name, name_kh, unit } }...]
+      const low = (stocks || [])
+        .filter((s) => isLowQty(s?.quantity, s?.ingredient))
+        .map(mapStockToNotification)
+        .sort((a, b) => a.current_stock - b.current_stock);
 
-      const nameToStock = new Map();
-      for (const s of stocks || []) {
-        const en = normalizeName(s?.ingredient?.name);
-        const km = normalizeName(s?.ingredient?.name_kh);
-        if (en) nameToStock.set(en, s);
-        if (km) nameToStock.set(km, s);
-      }
-
-      // 3) Enrich
-      lowStockItems.value = (low || []).map((it) => {
-        const match = nameToStock.get(normalizeName(it.ingredient));
-        return {
-          ...it,
-          stock_id: match?.id ?? null,
-          ingredient_id: match?.ingredient?.id ?? null,
-          unit: match?.ingredient?.unit ?? null,
-        };
-      });
-
-      notificationCount.value = lowStockItems.value.length;
-      return lowStockItems.value;
+      lowStockItems.value = low;
+      notificationCount.value = low.length;
+      return low;
     } catch {
       lowStockItems.value = [];
       notificationCount.value = 0;
@@ -89,7 +79,7 @@ export function useNotificationCount() {
     }
   };
 
-  // Reusable click → navigate helper
+  // Reusable click -> navigate helper
   const goToNotificationItem = async (router, item) => {
     if (!router || !item) return;
     if (item.stock_id) {

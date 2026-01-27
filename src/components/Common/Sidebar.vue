@@ -124,10 +124,6 @@
           <SidebarItem v-if="showKey('users')" to="/users" :label="t('sidebar.users')" :icon="Users"
             :collapsed="collapsed" :active="route.path.startsWith('/users')" />
 
-          <!-- Analytics -->
-          <SidebarItem v-if="showKey('analytics')" to="/analytics" :label="t('sidebar.analytics')" :icon="BarChart2"
-            :collapsed="collapsed" :active="route.path.startsWith('/analytics')" />
-
           <!-- Discounts -->
           <SidebarItem v-if="showKey('discounts')" to="/discounts" :label="t('sidebar.discounts')" :icon="Percent"
             :collapsed="collapsed" :active="route.path.startsWith('/discounts')" />
