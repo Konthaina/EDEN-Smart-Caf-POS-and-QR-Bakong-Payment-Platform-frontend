@@ -1,13 +1,12 @@
 <template>
   <AppLayout>
     <!-- PAGE SHELL -->
-    <div
-      class="p-6 pt-16 h-full flex flex-col min-h-0 bg-gray-50 dark:bg-gray-900 rounded-xl khmer-support"
-    >
-      <!-- Top cluster: header + tabs -->
-      <div class="space-y-4">
-        <!-- Header -->
-        <div class="flex items-center justify-between">
+    <div class="p-6 h-full flex flex-col min-h-0 khmer-support">
+      <div class="flex-1 flex flex-col gap-4 min-h-0">
+        <!-- Top cluster: header + tabs -->
+        <div class="flex flex-col gap-3">
+          <!-- Header -->
+          <div class="flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
               {{ $t("setting.title") || "Settings" }}
@@ -60,13 +59,13 @@
         </div>
 
         <!-- Tabs -->
-        <div class="flex gap-2 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-700">
           <button
             :class="[
-              'px-6 py-2 rounded-t-lg font-semibold transition-all focus:outline-none',
+              'px-4 py-2 -mb-px border-b-2 text-sm font-semibold transition-colors focus:outline-none',
               activeTab === 'profile'
-                ? 'bg-white dark:bg-gray-800 text-purple-600 border-x border-t border-gray-200 dark:border-gray-700'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-500 hover:text-purple-600',
+                ? 'border-purple-500 text-purple-600 dark:text-purple-300'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200',
             ]"
             @click="activeTab = 'profile'"
           >
@@ -77,24 +76,24 @@
           <button
             v-if="canEditApp"
             :class="[
-              'px-6 py-2 rounded-t-lg font-semibold transition-all focus:outline-none',
+              'px-4 py-2 -mb-px border-b-2 text-sm font-semibold transition-colors focus:outline-none',
               activeTab === 'app'
-                ? 'bg-white dark:bg-gray-800 text-purple-600 border-x border-t border-gray-200 dark:border-gray-700'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-500 hover:text-purple-600',
+                ? 'border-purple-500 text-purple-600 dark:text-purple-300'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200',
             ]"
             @click="activeTab = 'app'"
           >
             {{ $t("setting.app_setting") || "App Settings" }}
           </button>
-        </div>
+          </div>
       </div>
 
       <!-- Bottom cluster: scrollable content -->
       <div
-        class="mt-4 min-h-0 rounded-xl shadow bg-white dark:bg-gray-800 overflow-hidden"
+        class="flex-1 min-h-0 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden flex flex-col"
       >
         <div
-          class="h-[clamp(420px,60vh,900px)] overflow-y-auto no-scrollbar p-6"
+          class="flex-1 min-h-0 overflow-y-auto no-scrollbar p-6"
         >
           <!-- Loader -->
           <div
@@ -125,16 +124,27 @@
             <!-- Profile Setting Tab -->
             <div v-if="activeTab === 'profile'">
               <div
-                class="bg-white dark:bg-gray-800 rounded-2xl p-8 grid grid-cols-1 md:grid-cols-2 gap-10"
+                class="bg-white dark:bg-gray-800 rounded-2xl p-8 grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch"
               >
                 <!-- Profile Summary -->
                 <div
-                  class="flex flex-col items-center justify-center text-center space-y-4 border-r border-gray-200 dark:border-gray-700 md:pr-6"
+                  class="flex flex-col items-center justify-center text-center space-y-4 border-r border-gray-200 dark:border-gray-700 md:pr-6 self-stretch h-full"
                 >
-                  <img
-                    :src="preview || profile.avatar_url || defaultAvatar"
-                    class="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover ring ring-purple-300 dark:ring-purple-500 dark:border-gray-700"
-                  />
+                  <div class="relative">
+                    <img
+                      :src="preview || profile.avatar_url || defaultAvatar"
+                      class="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover ring ring-purple-300 dark:ring-purple-500 dark:border-gray-700"
+                    />
+                    <button
+                      type="button"
+                      @click="$refs.fileInput.click()"
+                      class="absolute -bottom-1 -right-1 flex items-center justify-center w-9 h-9 rounded-full bg-purple-600 text-white shadow hover:bg-purple-700 transition"
+                      :aria-label="$t('profile.change_avatar') || 'Change avatar'"
+                      :title="$t('profile.change_avatar') || 'Change avatar'"
+                    >
+                      <Camera class="w-4 h-4" />
+                    </button>
+                  </div>
                   <div class="space-y-1">
                     <p
                       class="text-xl font-semibold text-gray-800 dark:text-white"
@@ -160,12 +170,6 @@
                     class="hidden"
                     @change="handleFileChange"
                   />
-                  <button
-                    @click="$refs.fileInput.click()"
-                    class="btn-secondary text-sm"
-                  >
-                    {{ $t("profile.change_avatar") }}
-                  </button>
                 </div>
 
                 <!-- Profile Fields -->
@@ -268,12 +272,23 @@
                 <div
                   class="flex flex-col items-center justify-center text-center space-y-4 border-r border-gray-200 dark:border-gray-700 md:pr-6"
                 >
-                  <img
-                    :src="appLogoPreview || appLogoUrl"
-                    class="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover ring ring-blue-300 dark:ring-blue-500 dark:border-gray-700"
-                    alt="Shop Logo"
-                    @error="onLogoError"
-                  />
+                  <div class="relative">
+                    <img
+                      :src="appLogoPreview || appLogoUrl"
+                      class="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover ring ring-purple-300 dark:ring-purple-500 dark:border-gray-700"
+                      alt="Shop Logo"
+                      @error="onLogoError"
+                    />
+                    <button
+                      type="button"
+                      @click="openAppLogoPicker"
+                      class="absolute -bottom-1 -right-1 flex items-center justify-center w-9 h-9 rounded-full bg-purple-600 text-white shadow hover:bg-purple-700 transition"
+                      :aria-label="$t('profile.change_avatar') || 'Change logo'"
+                      :title="$t('profile.change_avatar') || 'Change logo'"
+                    >
+                      <Camera class="w-4 h-4" />
+                    </button>
+                  </div>
                   <div class="space-y-1">
                     <p
                       class="text-xl font-semibold text-gray-800 dark:text-white"
@@ -287,44 +302,76 @@
                       }}
                     </p>
                   </div>
-                  <button class="btn-primary" @click="openAppSettings">
-                    {{ $t("setting.edit_app_setting") || "Edit App Settings" }}
-                  </button>
                 </div>
 
                 <!-- App setting details -->
-                <div class="flex flex-col gap-6 justify-center">
-                  <div class="flex items-center gap-3">
-                    <span class="font-semibold"
-                      >{{ $t("setting.shop_name") || "Shop Name" }}:</span
-                    >
-                    <span>{{ settings.shop_name }}</span>
+                <div class="space-y-4">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="sm:col-span-2">
+                      <label class="label">
+                        {{ $t("setting.shop_name") || "Shop Name" }}
+                      </label>
+                      <input
+                        :value="settings.shop_name"
+                        type="text"
+                        class="input"
+                        disabled
+                      />
+                    </div>
+                    <div>
+                      <label class="label">
+                        {{ $t("setting.tax_rate") || "Tax Rate" }}
+                      </label>
+                      <input
+                        :value="settings.tax_rate"
+                        type="text"
+                        class="input"
+                        disabled
+                      />
+                    </div>
+                    <div>
+                      <label class="label">
+                        {{ $t("setting.exchange_rate") || "Exchange Rate" }}
+                      </label>
+                      <input
+                        :value="settings.exchange_rate_usd_khr"
+                        type="text"
+                        class="input"
+                        disabled
+                      />
+                    </div>
+                    <div class="sm:col-span-2">
+                      <label class="label">
+                        {{ $t("setting.merchant_id") || "Merchant ID" }}
+                      </label>
+                      <input
+                        :value="settings.bakong_machine_id || '-'"
+                        type="text"
+                        class="input"
+                        disabled
+                      />
+                    </div>
                   </div>
-                  <div class="flex items-center gap-3">
-                    <span class="font-semibold"
-                      >{{ $t("setting.tax_rate") || "Tax Rate" }}:</span
-                    >
-                    <span>{{ settings.tax_rate }}</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="font-semibold"
-                      >{{
-                        $t("setting.exchange_rate") || "Exchange Rate"
-                      }}:</span
-                    >
-                    <span>{{ settings.exchange_rate_usd_khr }}</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="font-semibold"
-                      >{{ $t("setting.merchant_id") || "Merchant ID" }}:</span
-                    >
-                    <span>{{ settings.bakong_machine_id || "-" }}</span>
-                  </div>
+                  <input
+                    ref="appLogoInlineInput"
+                    type="file"
+                    accept="image/*"
+                    class="hidden"
+                    @change="handleInlineLogoChange"
+                  />
+                  <button
+                    type="button"
+                    class="btn-primary w-full sm:w-auto"
+                    @click="openAppSettings"
+                  >
+                    {{ $t("setting.edit_app_setting") || "Edit App Settings" }}
+                  </button>
                 </div>
               </div>
             </div>
           </div>
           <!-- /not loading -->
+        </div>
         </div>
       </div>
     </div>
@@ -613,7 +660,7 @@ import api from "@/plugins/axios";
 import { publicUrl, storageUrl } from "@/config/urls";
 import useSettings from "@/composables/useSettings";
 import AppLayout from "@/components/Common/AppLayout.vue";
-import { Lock, Moon, Sun } from "lucide-vue-next";
+import { Camera, Lock, Moon, Sun } from "lucide-vue-next";
 
 // i18n / toast / tab
 const { locale } = useI18n();
@@ -702,12 +749,18 @@ const handleFileChange = async (e) => {
   const fd = new FormData();
   fd.append("avatar", file);
   try {
-    const res = await api.post("/profile/avatar", fd);
+    const res = await api.post("/profile/avatar", fd, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     toast.success("Avatar updated");
     profile.value.avatar_url = res.data.avatar_url;
     preview.value = null;
-  } catch {
-    toast.error("Failed to upload avatar");
+  } catch (err) {
+    const message =
+      err?.response?.data?.message || "Failed to upload avatar";
+    toast.error(message);
+  } finally {
+    if (e?.target) e.target.value = "";
   }
 };
 
@@ -794,6 +847,7 @@ const appForm = ref({
 const appLogoPreview = ref(null);
 const showAppSettingModal = ref(false);
 const logoInput = ref();
+const appLogoInlineInput = ref();
 
 const appLogoUrl = computed(() =>
   storageUrl(settings.value.shop_logo, "logo.png")
@@ -806,6 +860,29 @@ const handleAppLogoChange = (e) => {
     const reader = new FileReader();
     reader.onload = (ev) => (appLogoPreview.value = ev.target.result);
     reader.readAsDataURL(file);
+  }
+};
+
+const openAppLogoPicker = () => {
+  appLogoInlineInput.value?.click();
+};
+
+const handleInlineLogoChange = async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (ev) => (appLogoPreview.value = ev.target.result);
+  reader.readAsDataURL(file);
+
+  try {
+    await updateSettings({ shop_logo: file });
+    toast.success("Logo updated!");
+    await loadAppSettings();
+  } catch {
+    toast.error("Failed to update logo");
+  } finally {
+    if (e?.target) e.target.value = "";
   }
 };
 
