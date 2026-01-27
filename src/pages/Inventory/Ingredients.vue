@@ -332,7 +332,7 @@ const collator = computed(
   () => new Intl.Collator(locale.value || undefined, { sensitivity: "base" })
 );
 
-// ===== Tri-state sorting (like Stock page) =====
+// ===== Toggle sorting (asc/desc) =====
 const defaultSort = { by: "name", dir: "asc" }; // 'asc' | 'desc'
 const sort = ref({ ...defaultSort });
 
@@ -342,10 +342,7 @@ function setSort(by) {
     // sensible defaults for first click on each column
     sort.value.dir = by === "created" ? "desc" : by === "low" ? "asc" : "asc";
   } else {
-    if (sort.value.dir === "asc") sort.value.dir = "desc";
-    else if (sort.value.dir === "desc")
-      sort.value = { ...defaultSort }; // reset to default
-    else sort.value.dir = "asc";
+    sort.value.dir = sort.value.dir === "asc" ? "desc" : "asc";
   }
 }
 function isActive(col) {

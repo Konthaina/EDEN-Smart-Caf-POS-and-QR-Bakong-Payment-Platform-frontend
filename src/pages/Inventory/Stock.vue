@@ -371,7 +371,7 @@ const form = ref({ ingredient_id: "", current_quantity: "", addQuantity: "" });
 /* ===== Search ===== */
 const search = ref("");
 
-/* ===== Tri-state sorting ===== */
+/* ===== Toggle sorting (asc/desc) ===== */
 const defaultSort = { by: "ingredient", dir: "asc" }; // 'asc' | 'desc'
 const sort = ref({ ...defaultSort });
 
@@ -381,10 +381,7 @@ function setSort(by) {
     sort.value.dir =
       by === "quantity" || by === "level" || by === "updated" ? "desc" : "asc";
   } else {
-    if (sort.value.dir === "asc") sort.value.dir = "desc";
-    else if (sort.value.dir === "desc")
-      sort.value = { ...defaultSort }; // reset to default
-    else sort.value.dir = "asc";
+    sort.value.dir = sort.value.dir === "asc" ? "desc" : "asc";
   }
 }
 function isActive(col) {

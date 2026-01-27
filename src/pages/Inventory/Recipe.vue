@@ -262,7 +262,7 @@ const search = ref("");
 const selectedIngredient = ref("");
 const showArchived = ref(true); // default true so edits don't hide rows
 
-/* ===== Tri-state sorting ===== */
+/* ===== Toggle sorting (asc/desc) ===== */
 const defaultSort = { by: "name", dir: "asc" };
 const sort = ref({ ...defaultSort });
 
@@ -271,9 +271,7 @@ function setSort(by) {
     sort.value.by = by;
     sort.value.dir = by === "quantity" || by === "id" ? "desc" : "asc";
   } else {
-    if (sort.value.dir === "asc") sort.value.dir = "desc";
-    else if (sort.value.dir === "desc") sort.value = { ...defaultSort };
-    else sort.value.dir = "asc";
+    sort.value.dir = sort.value.dir === "asc" ? "desc" : "asc";
   }
 }
 function isActive(col) {

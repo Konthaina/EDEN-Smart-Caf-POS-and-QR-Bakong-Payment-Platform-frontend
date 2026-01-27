@@ -42,23 +42,46 @@
 
             <div class="flex items-end gap-3">
               <!-- Status filter -->
-              <div class="flex flex-col">
+              <div class="flex flex-col min-w-[180px]" ref="statusMenuRef">
                 <label class="text-xs text-gray-500 dark:text-gray-400">
                   {{ t("banners.filter.status") || "Status" }}
                 </label>
-                <select
-                  v-model="filters.status"
-                  class="input-mini"
-                  aria-label="Filter by status"
-                >
-                  <option value="all">{{ t("common.all") || "All" }}</option>
-                  <option value="active">
-                    {{ t("common.active") || "Active" }}
-                  </option>
-                  <option value="inactive">
-                    {{ t("common.inactive") || "Inactive/Hidden" }}
-                  </option>
-                </select>
+                <div class="relative">
+                  <button
+                    type="button"
+                    class="input-mini w-full pr-8 text-left"
+                    @click="toggleStatusMenu"
+                    aria-label="Filter by status"
+                  >
+                    {{ statusLabel }}
+                  </button>
+                  <ChevronDown
+                    class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                  />
+                  <div
+                    v-if="showStatusMenu"
+                    class="absolute left-0 mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-30 p-2"
+                  >
+                    <button
+                      v-for="opt in statusOptions"
+                      :key="opt.value"
+                      type="button"
+                      class="w-full flex items-center justify-between px-2 py-1 rounded text-sm transition whitespace-nowrap"
+                      :class="
+                        opt.value === filters.status
+                          ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200'
+                          : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
+                      "
+                      @click="setStatus(opt.value)"
+                    >
+                      <span>{{ opt.label }}</span>
+                      <Check
+                        v-if="opt.value === filters.status"
+                        class="w-3 h-3 text-purple-600 dark:text-purple-300"
+                      />
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <button
@@ -454,14 +477,22 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, h } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch, h } from "vue";
 import { useI18n } from "vue-i18n";
 import api from "@/plugins/axios";
 import { publicUrl, storageUrl } from "@/config/urls";
 import AppLayout from "@/components/Common/AppLayout.vue";
 import ConfirmModal from "@/components/Common/ConfirmModal.vue";
 import { useToast } from "vue-toastification";
-import { ChevronDown, ChevronUp, ChevronsUpDown, Image, Loader2, Search } from "lucide-vue-next";
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  ChevronsUpDown,
+  Image,
+  Loader2,
+  Search,
+} from "lucide-vue-next";
 
 const { t } = useI18n();
 const toast = useToast();
@@ -497,6 +528,35 @@ const filters = ref({
 });
 const sort = ref(saved.sort || { by: "title", dir: "asc" }); // title | is_active | display_order
 
+/* Dropdown UI state (Status) */
+const showStatusMenu = ref(false);
+const statusMenuRef = ref(null);
+const statusOptions = computed(() => [
+  { value: "all", label: t("common.all") || "All" },
+  { value: "active", label: t("common.active") || "Active" },
+  {
+    value: "inactive",
+    label: t("common.inactive") || "Inactive/Hidden",
+  },
+]);
+const statusLabel = computed(() => {
+  const match = statusOptions.value.find(
+    (o) => o.value === filters.value.status
+  );
+  return match?.label || (t("common.all") || "All");
+});
+function toggleStatusMenu() {
+  showStatusMenu.value = !showStatusMenu.value;
+}
+function setStatus(value) {
+  filters.value.status = value;
+  showStatusMenu.value = false;
+}
+function onDocClick(e) {
+  if (statusMenuRef.value && !statusMenuRef.value.contains(e.target))
+    showStatusMenu.value = false;
+}
+
 watch(
   [search, filters, sort],
   () => {
@@ -531,7 +591,13 @@ const fetchBanners = async () => {
     loading.value = false;
   }
 };
-onMounted(fetchBanners);
+onMounted(() => {
+  fetchBanners();
+  document.addEventListener("mousedown", onDocClick, true);
+});
+onUnmounted(() => {
+  document.removeEventListener("mousedown", onDocClick, true);
+});
 
 /* ── Filters + Search + Sorting ───────────────────────────────────────── */
 const filteredAndSorted = computed(() => {

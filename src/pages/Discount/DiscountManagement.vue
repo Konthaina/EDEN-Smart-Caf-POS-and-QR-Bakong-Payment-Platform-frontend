@@ -50,42 +50,88 @@
 
           <!-- Filters -->
           <div class="flex flex-wrap items-end gap-3">
-            <div class="flex flex-col">
+            <div class="flex flex-col min-w-[180px]" ref="typeMenuRef">
               <label class="text-xs text-gray-500 dark:text-gray-400">
                 {{ t("discounts.filter.type") || "Type" }}
               </label>
-              <select
-                v-model="filters.type"
-                class="input-mini"
-                aria-label="Filter by type"
-              >
-                <option value="all">{{ t("common.all") || "All" }}</option>
-                <option value="percent">
-                  {{ t("discounts.percent") || "Percent" }}
-                </option>
-                <option value="fixed">
-                  {{ t("discounts.fixed") || "Fixed" }}
-                </option>
-              </select>
+              <div class="relative">
+                <button
+                  type="button"
+                  class="input-mini w-full pr-8 text-left whitespace-nowrap"
+                  @click="toggleTypeMenu"
+                  aria-label="Filter by type"
+                >
+                  {{ typeLabel }}
+                </button>
+                <ChevronDown
+                  class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                />
+                <div
+                  v-if="showTypeMenu"
+                  class="absolute left-0 mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-30 p-2"
+                >
+                  <button
+                    v-for="opt in typeOptions"
+                    :key="opt.value"
+                    type="button"
+                    class="w-full flex items-center justify-between px-2 py-1 rounded text-sm transition whitespace-nowrap"
+                    :class="
+                      opt.value === filters.type
+                        ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200'
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    "
+                    @click="setType(opt.value)"
+                  >
+                    <span>{{ opt.label }}</span>
+                    <Check
+                      v-if="opt.value === filters.type"
+                      class="w-3 h-3 text-purple-600 dark:text-purple-300"
+                    />
+                  </button>
+                </div>
+              </div>
             </div>
 
-            <div class="flex flex-col">
+            <div class="flex flex-col min-w-[180px]" ref="statusMenuRef">
               <label class="text-xs text-gray-500 dark:text-gray-400">
                 {{ t("discounts.filter.status") || "Status" }}
               </label>
-              <select
-                v-model="filters.status"
-                class="input-mini"
-                aria-label="Filter by status"
-              >
-                <option value="all">{{ t("common.all") || "All" }}</option>
-                <option value="active">
-                  {{ t("common.active") || "Active" }}
-                </option>
-                <option value="inactive">
-                  {{ t("common.inactive") || "Inactive/Expired" }}
-                </option>
-              </select>
+              <div class="relative">
+                <button
+                  type="button"
+                  class="input-mini w-full pr-8 text-left whitespace-nowrap"
+                  @click="toggleStatusMenu"
+                  aria-label="Filter by status"
+                >
+                  {{ statusLabel }}
+                </button>
+                <ChevronDown
+                  class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                />
+                <div
+                  v-if="showStatusMenu"
+                  class="absolute left-0 mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-30 p-2"
+                >
+                  <button
+                    v-for="opt in statusOptions"
+                    :key="opt.value"
+                    type="button"
+                    class="w-full flex items-center justify-between px-2 py-1 rounded text-sm transition whitespace-nowrap"
+                    :class="
+                      opt.value === filters.status
+                        ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200'
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    "
+                    @click="setStatus(opt.value)"
+                  >
+                    <span>{{ opt.label }}</span>
+                    <Check
+                      v-if="opt.value === filters.status"
+                      class="w-3 h-3 text-purple-600 dark:text-purple-300"
+                    />
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div class="flex flex-col">
@@ -146,8 +192,13 @@
                       :aria-sort="ariaSort('code')"
                       @click="setSort('code')"
                     >
-                      {{ t("discounts.code") }}
-                      <SortIcon :active="sort.by === 'code'" :dir="sort.dir" />
+                      <div class="inline-flex items-center gap-1.5">
+                        <span>{{ t("discounts.code") }}</span>
+                        <SortIcon
+                          :active="sort.by === 'code'"
+                          :dir="sort.dir"
+                        />
+                      </div>
                     </th>
 
                     <th
@@ -156,8 +207,13 @@
                       :aria-sort="ariaSort('type')"
                       @click="setSort('type')"
                     >
-                      {{ t("discounts.type") }}
-                      <SortIcon :active="sort.by === 'type'" :dir="sort.dir" />
+                      <div class="inline-flex items-center gap-1.5">
+                        <span>{{ t("discounts.type") }}</span>
+                        <SortIcon
+                          :active="sort.by === 'type'"
+                          :dir="sort.dir"
+                        />
+                      </div>
                     </th>
 
                     <th
@@ -166,8 +222,13 @@
                       :aria-sort="ariaSort('value')"
                       @click="setSort('value')"
                     >
-                      {{ t("discounts.value") }}
-                      <SortIcon :active="sort.by === 'value'" :dir="sort.dir" />
+                      <div class="inline-flex items-center gap-1.5">
+                        <span>{{ t("discounts.value") }}</span>
+                        <SortIcon
+                          :active="sort.by === 'value'"
+                          :dir="sort.dir"
+                        />
+                      </div>
                     </th>
 
                     <th
@@ -176,11 +237,13 @@
                       :aria-sort="ariaSort('expires_at')"
                       @click="setSort('expires_at')"
                     >
-                      {{ t("discounts.expires") }}
-                      <SortIcon
-                        :active="sort.by === 'expires_at'"
-                        :dir="sort.dir"
-                      />
+                      <div class="inline-flex items-center gap-1.5">
+                        <span>{{ t("discounts.expires") }}</span>
+                        <SortIcon
+                          :active="sort.by === 'expires_at'"
+                          :dir="sort.dir"
+                        />
+                      </div>
                     </th>
 
                     <th
@@ -189,11 +252,13 @@
                       :aria-sort="ariaSort('active')"
                       @click="setSort('active')"
                     >
-                      {{ t("discounts.active") }}
-                      <SortIcon
-                        :active="sort.by === 'active'"
-                        :dir="sort.dir"
-                      />
+                      <div class="inline-flex items-center gap-1.5">
+                        <span>{{ t("discounts.active") }}</span>
+                        <SortIcon
+                          :active="sort.by === 'active'"
+                          :dir="sort.dir"
+                        />
+                      </div>
                     </th>
 
                     <th class="px-6 py-3">{{ t("discounts.actions") }}</th>
@@ -512,7 +577,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, h } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch, h } from "vue";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 import "dayjs/locale/km";
@@ -520,7 +585,15 @@ import api from "@/plugins/axios";
 import AppLayout from "@/components/Common/AppLayout.vue";
 import ConfirmModal from "@/components/Common/ConfirmModal.vue";
 import { useToast } from "vue-toastification";
-import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2, Receipt, Search } from "lucide-vue-next";
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  ChevronsUpDown,
+  Loader2,
+  Receipt,
+  Search,
+} from "lucide-vue-next";
 
 const { t } = useI18n();
 const toast = useToast();
@@ -545,6 +618,54 @@ const filters = ref({
   to: persisted.filters?.to ?? "",
 });
 const sort = ref(persisted.sort || { by: "code", dir: "asc" }); // code|type|value|expires_at|active
+
+/* Dropdown UI state (Type/Status) */
+const showTypeMenu = ref(false);
+const showStatusMenu = ref(false);
+const typeMenuRef = ref(null);
+const statusMenuRef = ref(null);
+const typeOptions = computed(() => [
+  { value: "all", label: t("common.all") || "All" },
+  { value: "percent", label: t("discounts.percent") || "Percent" },
+  { value: "fixed", label: t("discounts.fixed") || "Fixed" },
+]);
+const statusOptions = computed(() => [
+  { value: "all", label: t("common.all") || "All" },
+  { value: "active", label: t("common.active") || "Active" },
+  { value: "inactive", label: t("common.inactive") || "Inactive/Expired" },
+]);
+const typeLabel = computed(() => {
+  const match = typeOptions.value.find((o) => o.value === filters.value.type);
+  return match?.label || (t("common.all") || "All");
+});
+const statusLabel = computed(() => {
+  const match = statusOptions.value.find(
+    (o) => o.value === filters.value.status
+  );
+  return match?.label || (t("common.all") || "All");
+});
+function toggleTypeMenu() {
+  showStatusMenu.value = false;
+  showTypeMenu.value = !showTypeMenu.value;
+}
+function toggleStatusMenu() {
+  showTypeMenu.value = false;
+  showStatusMenu.value = !showStatusMenu.value;
+}
+function setType(value) {
+  filters.value.type = value;
+  showTypeMenu.value = false;
+}
+function setStatus(value) {
+  filters.value.status = value;
+  showStatusMenu.value = false;
+}
+function onDocClick(e) {
+  if (typeMenuRef.value && !typeMenuRef.value.contains(e.target))
+    showTypeMenu.value = false;
+  if (statusMenuRef.value && !statusMenuRef.value.contains(e.target))
+    showStatusMenu.value = false;
+}
 
 watch(
   [search, filters, sort],
@@ -590,7 +711,12 @@ const fetchDiscounts = async () => {
     discounts.value = (data || []).map((d) => ({
       ...d,
       active:
-        d.expires_at && new Date(d.expires_at) < new Date() ? false : d.active,
+        d.expires_at && new Date(d.expires_at) < new Date()
+          ? false
+          : d.active === true ||
+            d.active === 1 ||
+            d.active === "1" ||
+            d.active === "true",
     }));
   } catch (e) {
     discounts.value = [];
@@ -672,7 +798,9 @@ const filteredAndSorted = computed(() => {
         return (da - db) * dir;
       }
       case "active":
-        return ((a.active ? 1 : 0) - (b.active ? 1 : 0)) * dir;
+        return (
+          ((a.active ? 1 : 0) - (b.active ? 1 : 0)) * dir
+        );
       default:
         return 0;
     }
@@ -686,7 +814,10 @@ function setSort(by) {
   if (sort.value.by !== by) {
     sort.value = {
       by,
-      dir: by === "value" || by === "expires_at" ? "desc" : "asc",
+      dir:
+        by === "value" || by === "expires_at" || by === "active"
+          ? "desc"
+          : "asc",
     };
   } else {
     sort.value.dir = sort.value.dir === "asc" ? "desc" : "asc";
@@ -835,7 +966,13 @@ const confirmDelete = async () => {
   }
 };
 
-onMounted(fetchDiscounts);
+onMounted(() => {
+  fetchDiscounts();
+  document.addEventListener("mousedown", onDocClick, true);
+});
+onUnmounted(() => {
+  document.removeEventListener("mousedown", onDocClick, true);
+});
 </script>
 
 <style scoped>

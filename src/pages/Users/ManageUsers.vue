@@ -63,12 +63,41 @@
               </div>
 
               <!-- Per-page selector -->
-              <select v-model.number="perPage" class="input" @change="onPerPageChange">
-                <option :value="10">10 / page</option>
-                <option :value="20">20 / page</option>
-                <option :value="50">50 / page</option>
-                <option :value="100">100 / page</option>
-              </select>
+              <div class="relative min-w-[140px]" ref="perPageMenuRef">
+                <button
+                  type="button"
+                  class="input w-full pr-8 text-left"
+                  @click="togglePerPageMenu"
+                >
+                  {{ perPageLabel }}
+                </button>
+                <ChevronDown
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400"
+                />
+                <div
+                  v-if="showPerPageMenu"
+                  class="absolute left-0 mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-30 p-2"
+                >
+                  <button
+                    v-for="opt in perPageOptions"
+                    :key="opt.value"
+                    type="button"
+                    class="w-full flex items-center justify-between px-2 py-1 rounded text-sm transition"
+                    :class="
+                      opt.value === perPage
+                        ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200'
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    "
+                    @click="setPerPage(opt.value)"
+                  >
+                    <span>{{ opt.label }}</span>
+                    <Check
+                      v-if="opt.value === perPage"
+                      class="w-3 h-3 text-purple-600 dark:text-purple-300"
+                    />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -368,12 +397,18 @@
 
 <script setup>
 import AppLayout from "@/components/Common/AppLayout.vue";
-import { ref, reactive, computed, watch, onMounted, h } from "vue";
+import { ref, reactive, computed, watch, onMounted, onUnmounted, h } from "vue";
 import api from "@/plugins/axios";
 import { createToastInterface } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import { useI18n } from "vue-i18n";
-import { ChevronDown, ChevronUp, ChevronsUpDown, Search } from "lucide-vue-next";
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  ChevronsUpDown,
+  Search,
+} from "lucide-vue-next";
 
 const { t, locale } = useI18n();
 const toast = createToastInterface();
@@ -384,6 +419,19 @@ const loading = ref(false);
 const search = ref("");
 const perPage = ref(10);
 const currentPage = ref(1);
+const showPerPageMenu = ref(false);
+const perPageMenuRef = ref(null);
+const perPageOptions = [
+  { value: 10, label: "10 / page" },
+  { value: 20, label: "20 / page" },
+  { value: 50, label: "50 / page" },
+  { value: 100, label: "100 / page" },
+];
+const perPageLabel = computed(
+  () =>
+    perPageOptions.find((o) => o.value === perPage.value)?.label ||
+    `${perPage.value} / page`
+);
 
 /* Arrays returned by your controller */
 const allActive = ref([]); // GET /users
@@ -393,7 +441,7 @@ const allTrashed = ref([]); // GET /users/trashed
 const totalActive = computed(() => allActive.value.length);
 const totalTrashed = computed(() => allTrashed.value.length);
 
-/* Tri-state sorting */
+/* Toggle sorting (asc/desc) */
 const defaultSort = { by: "created_at", dir: "desc" }; // default neutral
 const sort = ref({ ...defaultSort });
 
@@ -404,9 +452,7 @@ function setSort(by) {
       ? "desc"
       : "asc";
   } else {
-    if (sort.value.dir === "asc") sort.value.dir = "desc";
-    else if (sort.value.dir === "desc") sort.value = { ...defaultSort };
-    else sort.value.dir = "asc";
+    sort.value.dir = sort.value.dir === "asc" ? "desc" : "asc";
   }
   currentPage.value = 1;
 }
@@ -501,6 +547,18 @@ function goToPage(p) {
 }
 function onPerPageChange() {
   currentPage.value = 1;
+}
+function togglePerPageMenu() {
+  showPerPageMenu.value = !showPerPageMenu.value;
+}
+function setPerPage(value) {
+  perPage.value = value;
+  showPerPageMenu.value = false;
+  onPerPageChange();
+}
+function onDocClick(e) {
+  if (perPageMenuRef.value && !perPageMenuRef.value.contains(e.target))
+    showPerPageMenu.value = false;
 }
 
 /* Page ranges for summary */
@@ -738,6 +796,10 @@ watch(search, () => {
 /* Mount */
 onMounted(async () => {
   await Promise.all([fetchActive(), fetchTrashed()]);
+  document.addEventListener("mousedown", onDocClick, true);
+});
+onUnmounted(() => {
+  document.removeEventListener("mousedown", onDocClick, true);
 });
 
 /* Sort icon component (functional) */
