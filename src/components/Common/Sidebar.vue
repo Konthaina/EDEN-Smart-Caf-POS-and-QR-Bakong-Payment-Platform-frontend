@@ -8,22 +8,25 @@
     <div :class="[
       'flex items-center border-b min-h-[64px]',
       'border-gray-200 dark:border-gray-800',
-      collapsed ? 'pl-3 pr-2 py-4' : 'pl-5 pr-4 py-4 justify-between',
+      collapsed ? 'px-3 py-4 justify-center' : 'pl-5 pr-4 py-4 justify-between',
     ]">
       <div
+        v-if="!collapsed"
         class="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-sm">
         <img :src="appLogoUrl" alt="Logo" class="w-full h-full object-cover rounded-lg" @error="onLogoError" />
       </div>
       <span v-if="!collapsed"
-        class="ml-4 font-bold text-lg whitespace-nowrap bg-gradient-to-r from-purple-500 via-pink-400 to-purple-700 bg-clip-text text-transparent select-none">
+        class="ml-4 min-w-0 max-w-[140px] truncate font-bold text-lg bg-gradient-to-r from-purple-500 via-pink-400 to-purple-700 bg-clip-text text-transparent select-none">
         {{ settings.shop_name || t('sidebar.app_name') }}
       </span>
-      <button @click="toggleSidebar" :title="t('sidebar.collapse')"
-        class="ml-auto p-2 rounded-lg transition-all duration-150 outline-none">
-        <ChevronRight :class="[
-          'w-6 h-6 text-purple-500 transition-transform duration-300',
-          collapsed ? 'rotate-180' : '',
-        ]" />
+      <button @click="toggleSidebar" :title="t('sidebar.collapse')" :class="[
+        'p-2 rounded-lg transition-all duration-150 outline-none',
+        collapsed ? '' : 'ml-auto',
+      ]">
+        <component
+          :is="collapsed ? PanelRightClose : PanelLeftClose"
+          class="w-6 h-6 text-purple-500 transition-transform duration-300"
+        />
       </button>
     </div>
 
@@ -62,7 +65,7 @@
                 ? 'bg-purple-50 text-purple-700 font-semibold dark:bg-purple-900 dark:text-purple-200'
                 : 'text-gray-700 hover:bg-purple-100 hover:text-purple-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white',
               collapsed
-                ? 'flex items-center pl-1 pr-2 gap-7 py-2 rounded-lg text-sm font-medium'
+                ? 'flex items-center justify-center w-full px-2 py-2 rounded-lg text-sm font-medium'
                 : 'flex items-center w-full px-3 justify-between gap-2 py-2 rounded-lg text-sm font-medium',
               'transition-colors duration-150 cursor-pointer select-none',
             ]">
@@ -70,7 +73,7 @@
                 <component :is="Utensils" class="w-5 h-5" />
                 <span v-if="!collapsed">{{ t('sidebar.menu') }}</span>
               </span>
-              <ChevronDown :class="[
+              <ChevronDown v-if="!collapsed" :class="[
                 'w-4 h-4 ml-1 transition-transform',
                 { 'rotate-180': isMenuOpen },
               ]" />
@@ -94,7 +97,7 @@
                 ? 'bg-purple-50 text-purple-700 font-semibold dark:bg-purple-900 dark:text-purple-200'
                 : 'text-gray-700 hover:bg-purple-100 hover:text-purple-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white',
               collapsed
-                ? 'flex items-center pl-1 pr-2 gap-7 py-2 rounded-lg text-sm font-medium'
+                ? 'flex items-center justify-center w-full px-2 py-2 rounded-lg text-sm font-medium'
                 : 'flex items-center w-full px-3 justify-between gap-2 py-2 rounded-lg text-sm font-medium',
               'transition-colors duration-150 cursor-pointer select-none',
             ]">
@@ -102,7 +105,7 @@
                 <component :is="Boxes" class="w-5 h-5" />
                 <span v-if="!collapsed">{{ t('sidebar.inventory') }}</span>
               </span>
-              <ChevronDown :class="[
+              <ChevronDown v-if="!collapsed" :class="[
                 'w-4 h-4 ml-1 transition-transform',
                 { 'rotate-180': isInventoryOpen },
               ]" />
@@ -145,7 +148,7 @@
                 ? 'bg-purple-50 text-purple-700 font-semibold dark:bg-purple-900 dark:text-purple-200'
                 : 'text-gray-700 hover:bg-purple-100 hover:text-purple-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white',
               collapsed
-                ? 'flex items-center pl-1 pr-2 gap-7 py-2 rounded-lg text-sm font-medium'
+                ? 'flex items-center justify-center w-full px-2 py-2 rounded-lg text-sm font-medium'
                 : 'flex items-center w-full px-3 justify-between gap-2 py-2 rounded-lg text-sm font-medium',
               'transition-colors duration-150 cursor-pointer select-none',
             ]">
@@ -153,7 +156,7 @@
                 <component :is="Megaphone" class="w-5 h-5" />
                 <span v-if="!collapsed">{{ t('sidebar.marketing') }}</span>
               </span>
-              <ChevronDown :class="[
+              <ChevronDown v-if="!collapsed" :class="[
                 'w-4 h-4 ml-1 transition-transform',
                 { 'rotate-180': isMarketingOpen },
               ]" />
@@ -198,6 +201,7 @@
         ]">
           <button
             class="flex flex-row items-center w-full px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition gap-2"
+            :title="collapsed ? t('sidebar.profile_settings') : ''"
             @click="goToSettings">
             <Settings class="w-5 h-5 text-gray-600 dark:text-gray-200" />
             <span v-if="!collapsed" class="ml-2 text-sm text-gray-700 dark:text-gray-200">
@@ -206,6 +210,7 @@
           </button>
           <button
             class="flex flex-row items-center w-full px-2 py-2 hover:bg-red-50 dark:hover:bg-red-900 rounded transition gap-2"
+            :title="collapsed ? t('sidebar.logout') : ''"
             @click="logout">
             <LogOut class="w-5 h-5 text-red-600" />
             <span v-if="!collapsed" class="ml-2 text-sm text-red-600 dark:text-red-400">
@@ -261,7 +266,8 @@ import {
   Settings,
   LogOut,
   Percent,
-  ChevronRight,
+  PanelLeftClose,
+  PanelRightClose,
   Zap,
 } from 'lucide-vue-next';
 

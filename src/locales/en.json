@@ -781,6 +781,7 @@
     "display_order": "Display Order"
   },
   "notifications": {
+    "no_data": "No notifications found.",
     "empty_title": "No notifications found.",
     "empty_help": "Start by adding a new notification to inform your customers or staff.",
     "search": "Search Notifications",

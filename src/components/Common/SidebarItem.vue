@@ -2,9 +2,10 @@
   <router-link
     :to="to"
     class="block"
+    :title="collapsed && label ? label : ''"
     :class="[
       collapsed
-        ? 'flex items-center justify-start pl-1 pr-2 py-2' // left aligned!
+        ? 'flex items-center justify-center px-2 py-2'
         : 'flex items-center gap-3 px-4 py-2',
       small ? 'text-xs' : 'text-base',
       active
