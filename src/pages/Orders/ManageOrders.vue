@@ -14,50 +14,6 @@
               </p>
             </div>
 
-            <!-- Columns menu trigger -->
-            <div class="relative" ref="colsMenuRef">
-              <button class="input !py-2" @click="toggleColsMenu">
-                Columns
-                <ChevronDown class="w-3 h-3 ml-2" />
-              </button>
-
-              <!-- Columns dropdown -->
-              <div
-                v-if="showColsMenu"
-                class="absolute right-0 mt-2 w-48 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-10 p-2"
-              >
-                <div
-                  class="text-xs px-2 py-1 mb-1 text-gray-500 dark:text-gray-400"
-                >
-                  Show/Hide Columns
-                </div>
-                <div
-                  v-for="c in toggleableColumns"
-                  :key="c.key"
-                  class="flex items-center gap-2 px-2 py-1"
-                >
-                  <input
-                    type="checkbox"
-                    :id="`col-${c.key}`"
-                    class="rounded"
-                    :checked="visibleCols[c.key]"
-                    @change="onToggleColumn(c.key, $event)"
-                  />
-                  <label
-                    :for="`col-${c.key}`"
-                    class="text-sm text-gray-700 dark:text-gray-200 select-none"
-                  >
-                    {{ c.label }}
-                  </label>
-                </div>
-                <div
-                  v-if="hiddenCount >= toggleableColumns.length - 1"
-                  class="px-2 pt-2 text-[11px] text-amber-600"
-                >
-                  At least one column must stay visible.
-                </div>
-              </div>
-            </div>
           </div>
 
           <!-- Filters row -->
@@ -71,40 +27,175 @@
               />
               <input v-model="filter.from" type="date" class="input" />
               <input v-model="filter.to" type="date" class="input" />
-              <select v-model="filter.status" class="input">
-                <option value="all">{{ $t("order.status.all") }}</option>
-                <option value="pending">
-                  {{ $t("order.status.pending") }}
-                </option>
-                <option value="completed">
-                  {{ $t("order.status.completed") }}
-                </option>
-                <option value="cancelled">
-                  {{ $t("order.status.cancelled") }}
-                </option>
-              </select>
+              <div class="relative min-w-[120px]" ref="statusMenuRef">
+                <button
+                  type="button"
+                  class="input !py-2 pr-9 w-full text-left whitespace-nowrap"
+                  @click="toggleStatusMenu"
+                >
+                  {{ statusLabel }}
+                </button>
+                <ChevronDown
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-500 dark:text-gray-400"
+                />
+
+                <div
+                  v-if="showStatusMenu"
+                  class="absolute left-0 mt-2 w-48 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-10 p-2"
+                >
+                  <div
+                    v-for="opt in statusOptions"
+                    :key="opt.value"
+                  >
+                    <button
+                      type="button"
+                      class="w-full flex items-center justify-between px-2 py-1 rounded text-sm transition"
+                      :class="opt.value === filter.status
+                        ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200'
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                      @click="setStatus(opt.value)"
+                    >
+                      <span>{{ opt.label }}</span>
+                      <Check
+                        v-if="opt.value === filter.status"
+                        class="w-3 h-3 text-purple-600 dark:text-purple-300"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Columns menu trigger (moved to filter row) -->
+              <div class="relative" ref="colsMenuRef">
+                <button
+                  class="input !py-2 pr-9 min-w-[120px] text-left whitespace-nowrap"
+                  @click="toggleColsMenu"
+                >
+                  Columns
+                </button>
+                <ChevronDown
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-500 dark:text-gray-400"
+                />
+
+                <!-- Columns dropdown -->
+                <div
+                  v-if="showColsMenu"
+                  class="absolute right-0 mt-2 w-48 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-10 p-2"
+                >
+                  <div
+                    class="text-xs px-2 py-1 mb-1 text-gray-500 dark:text-gray-400"
+                  >
+                    Show/Hide Columns
+                  </div>
+                  <div
+                    v-for="c in toggleableColumns"
+                    :key="c.key"
+                    class="flex items-center gap-2 px-2 py-1"
+                  >
+                    <input
+                      type="checkbox"
+                      :id="`col-${c.key}`"
+                      class="rounded"
+                      :checked="visibleCols[c.key]"
+                      @change="onToggleColumn(c.key, $event)"
+                    />
+                    <label
+                      :for="`col-${c.key}`"
+                      class="text-sm text-gray-700 dark:text-gray-200 select-none"
+                    >
+                      {{ c.label }}
+                    </label>
+                  </div>
+                  <div
+                    v-if="hiddenCount >= toggleableColumns.length - 1"
+                    class="px-2 pt-2 text-[11px] text-amber-600"
+                  >
+                    At least one column must stay visible.
+                  </div>
+                </div>
+              </div>
 
               <!-- Per-page selector -->
-              <select
-                v-model.number="perPage"
-                class="input"
-                @change="onPerPageChange"
-              >
-                <option :value="10">10 / page</option>
-                <option :value="20">20 / page</option>
-                <option :value="50">50 / page</option>
-                <option :value="100">100 / page</option>
-              </select>
+              <div class="relative min-w-[120px]" ref="perPageMenuRef">
+                <button
+                  type="button"
+                  class="input !py-2 pr-9 w-full text-left whitespace-nowrap"
+                  @click="togglePerPageMenu"
+                >
+                  {{ perPageLabel }}
+                </button>
+                <ChevronDown
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-500 dark:text-gray-400"
+                />
+
+                <div
+                  v-if="showPerPageMenu"
+                  class="absolute left-0 mt-2 w-40 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-10 p-2"
+                >
+                  <div
+                    v-for="opt in perPageOptions"
+                    :key="opt.value"
+                  >
+                    <button
+                      type="button"
+                      class="w-full flex items-center justify-between px-2 py-1 rounded text-sm transition"
+                      :class="opt.value === perPage
+                        ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200'
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                      @click="setPerPage(opt.value)"
+                    >
+                      <span>{{ opt.label }}</span>
+                      <Check
+                        v-if="opt.value === perPage"
+                        class="w-3 h-3 text-purple-600 dark:text-purple-300"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="flex flex-wrap gap-2 items-center">
-              <select v-model="filter.format" class="input">
-                <option value="csv">CSV</option>
-                <option value="pdf">PDF</option>
-              </select>
+              <div class="relative min-w-[88px]" ref="formatMenuRef">
+                <button
+                  type="button"
+                  class="input !py-2 pr-9 w-full text-left whitespace-nowrap"
+                  @click="toggleFormatMenu"
+                >
+                  {{ formatLabel }}
+                </button>
+                <ChevronDown
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-500 dark:text-gray-400"
+                />
+
+                <div
+                  v-if="showFormatMenu"
+                  class="absolute left-0 mt-2 w-28 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-10 p-2"
+                >
+                  <div
+                    v-for="opt in formatOptions"
+                    :key="opt.value"
+                  >
+                    <button
+                      type="button"
+                      class="w-full flex items-center justify-between px-2 py-1 rounded text-sm transition"
+                      :class="opt.value === filter.format
+                        ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200'
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                      @click="setFormat(opt.value)"
+                    >
+                      <span>{{ opt.label }}</span>
+                      <Check
+                        v-if="opt.value === filter.format"
+                        class="w-3 h-3 text-purple-600 dark:text-purple-300"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
               <button
                 @click="downloadReport"
-                class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-4 py-2 rounded-full shadow-sm text-sm transition"
+                class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-4 py-2 rounded-lg shadow-sm text-sm transition"
               >
                 <Download class="w-4 h-4 mr-2 inline-block" />
                 <span>{{ $t("order.download") }}</span>
@@ -252,7 +343,7 @@
 
               <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                 <tr
-                  v-for="(order, index) in orders"
+                  v-for="(order, index) in sortedOrders"
                   :key="order.id"
                   class="hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                 >
@@ -425,7 +516,7 @@ import MainLayout from "@/components/Common/AppLayout.vue";
 import { createToastInterface } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import { useI18n } from "vue-i18n";
-import { ChevronDown, ChevronUp, ChevronsUpDown, Download } from "lucide-vue-next";
+import { Check, ChevronDown, ChevronUp, ChevronsUpDown, Download } from "lucide-vue-next";
 
 const { t } = useI18n();
 const toast = createToastInterface();
@@ -447,6 +538,92 @@ const pagination = ref({
   total: 0,
 });
 const perPage = ref(10);
+
+/** Filter dropdown options */
+const statusOptions = computed(() => [
+  { value: "all", label: t("order.status.all") },
+  { value: "pending", label: t("order.status.pending") },
+  { value: "completed", label: t("order.status.completed") },
+  { value: "cancelled", label: t("order.status.cancelled") },
+]);
+const perPageOptions = [
+  { value: 10, label: "10 / page" },
+  { value: 20, label: "20 / page" },
+  { value: 50, label: "50 / page" },
+  { value: 100, label: "100 / page" },
+];
+const formatOptions = [
+  { value: "csv", label: "CSV" },
+  { value: "pdf", label: "PDF" },
+];
+
+const statusLabel = computed(
+  () =>
+    statusOptions.value.find((o) => o.value === filter.value.status)?.label ||
+    t("order.status.all")
+);
+const perPageLabel = computed(
+  () =>
+    perPageOptions.find((o) => o.value === perPage.value)?.label ||
+    `${perPage.value} / page`
+);
+const formatLabel = computed(
+  () =>
+    formatOptions.find((o) => o.value === filter.value.format)?.label ||
+    String(filter.value.format || "").toUpperCase()
+);
+
+/** Client-side fallback sort (keeps header sorting responsive) */
+const sortedOrders = computed(() => {
+  const data = Array.isArray(orders.value) ? [...orders.value] : [];
+  const by = sort.value.by;
+  const dir = sort.value.dir === "desc" ? "desc" : "asc";
+  if (!by) return data;
+
+  const numericKeys = new Set(["total_amount", "discount_amount"]);
+  const dateKeys = new Set(["created_at"]);
+  const getValue = (order) => {
+    if (dateKeys.has(by)) {
+      const raw =
+        order?.[by] ??
+        order?.created_at ??
+        order?.date ??
+        order?.createdAt ??
+        0;
+      const safe =
+        typeof raw === "string" && raw.includes(" ")
+          ? raw.replace(" ", "T")
+          : raw;
+      const t = new Date(safe).getTime();
+      return Number.isFinite(t) ? t : 0;
+    }
+    if (numericKeys.has(by)) {
+      const raw =
+        order?.[by] ??
+        order?.discount?.amount ??
+        order?.discount_amount ??
+        0;
+      const n = Number(raw);
+      return Number.isFinite(n) ? n : 0;
+    }
+    if (by === "user.name") return order?.user?.name ?? "";
+    if (by === "discount.code") return order?.discount?.code ?? "";
+    return order?.[by] ?? "";
+  };
+
+  data.sort((a, b) => {
+    const av = getValue(a);
+    const bv = getValue(b);
+    if (typeof av === "number" && typeof bv === "number") {
+      return dir === "asc" ? av - bv : bv - av;
+    }
+    const as = String(av).toLowerCase();
+    const bs = String(bv).toLowerCase();
+    return dir === "asc" ? as.localeCompare(bs) : bs.localeCompare(as);
+  });
+
+  return data;
+});
 
 /** Columns visibility */
 const visibleCols = ref({
@@ -473,12 +650,58 @@ const toggleableColumns = [
 /** Columns menu with safe click-outside */
 const showColsMenu = ref(false);
 const colsMenuRef = ref(null);
+const showStatusMenu = ref(false);
+const statusMenuRef = ref(null);
+const showPerPageMenu = ref(false);
+const perPageMenuRef = ref(null);
+const showFormatMenu = ref(false);
+const formatMenuRef = ref(null);
 function toggleColsMenu() {
+  showStatusMenu.value = false;
+  showPerPageMenu.value = false;
+  showFormatMenu.value = false;
   showColsMenu.value = !showColsMenu.value;
 }
+function toggleStatusMenu() {
+  showColsMenu.value = false;
+  showPerPageMenu.value = false;
+  showFormatMenu.value = false;
+  showStatusMenu.value = !showStatusMenu.value;
+}
+function togglePerPageMenu() {
+  showColsMenu.value = false;
+  showStatusMenu.value = false;
+  showFormatMenu.value = false;
+  showPerPageMenu.value = !showPerPageMenu.value;
+}
+function toggleFormatMenu() {
+  showColsMenu.value = false;
+  showStatusMenu.value = false;
+  showPerPageMenu.value = false;
+  showFormatMenu.value = !showFormatMenu.value;
+}
+function setStatus(value) {
+  filter.value.status = value;
+  showStatusMenu.value = false;
+}
+function setPerPage(value) {
+  perPage.value = value;
+  showPerPageMenu.value = false;
+  onPerPageChange();
+}
+function setFormat(value) {
+  filter.value.format = value;
+  showFormatMenu.value = false;
+}
 function onDocClick(e) {
-  if (!colsMenuRef.value) return;
-  if (!colsMenuRef.value.contains(e.target)) showColsMenu.value = false;
+  if (colsMenuRef.value && !colsMenuRef.value.contains(e.target))
+    showColsMenu.value = false;
+  if (statusMenuRef.value && !statusMenuRef.value.contains(e.target))
+    showStatusMenu.value = false;
+  if (perPageMenuRef.value && !perPageMenuRef.value.contains(e.target))
+    showPerPageMenu.value = false;
+  if (formatMenuRef.value && !formatMenuRef.value.contains(e.target))
+    showFormatMenu.value = false;
 }
 onMounted(() => {
   document.addEventListener("mousedown", onDocClick, true);
@@ -550,7 +773,7 @@ function formatDate(d) {
   return new Date(d).toLocaleDateString("en-GB");
 }
 
-/** Tri-state sorting: asc -> desc -> reset(default) */
+/** Sorting: toggle asc/desc */
 function setSort(by) {
   if (sort.value.by !== by) {
     sort.value.by = by;
@@ -560,10 +783,7 @@ function setSort(by) {
       ? "desc"
       : "asc";
   } else {
-    if (sort.value.dir === "asc") sort.value.dir = "desc";
-    else if (sort.value.dir === "desc")
-      sort.value = { ...defaultSort }; // reset
-    else sort.value.dir = "asc";
+    sort.value.dir = sort.value.dir === "asc" ? "desc" : "asc";
   }
   pagination.value.current_page = 1;
   fetchOrders(1);
