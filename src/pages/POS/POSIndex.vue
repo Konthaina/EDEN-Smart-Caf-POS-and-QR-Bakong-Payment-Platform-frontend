@@ -59,7 +59,7 @@
     </div>
 
     <!-- Layout grid (products + cart) -->
-    <div class="px-6 pb-6 h-[calc(90vh-32px)] min-h-0 overflow-hidden">
+    <div class="px-6 pb-0 h-full min-h-0 overflow-hidden">
       <div
         :class="['content-grid h-full', { 'cart-hidden': !showCartPanel }]"
         aria-label="Products and Cart"
