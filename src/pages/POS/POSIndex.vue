@@ -8,12 +8,12 @@
         {{ $t("pos.order_list") || "Order List" }}
       </h1>
 
-      <div class="flex-1 max-w-2xl">
+      <div class="flex-1 max-w-md">
         <div class="relative">
           <input
             v-model="search"
             :placeholder="$t('pos.search')"
-            class="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-white px-4 py-2 rounded-full shadow-sm focus:ring-2 focus:ring-purple-500 transition-all"
+            class="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-white px-4 py-2 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
           />
         </div>
       </div>
