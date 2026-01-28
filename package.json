@@ -4,7 +4,7 @@
     "name": "Angkor Science"
   },
   "private": true,
-  "version": "0.1.2",
+  "version": "1.0.1",
   "type": "module",
   "main": "main.cjs",
   "scripts": {
