@@ -551,31 +551,6 @@
             @submit.prevent="saveSettings"
             class="grid grid-cols-1 sm:grid-cols-2 gap-6"
           >
-            <div
-              class="flex flex-col items-center justify-center text-center gap-2 col-span-2"
-            >
-              <img
-                :src="appLogoPreview || appLogoUrl"
-                class="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover ring ring-blue-300 dark:ring-blue-500 dark:border-gray-700 mb-2"
-                alt="Shop Logo"
-                @error="onLogoError"
-              />
-              <input
-                ref="logoInput"
-                type="file"
-                accept="image/*"
-                class="hidden"
-                @change="handleAppLogoChange"
-              />
-              <button
-                @click.prevent="logoInput.click()"
-                class="btn-secondary text-sm"
-                type="button"
-              >
-                {{ $t("setting.change_logo") || "Change Logo" }}
-              </button>
-            </div>
-
             <div>
               <label class="label">{{
                 $t("setting.shop_name") || "Shop Name"
@@ -839,29 +814,17 @@ watch([isCashier, activeTab], () => {
 // App Settings logic
 const appForm = ref({
   shop_name: "",
-  shop_logo: null,
   tax_rate: "",
   exchange_rate_usd_khr: "",
   bakong_machine_id: "",
 });
 const appLogoPreview = ref(null);
 const showAppSettingModal = ref(false);
-const logoInput = ref();
 const appLogoInlineInput = ref();
 
 const appLogoUrl = computed(() =>
   storageUrl(settings.value.shop_logo, "logo.png")
 );
-
-const handleAppLogoChange = (e) => {
-  const file = e.target.files[0];
-  appForm.value.shop_logo = file;
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (ev) => (appLogoPreview.value = ev.target.result);
-    reader.readAsDataURL(file);
-  }
-};
 
 const openAppLogoPicker = () => {
   appLogoInlineInput.value?.click();
@@ -921,7 +884,6 @@ const loadAppSettings = async () => {
   await fetchSettings();
   appForm.value = {
     shop_name: settings.value.shop_name || "",
-    shop_logo: null,
     tax_rate: settings.value.tax_rate || "",
     exchange_rate_usd_khr: settings.value.exchange_rate_usd_khr || "",
     bakong_machine_id: settings.value.bakong_machine_id || "",
