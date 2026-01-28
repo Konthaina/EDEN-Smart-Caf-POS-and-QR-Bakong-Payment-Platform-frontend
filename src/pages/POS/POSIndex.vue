@@ -13,7 +13,7 @@
           <input
             v-model="search"
             :placeholder="$t('pos.search')"
-            class="w-full border dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white px-4 py-2 rounded-full shadow-sm focus:ring-2 focus:ring-purple-500 transition-all"
+            class="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-white px-4 py-2 rounded-full shadow-sm focus:ring-2 focus:ring-purple-500 transition-all"
           />
         </div>
       </div>
@@ -70,7 +70,7 @@
           <div class="flex items-center mb-4 shrink-0 gap-4">
             <div
               ref="categoryScroll"
-              class="max-w-[68%] min-w-[180px] overflow-x-auto no-scrollbar"
+              class="max-w-[100%] min-w-[75%] overflow-x-auto no-scrollbar bg-white dark:bg-gray-800 rounded-full p-1"
               @wheel.prevent="handleWheelScroll"
             >
               <div class="inline-flex gap-2">
@@ -89,7 +89,6 @@
                 </button>
               </div>
             </div>
-            <div class="flex-1"></div>
             <div class="flex items-center gap-2">
               <button
                 type="button"
