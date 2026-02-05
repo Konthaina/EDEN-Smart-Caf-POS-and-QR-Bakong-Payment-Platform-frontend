@@ -38,6 +38,8 @@
     "save": "រក្សាទុកការផ្លាស់ប្ដូរ",
     "update": "បច្ចុប្បន្នភាព",
     "logout": "ចេញពីប្រព័ន្ធ",
+    "logout_confirm_title": "បញ្ជាក់ការចាកចេញ",
+    "logout_confirm_message": "តើអ្នកពិតជាចង់ចាកចេញមែនទេ?",
     "apply": "អនុវត្ត",
     "confirmDelete": "បាទ/ចាស លុប",
     "delete": "លុប",
@@ -771,7 +773,10 @@
     "update_success": "បានកែប្រែដោយជោគជ័យ។",
     "delete_success": "បានលុបដោយជោគជ័យ។",
     "delete_error": "លុបបរាជ័យ។",
-    "display_order": "លំដាប់បង្ហាញ"
+    "display_order": "លំដាប់បង្ហាញ",
+    "filter": {
+      "status": "ស្ថានភាព"
+    }
   },
   "notifications": {
     "no_data": "មិនមានការជូនដំណឹងទេ។",

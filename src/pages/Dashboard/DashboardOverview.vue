@@ -18,7 +18,7 @@
           <!-- Right cluster: Exchange Rate quick control + Logout -->
           <div class="flex items-center gap-2">
             <ExchangeRateQuick />
-            <button @click="logout"
+            <button @click="showLogoutConfirm = true"
               class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-full font-medium shadow transition w-full sm:w-auto justify-center">
               <span>{{ $t('common.logout') }}</span>
               <LogOut class="w-4 h-4" />
@@ -65,11 +65,21 @@
         </p>
       </div>
     </div>
+
+    <ConfirmModal
+      :show="showLogoutConfirm"
+      :title="$t('common.logout_confirm_title') || 'Confirm Logout'"
+      :message="$t('common.logout_confirm_message') || 'Are you sure you want to log out?'"
+      :confirm-text="$t('common.logout') || 'Logout'"
+      :cancel-text="$t('common.cancel') || 'Cancel'"
+      @confirm="confirmLogout"
+      @cancel="showLogoutConfirm = false"
+    />
   </MainLayout>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useDashboardStore } from '@/store/dashboard'
@@ -77,6 +87,7 @@ import api from '@/plugins/axios'
 import { DollarSign, LogOut, Package, Users, Utensils } from 'lucide-vue-next'
 
 import MainLayout from '@/components/Common/AppLayout.vue'
+import ConfirmModal from '@/components/Common/ConfirmModal.vue'
 import StatsCard from '@/components/Dashboard/StatsCard.vue'
 import BarChart from '@/components/Dashboard/BarChart.vue'
 import DonutChart from '@/components/Dashboard/DonutChart.vue'
@@ -89,15 +100,22 @@ import PendingOrdersTable from '@/components/Dashboard/PendingOrdersTable.vue'
 const { t } = useI18n()
 const router = useRouter()
 const dashboard = useDashboardStore()
+const showLogoutConfirm = ref(false)
 
 const logout = async () => {
   try {
     await api.post('/logout')
     localStorage.removeItem('token')
+    localStorage.removeItem('role')
     router.push('/login')
   } catch (err) {
     console.error('Logout failed:', err)
   }
+}
+
+const confirmLogout = async () => {
+  showLogoutConfirm.value = false
+  await logout()
 }
 
 onMounted(async () => {

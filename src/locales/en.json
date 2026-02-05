@@ -38,6 +38,8 @@
     "save": "Save Changes",
     "update": "Update",
     "logout": "Logout",
+    "logout_confirm_title": "Confirm Logout",
+    "logout_confirm_message": "Are you sure you want to log out?",
     "apply": "Apply",
     "confirmDelete": "Yes, Delete",
     "delete": "Delete",
@@ -778,7 +780,10 @@
     "update_success": "Banner updated successfully.",
     "delete_success": "Banner deleted successfully.",
     "delete_error": "Failed to delete banner.",
-    "display_order": "Display Order"
+    "display_order": "Display Order",
+    "filter": {
+      "status": "Status"
+    }
   },
   "notifications": {
     "no_data": "No notifications found.",

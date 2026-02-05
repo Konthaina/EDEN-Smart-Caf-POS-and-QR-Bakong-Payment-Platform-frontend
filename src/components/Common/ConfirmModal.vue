@@ -18,13 +18,13 @@
           @click="emit('cancel')"
           class="px-4 py-2 rounded bg-gray-200 text-gray-800 text-sm hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600 transition"
         >
-          {{ ($t && $t("common.cancel")) || "Cancel" }}
+          {{ cancelText || (($t && $t("common.cancel")) || "Cancel") }}
         </button>
         <button
           @click="emit('confirm')"
           class="px-4 py-2 rounded bg-red-600 text-white text-sm hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 transition font-semibold shadow"
         >
-          {{ ($t && $t("common.yes_delete")) || "Yes, Delete" }}
+          {{ confirmText || (($t && $t("common.yes_delete")) || "Yes, Delete") }}
         </button>
       </div>
     </div>
@@ -38,6 +38,8 @@ defineProps({
   show: Boolean,
   message: String,
   title: String, // Add this line
+  confirmText: String,
+  cancelText: String,
 });
 const emit = defineEmits(["confirm", "cancel"]);
 </script>
