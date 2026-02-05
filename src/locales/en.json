@@ -91,7 +91,16 @@
     "success": "Reset link has been sent to your email.",
     "failed": "Failed to send reset link."
   },
+  "otp": {
+    "code": "Code",
+    "placeholder": "Enter reset code",
+    "resend": "Resend Code",
+    "verify": "Verify Code"
+  },
   "reset": {
+    "change_email": "Change Email",
+    "sent_to": "A reset code has been sent to your email.",
+    "enter_code": "Enter the reset code sent to your email",
     "title_register": "Set your password",
     "send_code": "Send Code",
     "back_to_login": "Back to Login",
