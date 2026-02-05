@@ -87,7 +87,7 @@
           class="fixed inset-0 z-[60] bg-black bg-opacity-70 flex items-center justify-center khmer-support"
         >
           <div
-            class="bg-white dark:bg-gray-900 w-[300px] rounded-[20px] overflow-hidden shadow-xl text-center relative border dark:border-gray-700"
+            class="bg-white dark:bg-gray-900 w-[300px] rounded-[20px] overflow-hidden shadow-xl text-center relative"
           >
             <div
               class="bg-[#D00000] dark:bg-[#8d1717] text-white text-[20px] font-bold py-3 px-4"
@@ -155,6 +155,7 @@ import DiscountSection from "@/components/POS/DiscountSection.vue";
 import CartSummary from "@/components/POS/CartSummary.vue";
 import ReceiptPrint from "@/components/POS/ReceiptPrint.vue";
 import useSettings from "@/composables/useSettings";
+import { publicUrl } from "@/config/urls";
 
 const { t, locale } = useI18n();
 const toast = useToast();
@@ -198,7 +199,9 @@ const exchangeRate = computed(
   () => parseFloat(settings.value.exchange_rate_usd_khr) || 4100
 );
 const currencyLogo = computed(() =>
-  selectedCurrency.value === "KHR" ? "/khr-logo.png" : "/usd-logo.png"
+  selectedCurrency.value === "KHR"
+    ? publicUrl("khr-logo.png")
+    : publicUrl("usd-logo.png")
 );
 
 /* who can use manual discount (UI hint only; server must enforce) */
