@@ -72,7 +72,7 @@
         <!-- Left Image -->
         <div class="hidden md:block">
           <img
-            :src="publicUrl('login-image.jpg')"
+            :src="publicUrl('login-image.png')"
             alt="Reset Password"
             class="h-full w-full object-cover"
             loading="lazy"

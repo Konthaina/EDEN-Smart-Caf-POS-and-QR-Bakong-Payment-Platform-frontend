@@ -75,7 +75,7 @@
         <!-- Left image -->
         <div class="hidden md:block">
           <img
-            :src="publicUrl('login-image.jpg')"
+            :src="publicUrl('login-image.png')"
             alt="POS preview"
             class="h-full w-full object-cover"
             loading="lazy"
