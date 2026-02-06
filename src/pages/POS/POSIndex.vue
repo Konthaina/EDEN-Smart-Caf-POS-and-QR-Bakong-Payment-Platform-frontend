@@ -73,7 +73,7 @@
               class="max-w-[100%] min-w-[75%] overflow-x-auto no-scrollbar bg-white dark:bg-gray-800 rounded-full p-1"
               @wheel.prevent="handleWheelScroll"
             >
-              <div class="inline-flex gap-2">
+              <div class="inline-flex">
                 <button
                   v-for="cat in categoriesWithAll"
                   :key="cat.id"
