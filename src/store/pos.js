@@ -164,7 +164,8 @@ export const usePOSStore = defineStore("pos", () => {
   };
 
   const clearCart = () => {
-    cart.value = [];
+    // Mutate in place so all consumers keep the same array reference
+    cart.value.splice(0, cart.value.length);
   };
 
   const totalQty = computed(() =>

@@ -177,7 +177,7 @@
 
         <!-- RIGHT: cart column -->
         <aside class="cart-sidebar" aria-label="Cart sidebar">
-          <Cart @checkout="handleCheckout" @close="showCartPanel = false" />
+          <Cart @checkout="handleCheckout" @close="setCartPanelOpen(false)" />
         </aside>
       </div>
     </div>
@@ -241,6 +241,7 @@ const { cart, clearCart } = usePOSStore(); // we'll push line objects directly
 const menuStore = useMenuStore();
 
 const showModal = ref(false);
+const CART_HIDDEN_KEY = "posCartHidden";
 const showCartPanel = ref(true);
 const showMobileDrawer = ref(false);
 const search = ref("");
@@ -368,8 +369,6 @@ function onPreAddConfirm({ qty, customizations, note, variant }) {
   cart.push(line);
 
   closeAddModal();
-  if (window.innerWidth < 768) openMobileCart();
-  else showCartPanel.value = true;
 }
 
 /* Filtering — POS shows ACTIVE only */
@@ -403,14 +402,20 @@ const handleSuccess = () => {
 };
 
 /* desktop toggle + persistence */
-const CART_HIDDEN_KEY = "posCartHidden";
+function setCartPanelOpen(next) {
+  showCartPanel.value = next;
+  if (typeof window !== "undefined") {
+    localStorage.setItem(CART_HIDDEN_KEY, next ? "0" : "1");
+  }
+}
 function toggleCartDesktop() {
-  showCartPanel.value = !showCartPanel.value;
-  localStorage.setItem(CART_HIDDEN_KEY, showCartPanel.value ? "0" : "1");
+  setCartPanelOpen(!showCartPanel.value);
 }
 function initCartFromStorage() {
+  if (typeof window === "undefined") return;
   const saved = localStorage.getItem(CART_HIDDEN_KEY);
   if (saved === "1") showCartPanel.value = false;
+  if (saved === "0") showCartPanel.value = true;
 }
 
 /* mobile drawer helpers */
@@ -425,10 +430,11 @@ function closeMobileCart() {
 
 /* bootstrap */
 onMounted(async () => {
-  initCartFromStorage();
   await menuStore.ensureLoaded(); // variants are preloaded via include_variants=1
   window.addEventListener("resize", onResize);
 });
+
+initCartFromStorage();
 
 onBeforeRouteLeave(() => {
   menuStore.cancelAll();

@@ -1,26 +1,33 @@
 <template>
   <div :lang="locale" class="khmer-support font-sans">
-    <h2 class="text-lg font-semibold text-purple-700 dark:text-purple-400 mb-4">
+    <h2 class="text-base font-semibold text-gray-800 dark:text-gray-100 mb-4">
       {{ $t("payment.methods") }}
     </h2>
 
     <!-- Cash Method (USD or KHR) -->
     <div :class="methodBox('cash')" @click="$emit('select', 'cash')">
-      <div class="flex items-center justify-between mb-2">
-        <div class="font-medium text-sm text-gray-700 dark:text-gray-200">
+      <div class="flex items-center justify-between mb-3">
+        <div
+          class="font-medium text-base"
+          :class="
+            isCashSelected
+              ? 'text-white'
+              : 'text-gray-800 dark:text-gray-100'
+          "
+        >
           {{ $t("payment.cash") }}
         </div>
 
         <!-- Currency toggle -->
         <div
-          class="inline-flex items-center gap-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-full p-1"
+          class="inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full p-1"
         >
           <button
             type="button"
-            class="px-3 py-1 text-xs rounded-full"
+            class="px-3 py-1 text-[11px] rounded-full"
             :class="
               cashCurrency === 'USD'
-                ? 'bg-purple-600 text-white'
+                ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
                 : 'text-gray-700 dark:text-gray-200'
             "
             @click.stop="selectCurrency('USD')"
@@ -29,10 +36,10 @@
           </button>
           <button
             type="button"
-            class="px-3 py-1 text-xs rounded-full"
+            class="px-3 py-1 text-[11px] rounded-full"
             :class="
               cashCurrency === 'KHR'
-                ? 'bg-purple-600 text-white'
+                ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
                 : 'text-gray-700 dark:text-gray-200'
             "
             @click.stop="selectCurrency('KHR')"
@@ -48,27 +55,34 @@
           v-model="localUsd"
           type="number"
           :placeholder="$t('payment.cash_amount_placeholder') || '$ Amount'"
-          class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-lg outline-none text-sm text-gray-800 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 transition"
+          class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-2 rounded-lg outline-none text-base text-gray-800 dark:text-gray-100 focus:ring-2 focus:ring-gray-900/20 dark:focus:ring-white/20 transition"
           @input="updateAmountUSD"
           step="1"
           min="0"
           inputmode="numeric"
         />
-        <p class="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
-          {{ $t("payment.max_for_order") || "Max for this order" }}:
-          <strong>\${{ maxUSDAllowed.toFixed(2) }}</strong>
-          <span class="ml-1 text-gray-400">
-            ({{ $t("payment.min_cap") || "min cap" }} ${{ USD_MIN_CAP }})
-          </span>
-        </p>
-
-        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-          ≈ {{ previewKHR.toLocaleString("en-US") }} ៛
-          <span v-if="exchangeRateValid" class="ml-2">
-            • {{ $t("payment.rate_hint") || "Rate" }}: 1$ =
-            {{ props.exchangeRate.toLocaleString("en-US") }} ៛
-          </span>
-        </p>
+        <div
+          class="mt-2 space-y-1 text-xs leading-snug"
+          :class="
+            isCashSelected
+              ? 'text-white/80'
+              : 'text-gray-500 dark:text-gray-400'
+          "
+        >
+          <div>
+            ≈ {{ previewKHR.toLocaleString("en-US") }} ៛
+            <span v-if="exchangeRateValid" class="ml-2">
+              • {{ $t("payment.rate_hint") || "Rate" }}: 1$ =
+              {{ props.exchangeRate.toLocaleString("en-US") }} ៛
+            </span>
+          </div>
+          <div>
+            {{
+              $t("payment.usd_round_hint") ||
+              "Round cash amount to nearest $1."
+            }}
+          </div>
+        </div>
       </div>
 
       <!-- KHR Input -->
@@ -77,7 +91,7 @@
           v-model="localKhrStr"
           type="number"
           :placeholder="$t('payment.cash_amount_khr_placeholder') || '៛ Amount'"
-          class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-lg outline-none text-sm text-gray-800 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 transition"
+          class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-2 rounded-lg outline-none text-base text-gray-800 dark:text-gray-100 focus:ring-2 focus:ring-gray-900/20 dark:focus:ring-white/20 transition"
           @focus="isEditingKHR = true"
           @blur="onKhrBlur"
           @input="updateAmountKHR"
@@ -85,58 +99,95 @@
           min="0"
           inputmode="numeric"
         />
-        <p class="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
-          {{ $t("payment.max_for_order") || "Max for this order" }}:
-          <strong>{{ maxKHRAllowed.toLocaleString("en-US") }} ៛</strong>
-          <span class="ml-1 text-gray-400">
-            ({{ $t("payment.min_cap") || "min cap" }}
-            {{ KHR_MIN_CAP.toLocaleString("en-US") }} ៛)
-          </span>
-        </p>
-
-        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-          ≈ {{ previewUSDFromKHR }} $
-          <span v-if="exchangeRateValid" class="ml-2">
-            • {{ $t("payment.rate_hint") || "Rate" }}: 1$ =
-            {{ props.exchangeRate.toLocaleString("en-US") }} ៛
-          </span>
-        </p>
-        <p class="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
-          {{
-            $t("payment.khr_round_hint") ||
-            "KHR will be rounded to the nearest 100 on blur."
-          }}
-        </p>
+        <div
+          class="mt-2 space-y-1 text-xs leading-snug"
+          :class="
+            isCashSelected
+              ? 'text-white/80'
+              : 'text-gray-500 dark:text-gray-400'
+          "
+        >
+          <div>
+            ≈ {{ previewUSDFromKHR }} $
+            <span v-if="exchangeRateValid" class="ml-2">
+              • {{ $t("payment.rate_hint") || "Rate" }}: 1$ =
+              {{ props.exchangeRate.toLocaleString("en-US") }} ៛
+            </span>
+          </div>
+          <div>
+            {{
+              $t("payment.khr_round_hint") ||
+              "KHR will be rounded to the nearest 100 on blur."
+            }}
+          </div>
+        </div>
       </div>
 
-      <!-- Change -->
-      <div
-        class="mt-4 text-sm font-medium"
-        v-if="props.selectedMethod === 'cash' && +props.changeAmount > 0"
-      >
-        <template v-if="cashCurrency === 'USD'">
-          <span class="text-green-600 dark:text-green-400">
-            {{ $t("payment.change_usd") || "Change (USD)" }}:
-          </span>
-          {{ changeAmountUSD }} $
-        </template>
-        <template v-else>
-          <span class="text-green-600 dark:text-green-400">
-            {{ $t("payment.change_khr") || "Change (KHR)" }}:
-          </span>
-          {{ changeAmountKHR.toLocaleString("en-US") }} ៛
-        </template>
-      </div>
     </div>
 
     <!-- KHQR -->
     <div class="grid grid-cols-2 gap-4 mt-6">
       <div :class="methodBox('khqr')" @click="$emit('select', 'khqr')">
         <img :src="khqrIcon" class="h-10 mx-auto" alt="KHQR" />
-        <p class="text-center text-sm text-gray-700 dark:text-gray-200 mt-2">
+        <p
+          class="text-center text-sm mt-2"
+          :class="
+            props.selectedMethod === 'khqr'
+              ? 'text-white'
+              : 'text-gray-700 dark:text-gray-200'
+          "
+        >
           KHQR
         </p>
+        <div class="mt-3 flex items-center justify-center">
+          <div
+            class="inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full p-1"
+          >
+            <button
+              type="button"
+              class="px-3 py-1 text-xs rounded-full"
+              :class="
+                cashCurrency === 'USD'
+                  ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
+                  : 'text-gray-700 dark:text-gray-200'
+              "
+              @click.stop="selectCurrency('USD')"
+            >
+              USD $
+            </button>
+            <button
+              type="button"
+              class="px-3 py-1 text-xs rounded-full"
+              :class="
+                cashCurrency === 'KHR'
+                  ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
+                  : 'text-gray-700 dark:text-gray-200'
+              "
+              @click.stop="selectCurrency('KHR')"
+            >
+              ៛ KHR
+            </button>
+          </div>
+        </div>
       </div>
+      <div
+        v-if="showChangeCard"
+        class="rounded-xl p-4 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300"
+      >
+        <div class="text-[11px] uppercase tracking-wide text-emerald-700/80">
+          {{ $t("payment.change") || "Change" }}
+        </div>
+      <div class="mt-1 text-lg font-semibold">
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-medium">USD:</span>
+          <span>{{ changeAmountUSD }} $</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-medium">KHR:</span>
+          <span>{{ changeAmountKHR.toLocaleString("en-US") }} ៛</span>
+        </div>
+      </div>
+    </div>
     </div>
   </div>
 </template>
@@ -144,12 +195,9 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import axios from "@/plugins/axios";
-import { useToast } from "vue-toastification";
 import khqrIcon from "@/assets/icons/khqr.png";
 
 const { locale } = useI18n();
-const toast = useToast();
 
 /** ------- RULES ------- **
  * Max tendered per order = max(MIN_CAP, 2 × order_due)
@@ -163,7 +211,6 @@ const props = defineProps({
   selectedMethod: String,
   /** parent canonical amount in USD (tendered) */
   amount: [Number, String],
-  methodError: String,
   /** change in USD (computed by parent) */
   changeAmount: [Number, String],
   /** USD -> KHR exchange rate */
@@ -178,8 +225,6 @@ const emit = defineEmits([
   "select",
   "update:amount", // always emit USD
   "update:currency", // sync currency with modal
-  "bakongQr",
-  "bakongSuccess",
 ]);
 
 /** ---------- Local state ---------- */
@@ -187,8 +232,6 @@ const cashCurrency = ref(props.currency || "USD");
 const localUsd = ref(parseInt(props.amount || 0));
 const localKhrStr = ref("");
 const isEditingKHR = ref(false);
-const qrCode = ref(null);
-let pollingInterval = null;
 
 /** ---------- Helpers ---------- */
 const exchangeRateValid = computed(() => Number(props.exchangeRate) > 0);
@@ -233,14 +276,21 @@ const changeAmountKHR = computed(() => {
   return roundRiel(usdChange * props.exchangeRate);
 });
 
+const showChangeCard = computed(
+  () =>
+    props.selectedMethod === "cash" &&
+    Number(props.changeAmount || 0) > 0
+);
+const isCashSelected = computed(() => props.selectedMethod === "cash");
+
 /** ---------- UI helpers ---------- */
 const methodBox = (method) => {
   const base =
-    "cursor-pointer border rounded-xl p-4 transition select-none bg-gray-50 dark:bg-gray-800";
+    "cursor-pointer rounded-xl p-4 transition select-none bg-gray-50 dark:bg-gray-800/60";
   const active =
-    "border-purple-600 bg-purple-50 dark:border-purple-500 dark:bg-purple-900 shadow";
+    "bg-purple-600 text-white dark:bg-purple-600 dark:text-white shadow-sm";
   const hover =
-    "hover:border-purple-400 hover:bg-purple-100 dark:hover:border-purple-400 dark:hover:bg-gray-700";
+    "hover:bg-gray-100 dark:hover:bg-gray-800/80";
   return [base, props.selectedMethod === method ? active : hover].join(" ");
 };
 
@@ -304,23 +354,6 @@ function onKhrBlur() {
   emit("update:amount", usd);
 }
 
-/** ---------- KHQR (optional trigger) ---------- */
-const generateKHQR = async () => {
-  if (pollingInterval) clearInterval(pollingInterval);
-  qrCode.value = null;
-
-  try {
-    const res = await axios.post("/bakong/generate-qr", {
-      amount: props.dueUsd, // Pay exactly the due
-      currency: cashCurrency.value,
-    });
-    qrCode.value = res.data.qr_string;
-    emit("bakongQr", res.data.qr_string);
-  } catch {
-    toast.error("Failed to generate KHQR.");
-  }
-};
-
 /** ---------- Sync from parent ---------- */
 watch(
   () => props.amount,
@@ -377,7 +410,6 @@ watch(
 );
 
 defineExpose({
-  generateKHQR,
   USD_MIN_CAP,
   KHR_MIN_CAP,
   maxUSDAllowed,
@@ -391,5 +423,16 @@ defineExpose({
     "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   line-height: 1.6;
+}
+
+/* Hide number input spinners */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 </style>

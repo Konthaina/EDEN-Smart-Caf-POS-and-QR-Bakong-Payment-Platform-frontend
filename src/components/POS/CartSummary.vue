@@ -6,7 +6,7 @@
   >
     <!-- Header -->
     <div class="flex items-center mb-4">
-      <h2 class="text-lg font-semibold text-purple-700 dark:text-purple-400 flex items-center gap-2">
+      <h2 class="text-base font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
         <ShoppingCart class="w-5 h-5" />
         <span>{{ $t("payment.cart_items") }}</span>
       </h2>
@@ -110,10 +110,17 @@
       </div>
 
       <div
-        class="flex justify-between text-base font-bold pt-2 text-purple-700 dark:text-purple-400"
+        class="flex justify-between text-base font-semibold pt-2 text-gray-900 dark:text-gray-100"
       >
         <span>{{ $t("payment.total") }}:</span>
         <span>${{ format(discountedTotal) }}</span>
+      </div>
+      <div
+        v-if="totalKhr && Number(totalKhr) > 0"
+        class="flex justify-between text-sm text-gray-500 dark:text-gray-400"
+      >
+        <span>{{ $t("receipt.total_khr") || "Total in KHR" }}:</span>
+        <span>{{ Number(totalKhr).toLocaleString("en-US") }} ៛</span>
       </div>
 
       <div
@@ -130,7 +137,7 @@
       <button
         type="button"
         @click="$emit('close')"
-        class="px-4 py-2 rounded-lg border border-red-300 dark:border-red-800 text-red-600 dark:text-red-300 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/30 text-sm"
+        class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/60 text-sm"
       >
         {{ $t("common.close") || "Close" }}
       </button>
@@ -139,7 +146,7 @@
         type="button"
         @click="$emit('pay')"
         :disabled="!canPay"
-        class="px-4 py-2 rounded-lg text-sm font-semibold transition text-white bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 disabled:text-gray-600 disabled:dark:bg-gray-700 disabled:dark:text-gray-300 disabled:cursor-not-allowed"
+        :class="payButtonClass"
       >
         {{ $t("payment.pay_now") }}
       </button>
@@ -160,9 +167,9 @@ const props = defineProps({
   total: Number,
   discountedTotal: Number,
   discount: Object,
-  discountText: String,
   taxAmount: Number,
   taxRate: Number,
+  totalKhr: [Number, String],
   selectedMethod: String,
   tenderedAmount: { type: [Number, String], default: 0 },
 });
@@ -251,15 +258,25 @@ const discountAmount = computed(() => {
     : Math.min(props.discount.value, props.total || 0);
 });
 
+const hasMethod = computed(() => !!props.selectedMethod);
 const isCash = computed(
   () => String(props.selectedMethod || "").toLowerCase() === "cash"
 );
 const tendered = computed(() => parseFloat(props.tenderedAmount || 0) || 0);
 const needed = computed(() => parseFloat(props.discountedTotal || 0) || 0);
-const canPay = computed(() => !isCash.value || tendered.value >= needed.value);
+const canPay = computed(
+  () => hasMethod.value && (!isCash.value || tendered.value >= needed.value)
+);
 const shortage = computed(() =>
   Math.max(0, needed.value - tendered.value).toFixed(2)
 );
+
+const payButtonClass = computed(() => {
+  const base =
+    "px-4 py-2 rounded-lg text-sm font-semibold transition text-white disabled:bg-gray-300 disabled:text-gray-600 disabled:dark:bg-gray-700 disabled:dark:text-gray-300 disabled:cursor-not-allowed";
+  if (!canPay.value) return `${base} bg-gray-900/40`;
+  return `${base} bg-purple-600 hover:bg-purple-700`;
+});
 </script>
 
 <style scoped>

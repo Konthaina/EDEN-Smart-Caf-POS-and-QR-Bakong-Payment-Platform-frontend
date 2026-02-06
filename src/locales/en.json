@@ -258,6 +258,9 @@
     "remove": "Remove"
   },
   "payment": {
+    "usd_round_hint": "Round cash amount to nearest $1.",
+    "max_for_order": "Max for this order",
+    "min_cap": "min cap",
     "sale_mode": "Payment Mode",
     "normal_sale": "Normal Sale",
     "event_pay": "Event Sale",
@@ -308,7 +311,7 @@
     "unknown": "Unknown",
     "tax_rate": "Tax Rate (%)",
     " exchange_rate": "Exchange Rate ",
-    "total_khr": "total (៛)"
+    "total_khr": "Total (៛)"
   },
   "order.title": "Order Management",
   "order.subtitle": "Manage and track all customer orders.",

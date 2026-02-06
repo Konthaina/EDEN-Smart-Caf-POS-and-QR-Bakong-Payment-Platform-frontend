@@ -6,36 +6,33 @@
       class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center khmer-support"
     >
       <div
-        class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-[90%] max-w-6xl h-[90%] flex overflow-hidden relative text-gray-800 dark:text-gray-100"
+        class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 w-[90%] max-w-6xl h-[90%] flex overflow-hidden relative text-gray-800 dark:text-gray-100"
       >
         <!-- Left: Payment Methods + Discounts -->
         <div class="flex-1 p-6 overflow-y-auto no-scrollbar space-y-6">
           <!-- Settings Summary -->
           <div
-            class="mb-4 flex flex-col gap-2 bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 rounded-xl px-4 py-2 text-[15px] text-gray-700 dark:text-gray-200 shadow-sm"
+            class="mb-4 flex flex-wrap items-center gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-700 dark:text-gray-200"
           >
-            <div>
-              <span class="font-semibold">{{ $t("pos.taxRate") }}:</span>
-              <span>{{ taxRate }}%</span>
+            <div class="flex items-center gap-2">
+              <span class="text-gray-500 dark:text-gray-400">{{ $t("pos.taxRate") }}</span>
+              <span class="font-semibold">{{ taxRate }}%</span>
             </div>
-            <div>
-              <span class="font-semibold">{{ $t("pos.exchangeRate") }}:</span>
-              <span> 1 USD = {{ formatNumber(exchangeRate) }} ៛ </span>
+            <div class="h-4 w-px bg-gray-200 dark:bg-gray-700"></div>
+            <div class="flex items-center gap-2">
+              <span class="text-gray-500 dark:text-gray-400">{{ $t("pos.exchangeRate") }}</span>
+              <span class="font-semibold">1 USD = {{ formatNumber(exchangeRate) }} ៛</span>
             </div>
           </div>
 
           <PaymentMethods
-            ref="paymentMethodRef"
             :selected-method="selectedMethod"
             v-model:amount="amount"
             v-model:currency="selectedCurrency"
             :exchange-rate="exchangeRate"
-            :method-error="methodError"
             :change-amount="changeAmountUSD"
             :due-usd="discountedTotal"
             @select="selectMethod"
-            @bakongQr="handleQrPopup"
-            @bakongSuccess="handlePaymentSuccess"
           />
 
           <DiscountSection
@@ -54,7 +51,6 @@
           :total="total"
           :discount="discount"
           :discountedTotal="discountedTotal"
-          :discountText="discountText"
           :taxAmount="taxAmount"
           :taxRate="taxRate"
           :totalKhr="totalKhr"
@@ -100,7 +96,7 @@
                 Eden Coffee
               </p>
               <p class="text-[25px] font-medium text-black dark:text-white">
-                {{ formatNumber(discountedTotal) }}
+                {{ formatNumber(khqrAmount) }}
                 <span class="text-[16px] text-gray-600 dark:text-gray-300 ml-1">
                   {{ selectedCurrency }}
                 </span>
@@ -180,14 +176,12 @@ const amount = ref(""); // always USD
 const promoCode = ref("");
 const discount = ref(null);
 const discountError = ref("");
-const methodError = ref("");
 const orderId = ref(null);
 const selectedCurrency = ref("USD"); // 'USD' | 'KHR'
 
 const qrCode = ref(null);
 const showQrPopup = ref(false);
 const polling = ref(null);
-const bakongMd5 = ref(null);
 
 /** ensure we print only once */
 const hasPrinted = ref(false);
@@ -266,6 +260,9 @@ const totalKhr = computed(() =>
     ? Math.round(discountedTotal.value * exchangeRate.value)
     : 0
 );
+const khqrAmount = computed(() =>
+  selectedCurrency.value === "KHR" ? totalKhr.value : discountedTotal.value
+);
 
 /** Derived displays for CartSummary */
 const displayTenderedForSummary = computed(() => {
@@ -311,15 +308,24 @@ onMounted(async () => {
 });
 watch(cart, (val) => val.length === 0 && close());
 watch(showQrPopup, (v) => (document.body.style.overflow = v ? "hidden" : ""));
+watch(
+  () => props.visible,
+  (v) => {
+    if (v) {
+      hasPrinted.value = false;
+      orderId.value = null;
+    }
+  }
+);
 
 const close = () => {
   emit("close");
   orderId.value = null;
+  hasPrinted.value = false;
 };
 
 const selectMethod = (m) => {
   selectedMethod.value = m;
-  methodError.value = "";
 };
 
 /* discounts */
@@ -415,16 +421,6 @@ const cancelQr = () => {
   showQrPopup.value = false;
   if (polling.value) clearInterval(polling.value);
   polling.value = null;
-};
-
-const handleQrPopup = (qr) => {
-  qrCode.value = qr;
-  showQrPopup.value = true;
-};
-
-const handlePaymentSuccess = () => {
-  showQrPopup.value = false;
-  emit("success");
 };
 
 /* formatting */
@@ -527,7 +523,6 @@ function exceedsPerOrderMax(paidUSD) {
 
 const submitPayment = async () => {
   if (!selectedMethod.value) {
-    methodError.value = t("pos.selectMethod");
     return;
   }
 
@@ -571,12 +566,18 @@ const submitPayment = async () => {
 
   if (String(selectedMethod.value).toLowerCase() === "khqr") {
     try {
+      const totalDueKHR = Number(totalKhr.value) || 0;
+      const qrCurrency = selectedCurrency.value;
+      const qrAmount = qrCurrency === "KHR" ? totalDueKHR : totalDueUSD;
+      if (!(qrAmount > 0)) {
+        toast.error(t("pos.invalidAmount"));
+        return;
+      }
       const qrRes = await api.post("/bakong/generate-qr", {
-        amount: totalDueUSD, // pay exactly the due
-        currency: selectedCurrency.value,
+        amount: qrAmount, // pay exactly the due
+        currency: qrCurrency,
       });
       qrCode.value = qrRes.data.qr_string;
-      bakongMd5.value = qrRes.data.md5;
       showQrPopup.value = true;
       startPollingBakong(qrRes.data.md5);
     } catch (error) {
@@ -618,10 +619,10 @@ const handleCashPayment = async () => {
 
       clearCart();
       window.onafterprint = () => {
-        location.reload();
         orderId.value = null;
       };
       window.print();
+      emit("success");
     }, 200);
   } catch (error) {
     console.error("Cash payment failed:", error?.response?.data || error);
@@ -663,7 +664,6 @@ const startPollingBakong = (md5) => {
           hasPrinted.value = true;
 
           window.onafterprint = () => {
-            location.reload();
             orderId.value = null;
           };
           window.print();
