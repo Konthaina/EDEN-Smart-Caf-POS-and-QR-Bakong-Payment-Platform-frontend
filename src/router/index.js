@@ -397,8 +397,9 @@ function getHomeRouteByRole(role) {
   switch (role) {
     case "Super Admin":
     case "Admin":
-    case "Cashier":
       return { name: "Dashboard" };
+    case "Cashier":
+      return { name: "POS" };
     case "Customer":
     case "Table":
       return { name: "CustomerHome" };
