@@ -291,10 +291,19 @@ const handleLogin = async () => {
     if (user.role && user.role.name)
       localStorage.setItem("role", user.role.name);
 
+    const roleName =
+      user.role?.name || user.role || localStorage.getItem("role") || "";
+    const targetRoute =
+      roleName === "Cashier"
+        ? { name: "POS" }
+        : roleName === "Customer" || roleName === "Table"
+          ? { name: "CustomerHome" }
+          : { name: "Dashboard" };
+
     // Optional: welcome toast (queued, not spammy)
     // enqueueToast("success", t("login.welcome_back") || "Welcome back!", { timeout: 2000 });
 
-    await router.push("/dashboard");
+    await router.push(targetRoute);
   } catch (err) {
     notifyError(
       t("login.error_invalid") || "Login failed. Please check your credentials."
