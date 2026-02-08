@@ -93,7 +93,7 @@
 
             <div class="px-12 pt-4 pb-2 text-left">
               <p class="font-bold text-[16px] text-gray-900 dark:text-gray-100">
-                Eden Coffee
+                {{ shopName }}
               </p>
               <p class="text-[25px] font-medium text-black dark:text-white">
                 {{ formatNumber(khqrAmount) }}
@@ -196,6 +196,9 @@ const currencyLogo = computed(() =>
   selectedCurrency.value === "KHR"
     ? publicUrl("khr-logo.png")
     : publicUrl("usd-logo.png")
+);
+const shopName = computed(
+  () => settings.value?.shop_name || t("app_name") || "Eden Coffee"
 );
 
 /* who can use manual discount (UI hint only; server must enforce) */

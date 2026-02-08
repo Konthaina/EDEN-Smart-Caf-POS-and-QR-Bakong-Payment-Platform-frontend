@@ -241,7 +241,7 @@
           &times;
         </button>
         <div class="p-6 text-center">
-          <p class="font-bold text-lg text-gray-800">Eden Coffee</p>
+          <p class="font-bold text-lg text-gray-800">{{ shopName }}</p>
           <p class="text-4xl font-bold text-black my-1">
             {{ reorderAmount > 0 ? formatCurrency(reorderAmount) : "" }}
           </p>
@@ -277,14 +277,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "@/plugins/axios";
 import { storageUrl } from "@/config/urls";
 import { useRouter } from "vue-router";
 import QrcodeVue from "qrcode.vue";
 import { CheckCircle } from "lucide-vue-next";
+import useSettings from "@/composables/useSettings";
 
 const router = useRouter();
+const { settings, fetchSettings } = useSettings();
 
 const orders = ref([]);
 const isLoading = ref(true);
@@ -461,7 +463,10 @@ const getStatusClass = (status) => {
 
 onMounted(() => {
   fetchOrders();
+  fetchSettings();
 });
+
+const shopName = computed(() => settings.value?.shop_name || "Eden Coffee");
 </script>
 
 <style scoped>
